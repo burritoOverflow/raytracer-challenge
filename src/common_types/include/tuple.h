@@ -60,8 +60,10 @@ class Tuple {
         return (fabs(a - b) <= EPSILON_ || a == b);
     }
 
-   private:
+   protected:
     double e_[4]{};  // individual tuple elements
+
+   private:
     static constexpr double EPSILON_ = 0.00001;
 };
 }  // namespace commontypes
