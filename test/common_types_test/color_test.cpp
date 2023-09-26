@@ -29,6 +29,7 @@ TEST(ColorTests, TestMultiplyColorsByScalar) {
     commontypes::Color expected{0.4, 0.6, 0.8};
     ASSERT_TRUE(c * 2 == expected);
 }
+
 TEST(ColorTests, TestMultiplyColorByColor) {
     commontypes::Color c1{1, 0.2, 0.4};
     commontypes::Color c2{0.9, 1, 0.1};
