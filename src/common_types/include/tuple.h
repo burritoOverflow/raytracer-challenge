@@ -37,7 +37,7 @@ class Tuple {
 
     inline Tuple Normalize() {
         const double magnitude = this->Magnitude();
-        return Tuple{e_[0] / magnitude, e_[1] / magnitude, e_[2] / magnitude, e_[3] / magnitude};
+        return {e_[0] / magnitude, e_[1] / magnitude, e_[2] / magnitude, e_[3] / magnitude};
     }
 
     inline double Dot(const Tuple& t) {
