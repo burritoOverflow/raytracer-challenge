@@ -13,9 +13,9 @@ class Canvas final {
         std::vector<commontypes::Color> height_vector{height_};
         canvas_.resize(width_, height_vector);
 
-        for (size_t i = 0; i < width_; i++) {
-            for (size_t j = 0; j < height_; j++) {
-                canvas_[i][j] = commontypes::Color{};
+        for (size_t x = 0; x < width_; x++) {
+            for (size_t y = 0; y < height_; y++) {
+                canvas_.at(x).at(y) = commontypes::Color{};
             }
         }
     }
@@ -27,13 +27,13 @@ class Canvas final {
     inline commontypes::Color GetPixel(const size_t x, const size_t y) {
         assert(x >= 0 && x < width_);
         assert(y >= 0 && y < height_);
-        return canvas_[x][y];
+        return canvas_.at(x).at(y);
     }
 
     inline void WritePixel(const size_t x, const size_t y, commontypes::Color& color) {
         assert(x >= 0 && x < width_);
         assert(y >= 0 && y < height_);
-        canvas_[x][y] = color;
+        canvas_.at(x).at(y) = color;
     }
 
    private:

@@ -3,19 +3,19 @@
 using namespace commontypes;
 
 Tuple operator+(Tuple& t1, Tuple& t2) {
-    return Tuple{t1.x() + t2.x(), t1.y() + t2.y(), t1.z() + t2.z(), t1.w() + t2.w()};
+    return {t1.x() + t2.x(), t1.y() + t2.y(), t1.z() + t2.z(), t1.w() + t2.w()};
 }
 
 Tuple operator-(Tuple& t1, Tuple& t2) {
-    return Tuple{t1.x() - t2.x(), t1.y() - t2.y(), t1.z() - t2.z(), t1.w() - t2.w()};
+    return {t1.x() - t2.x(), t1.y() - t2.y(), t1.z() - t2.z(), t1.w() - t2.w()};
 }
 
 Tuple operator*(Tuple& t, double d) {
-    return Tuple{t.x() * d, t.y() * d, t.z() * d, t.w() * d};
+    return {t.x() * d, t.y() * d, t.z() * d, t.w() * d};
 }
 
 Tuple operator/(Tuple& t, double d) {
-    return Tuple{t.x() / d, t.y() / d, t.z() / d, t.w() / d};
+    return {t.x() / d, t.y() / d, t.z() / d, t.w() / d};
 }
 
 bool operator==(const Tuple& t1, const Tuple& t2) {
