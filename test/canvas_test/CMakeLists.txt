@@ -1,0 +1,1 @@
+target_sources(TestSuite PRIVATE canvas_test.cpp)

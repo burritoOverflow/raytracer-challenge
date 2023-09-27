@@ -21,7 +21,8 @@ add_executable(${This} "")
 target_sources(${This} PRIVATE unit_tests.cpp)
 
 add_subdirectory(common_types_test)
+add_subdirectory(canvas_test)
 
-target_link_libraries(${This} PUBLIC gtest_main Common)
+target_link_libraries(${This} PUBLIC gtest_main Common Canvas)
 
 gtest_discover_tests(${This})
