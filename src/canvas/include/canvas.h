@@ -2,6 +2,8 @@
 #define CANVAS_H
 
 #include <cassert>
+#include <sstream>
+#include <string>
 #include <vector>
 #include "color.h"
 
@@ -20,8 +22,8 @@ class Canvas final {
         }
     }
 
-    inline size_t width() { return width_; }
-    inline size_t height() { return height_; }
+    inline size_t width() const { return width_; }
+    inline size_t height() const { return height_; }
     inline raytracercanvas GetCurrentCanvas() { return canvas_; }
 
     inline commontypes::Color GetPixel(const size_t x, const size_t y) {
@@ -36,7 +38,12 @@ class Canvas final {
         canvas_.at(x).at(y) = color;
     }
 
+    // write the current canvas contents to a PPM file
+    std::string WritePPM();
+
    private:
+    static double Clamp(double d, double min = 0.0, double max = 0.999);
+
     size_t width_;
     size_t height_;
     raytracercanvas canvas_;

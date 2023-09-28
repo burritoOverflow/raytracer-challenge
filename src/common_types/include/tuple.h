@@ -40,7 +40,7 @@ class Tuple {
         return {e_[0] / magnitude, e_[1] / magnitude, e_[2] / magnitude, e_[3] / magnitude};
     }
 
-    inline double Dot(const Tuple& t) {
+    inline double Dot(const Tuple& t) const {
         return this->x() * t.x() + this->y() * t.y() + this->z() * t.z() + this->w() + t.w();
     }
 
@@ -52,6 +52,9 @@ class Tuple {
             -e_[3],
         };
     }
+
+    inline double operator[](size_t i) const { return e_[i]; }
+    inline double& operator[](size_t i) { return e_[i]; }
 
     Tuple& operator+=(const Tuple& t);
     Tuple& operator-=(const Tuple& t);
