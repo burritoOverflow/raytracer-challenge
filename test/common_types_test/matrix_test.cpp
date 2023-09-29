@@ -27,3 +27,15 @@ TEST(MatrixTests, Test3x3MatrixRepresentable) {
     ASSERT_DOUBLE_EQ(-2, matrix.GetElement(1, 1));
     ASSERT_DOUBLE_EQ(1, matrix.GetElement(2, 2));
 }
+
+TEST(MatrixTests, TestMatrixEqualityWithIdenticalMatrices) {
+    commontypes::Matrix a({{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
+    commontypes::Matrix b({{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
+    ASSERT_TRUE(a == b);
+}
+
+TEST(MatrixTests, TestMatrixEqualityWithDifferentMatrices) {
+    commontypes::Matrix a({{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}});
+    commontypes::Matrix b({{2, 3, 4, 5}, {6, 7, 8, 9}, {8, 7, 6, 5}, {4, 3, 2, 1}});
+    ASSERT_TRUE(a != b);
+}

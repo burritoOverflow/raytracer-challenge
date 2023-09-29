@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <limits>
+#include "utility.h"
 
 namespace commontypes {
 class Tuple {
@@ -26,10 +27,10 @@ class Tuple {
     inline double w() const { return e_[3]; }
 
     // w == 1.0 is a Point
-    bool IsPoint() const { return fabs(w() - 1.0) < EPSILON_; }
+    bool IsPoint() const { return fabs(w() - 1.0) < utility::EPSILON_; }
 
     // w == 0 is a Vector
-    bool IsVector() const { return fabs(w()) < EPSILON_; }
+    bool IsVector() const { return fabs(w()) < utility::EPSILON_; }
 
     inline double Magnitude() {
         return sqrt(e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2] + e_[3] * e_[3]);
@@ -59,15 +60,8 @@ class Tuple {
     Tuple& operator+=(const Tuple& t);
     Tuple& operator-=(const Tuple& t);
 
-    static inline bool NearEquals(const double a, const double b) {
-        return (fabs(a - b) <= EPSILON_ || a == b);
-    }
-
    protected:
     double e_[4]{};  // individual tuple elements
-
-   private:
-    static constexpr double EPSILON_ = 0.00001;
 };
 }  // namespace commontypes
 

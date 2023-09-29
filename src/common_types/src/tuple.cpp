@@ -24,7 +24,7 @@ bool operator==(const Tuple& t1, const Tuple& t2) {
 
     for (size_t i = 0; i < 4; i++) {
         // perform a "double equals" for each element in each Tuple
-        if (!Tuple::NearEquals(t1_elements[i], t2_elements[i])) {
+        if (!utility::NearEquals(t1_elements[i], t2_elements[i])) {
             return false;
         }
     }

@@ -29,6 +29,10 @@ class Matrix {
 
     ~Matrix() = default;
 
+    inline size_t n_rows() const { return n_rows_; }
+
+    inline size_t n_columns() const { return n_columns_; }
+
     void SetElement(const size_t row_idx, const size_t column_idx, const double value) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);
@@ -53,5 +57,8 @@ class Matrix {
     matrixtype matrix_;
 };
 }  // namespace commontypes
+
+bool operator==(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
+bool operator!=(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
 
 #endif  // MATRIX_H
