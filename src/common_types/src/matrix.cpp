@@ -19,13 +19,20 @@ double commontypes::Matrix::Determinant() const {
     // for 2x2 Matrix: Det == ad - bc
     if (n_rows_ == 2 && n_columns_ == 2) {
         return GetElement(0, 0) * GetElement(1, 1) - GetElement(0, 1) * GetElement(1, 0);
-    } else {
-        // TODO
-        throw std::logic_error("Dimensions greater than 2x2 not currently implemented");
     }
+
+    double determinant{0.0};
+    const size_t row_idx{0};
+    // for each element multiply the element by its cofactor; add these products together
+    for (size_t column = 0; column < n_columns_; ++column) {
+        determinant += GetElement(row_idx, column) * Cofactor(row_idx, column);
+    }
+
+    return determinant;
 }
 
-commontypes::Matrix commontypes::Matrix::Submatrix(const size_t row_idx, const size_t column_idx) {
+commontypes::Matrix commontypes::Matrix::Submatrix(const size_t row_idx,
+                                                   const size_t column_idx) const {
     assert(row_idx >= 0 && row_idx < n_rows_);
     assert(column_idx >= 0 && column_idx < n_columns_);
 
@@ -42,18 +49,18 @@ commontypes::Matrix commontypes::Matrix::Submatrix(const size_t row_idx, const s
             // true when the previous iteration == the corresponding index
             const size_t r = row >= row_idx ? row - 1 : row;
             const size_t c = column >= column_idx ? column - 1 : column;
-            submatrix(r, c) = (*this)(row, column);
+            submatrix(r, c) = GetElement(row, column);
         }
     }
 
     return submatrix;
 }
 
-double commontypes::Matrix::Minor(const size_t row_idx, const size_t column_idx) {
+double commontypes::Matrix::Minor(const size_t row_idx, const size_t column_idx) const {
     return Submatrix(row_idx, column_idx).Determinant();
 }
 
-double commontypes::Matrix::Cofactor(const size_t row_idx, const size_t column_idx) {
+double commontypes::Matrix::Cofactor(const size_t row_idx, const size_t column_idx) const {
     const double minor = Minor(row_idx, column_idx);
     if (row_idx + column_idx % 2 == 0) {
         return minor;

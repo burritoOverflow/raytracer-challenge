@@ -111,3 +111,20 @@ TEST(MatrixTests, TestCalculateCofactorOf3x3Matrix) {
     EXPECT_DOUBLE_EQ(a.Minor(1, 0), 25.0);
     EXPECT_DOUBLE_EQ(a.Cofactor(1, 0), -25.0);
 }
+
+TEST(MatrixTests, TestDeterminantOf3x3Matrix) {
+    commontypes::Matrix a({{1, 2, 6}, {-5, 8, -4}, {2, 6, 4}});
+    ASSERT_DOUBLE_EQ(a.Cofactor(0, 0), 56.0);
+    ASSERT_DOUBLE_EQ(a.Cofactor(0, 1), 12.0);
+    ASSERT_DOUBLE_EQ(a.Cofactor(0, 2), -46.0);
+    ASSERT_DOUBLE_EQ(a.Determinant(), -196);
+}
+
+TEST(MatrixTests, TestDeterminantOf4x4Matrix) {
+    commontypes::Matrix a({{-2, -8, 3, 5}, {-3, 1, 7, 3}, {1, 2, -9, 6}, {-6, 7, 7, -9}});
+    ASSERT_DOUBLE_EQ(a.Cofactor(0, 0), 690.0);
+    ASSERT_DOUBLE_EQ(a.Cofactor(0, 1), 447.0);
+    ASSERT_DOUBLE_EQ(a.Cofactor(0, 2), 210.0);
+    ASSERT_DOUBLE_EQ(a.Cofactor(0, 3), 51.0);
+    ASSERT_DOUBLE_EQ(a.Determinant(), -4071.0);
+}
