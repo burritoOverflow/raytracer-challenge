@@ -103,3 +103,11 @@ TEST(MatrixTests, TestCalculateMinorOf3x3Matrix) {
     ASSERT_TRUE(a.Minor(1, 0) == expected_determinant);
     ASSERT_TRUE(b.Determinant() == a.Minor(1, 0));
 }
+
+TEST(MatrixTests, TestCalculateCofactorOf3x3Matrix) {
+    commontypes::Matrix a({{3, 5, 0}, {2, -1, -7}, {6, -1, 5}});
+    const double expected{-12};
+    EXPECT_DOUBLE_EQ(expected, a.Minor(0, 0));
+    EXPECT_DOUBLE_EQ(a.Minor(1, 0), 25.0);
+    EXPECT_DOUBLE_EQ(a.Cofactor(1, 0), -25.0);
+}

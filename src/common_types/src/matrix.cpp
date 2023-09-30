@@ -49,8 +49,16 @@ commontypes::Matrix commontypes::Matrix::Submatrix(const size_t row_idx, const s
     return submatrix;
 }
 
-double commontypes::Matrix::Minor(size_t row_idx, size_t column_idx) {
+double commontypes::Matrix::Minor(const size_t row_idx, const size_t column_idx) {
     return Submatrix(row_idx, column_idx).Determinant();
+}
+
+double commontypes::Matrix::Cofactor(const size_t row_idx, const size_t column_idx) {
+    const double minor = Minor(row_idx, column_idx);
+    if (row_idx + column_idx % 2 == 0) {
+        return minor;
+    }
+    return -minor;
 }
 
 static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,

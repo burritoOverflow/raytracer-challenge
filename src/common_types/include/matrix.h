@@ -57,6 +57,8 @@ class Matrix {
     // Minor at row_idx, column_idx is the determinant of the submatrix at row_idx, column_idx
     double Minor(size_t row_idx, size_t column_idx);
 
+    double Cofactor(size_t row_idx, size_t column_idx);
+
     inline double& operator()(const size_t row_idx, const size_t column_idx) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);
