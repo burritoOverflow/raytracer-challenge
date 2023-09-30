@@ -48,6 +48,8 @@ class Matrix {
 
     Matrix Transpose() const;
 
+    double Determinant() const;
+
     inline double& operator()(const size_t row_idx, const size_t column_idx) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);

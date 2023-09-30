@@ -74,3 +74,9 @@ TEST(MatrixTests, TestMatrixTranspose) {
     commontypes::Matrix a_transpose({{0, 9, 1, 0}, {9, 8, 8, 0}, {3, 0, 5, 5}, {0, 8, 3, 8}});
     ASSERT_TRUE(a.Transpose() == a_transpose);
 }
+
+TEST(MatrixTests, TestMatrix2x2Determinant) {
+    commontypes::Matrix a({{1, 5}, {-3, 2}});
+    const double expected = 17.0;
+    ASSERT_DOUBLE_EQ(a.Determinant(), expected);
+}

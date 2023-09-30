@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include <stdexcept>
 #include "tuple.h"
 #include "utility.h"
 
@@ -12,6 +13,16 @@ commontypes::Matrix commontypes::Matrix::Transpose() const {
     }
 
     return result;
+}
+
+double commontypes::Matrix::Determinant() const {
+    // for 2x2 Matrix: Det == ad - bc
+    if (n_rows_ == 2 && n_columns_ == 2) {
+        return GetElement(0, 0) * GetElement(1, 1) - GetElement(0, 1) * GetElement(1, 0);
+    } else {
+        // TODO
+        throw std::logic_error("Dimensions greater than 2x2 not currently implemented");
+    }
 }
 
 static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
