@@ -2,6 +2,34 @@
 #include "tuple.h"
 #include "utility.h"
 
+commontypes::Matrix commontypes::Matrix::Transpose() const {
+    commontypes::Matrix result{n_columns_, n_rows_};
+
+    for (size_t row = 0; row < n_rows_; ++row) {
+        for (size_t column = 0; column < n_columns_; ++column) {
+            result(row, column) = GetElement(column, row);
+        }
+    }
+
+    return result;
+}
+
+static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
+                                              const commontypes::Tuple& t) {
+    assert(m.n_rows() == 4 && m.n_columns() == 4);
+    commontypes::Tuple result{};
+
+    for (size_t row = 0; row < m.n_rows(); ++row) {
+        double row_result = 0.0;
+        for (size_t i = 0; i < m.n_columns(); ++i) {
+            row_result += m.GetElement(row, i) * t.e_[i];
+        }
+        result.e_[row] = row_result;
+    }
+
+    return result;
+}
+
 commontypes::Matrix operator*(const commontypes::Matrix& m1, const commontypes::Matrix& m2) {
     assert(m1.n_columns() == m2.n_rows());
     commontypes::Matrix result(m1.n_rows(), m2.n_columns());
@@ -21,18 +49,11 @@ commontypes::Matrix operator*(const commontypes::Matrix& m1, const commontypes::
 
 // expected the only use case is a 4x4 Matrix, implicity in the book
 commontypes::Tuple operator*(const commontypes::Matrix& m, const commontypes::Tuple& t) {
-    assert(m.n_rows() == 4 && m.n_columns() == 4);
-    commontypes::Tuple result{};
+    return MultiplyMatrixTuple(m, t);
+}
 
-    for (size_t row = 0; row < m.n_rows(); ++row) {
-        double row_result = 0.0;
-        for (size_t i = 0; i < m.n_columns(); ++i) {
-            row_result += m.GetElement(row, i) * t.e_[i];
-        }
-        result.e_[row] = row_result;
-    }
-
-    return result;
+commontypes::Tuple operator*(const commontypes::Tuple& t, const commontypes::Matrix& m) {
+    return MultiplyMatrixTuple(m, t);
 }
 
 bool operator==(const commontypes::Matrix& m1, const commontypes::Matrix& m2) {
@@ -50,6 +71,7 @@ bool operator==(const commontypes::Matrix& m1, const commontypes::Matrix& m2) {
             }
         }
     }
+
     return true;
 }
 

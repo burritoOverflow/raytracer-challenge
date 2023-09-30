@@ -55,8 +55,22 @@ TEST(MatrixTests, TestMatrixMultiplyByTuple) {
     ASSERT_TRUE(a * b == expected);
 }
 
-TEST(MatrixTests, TestMatrixMultiplyByIdentityMatrix) {
+TEST(MatrixTests, TestMatrixMultiplyMatrixByIdentityMatrix) {
     commontypes::Matrix a({{0, 1, 2, 4}, {1, 2, 4, 8}, {2, 4, 8, 16}, {4, 8, 16, 32}});
     commontypes::IdentityMatrix identity_matrix{};
     ASSERT_TRUE(a * identity_matrix == a);
+    ASSERT_TRUE(identity_matrix * a == a);
+}
+
+TEST(MatrixTests, TestMatrixMultiplyTupleByIdentityMatrix) {
+    commontypes::Tuple a{1, 2, 3, 4};
+    commontypes::IdentityMatrix identity_matrix{};
+    ASSERT_TRUE(a * identity_matrix == a);
+    ASSERT_TRUE(identity_matrix * a == a);
+}
+
+TEST(MatrixTests, TestMatrixTranspose) {
+    commontypes::Matrix a({{0, 9, 3, 0}, {9, 8, 0, 8}, {1, 8, 5, 3}, {0, 0, 5, 8}});
+    commontypes::Matrix a_transpose({{0, 9, 1, 0}, {9, 8, 8, 0}, {3, 0, 5, 5}, {0, 8, 3, 8}});
+    ASSERT_TRUE(a.Transpose() == a_transpose);
 }

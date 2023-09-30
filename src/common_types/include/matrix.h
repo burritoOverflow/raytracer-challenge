@@ -46,6 +46,8 @@ class Matrix {
         return matrix_.at(row_idx).at(column_idx);
     }
 
+    Matrix Transpose() const;
+
     inline double& operator()(const size_t row_idx, const size_t column_idx) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);
@@ -61,6 +63,7 @@ class Matrix {
 
 commontypes::Matrix operator*(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
 commontypes::Tuple operator*(const commontypes::Matrix& m, const commontypes::Tuple& t);
+commontypes::Tuple operator*(const commontypes::Tuple& t, const commontypes::Matrix& m);
 bool operator==(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
 bool operator!=(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
 
