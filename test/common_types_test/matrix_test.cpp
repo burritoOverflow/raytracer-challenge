@@ -1,5 +1,5 @@
-#include "matrix.h"
 #include <gtest/gtest.h>
+#include "identitymatrix.h"
 
 TEST(MatrixTests, TestConstructAndInspect4x4Matrix) {
     commontypes::Matrix matrix(
@@ -53,4 +53,10 @@ TEST(MatrixTests, TestMatrixMultiplyByTuple) {
     commontypes::Tuple b{1, 2, 3, 1};
     commontypes::Tuple expected{18, 24, 33, 1};
     ASSERT_TRUE(a * b == expected);
+}
+
+TEST(MatrixTests, TestMatrixMultiplyByIdentityMatrix) {
+    commontypes::Matrix a({{0, 1, 2, 4}, {1, 2, 4, 8}, {2, 4, 8, 16}, {4, 8, 16, 32}});
+    commontypes::IdentityMatrix identity_matrix{};
+    ASSERT_TRUE(a * identity_matrix == a);
 }
