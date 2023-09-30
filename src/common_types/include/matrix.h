@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <utility>
 #include <vector>
+#include "tuple.h"
 
 using matrixtype = std::vector<std::vector<double>>;
 
@@ -58,6 +59,8 @@ class Matrix {
 };
 }  // namespace commontypes
 
+commontypes::Matrix operator*(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
+commontypes::Tuple operator*(const commontypes::Matrix& m, const commontypes::Tuple& t);
 bool operator==(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
 bool operator!=(const commontypes::Matrix& m1, const commontypes::Matrix& m2);
 

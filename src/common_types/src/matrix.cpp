@@ -1,5 +1,39 @@
 #include "matrix.h"
+#include "tuple.h"
 #include "utility.h"
+
+commontypes::Matrix operator*(const commontypes::Matrix& m1, const commontypes::Matrix& m2) {
+    assert(m1.n_columns() == m2.n_rows());
+    commontypes::Matrix result(m1.n_rows(), m2.n_columns());
+
+    for (int row = 0; row < m1.n_rows(); ++row) {
+        for (int column = 0; column < m2.n_columns(); ++column) {
+            double accum{0.0};
+            for (size_t idx = 0; idx < m1.n_columns(); ++idx) {
+                accum += m1.GetElement(row, idx) * m2.GetElement(idx, column);
+            }
+            result(row, column) = accum;
+        }
+    }
+
+    return result;
+}
+
+// expected the only use case is a 4x4 Matrix, implicity in the book
+commontypes::Tuple operator*(const commontypes::Matrix& m, const commontypes::Tuple& t) {
+    assert(m.n_rows() == 4 && m.n_columns() == 4);
+    commontypes::Tuple result{};
+
+    for (size_t row = 0; row < m.n_rows(); ++row) {
+        double row_result = 0.0;
+        for (size_t i = 0; i < m.n_columns(); ++i) {
+            row_result += m.GetElement(row, i) * t.e_[i];
+        }
+        result.e_[row] = row_result;
+    }
+
+    return result;
+}
 
 bool operator==(const commontypes::Matrix& m1, const commontypes::Matrix& m2) {
     if (m1.n_rows() != m2.n_rows() || m1.n_columns() != m2.n_columns()) {

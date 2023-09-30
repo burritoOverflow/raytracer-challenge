@@ -39,3 +39,18 @@ TEST(MatrixTests, TestMatrixEqualityWithDifferentMatrices) {
     commontypes::Matrix b({{2, 3, 4, 5}, {6, 7, 8, 9}, {8, 7, 6, 5}, {4, 3, 2, 1}});
     ASSERT_TRUE(a != b);
 }
+
+TEST(MatrixTests, TestMatrixMultiplicationForTwoMatrices) {
+    commontypes::Matrix a({{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}});
+    commontypes::Matrix b({{-2, 1, 2, 3}, {3, 2, 1, -1}, {4, 3, 6, 5}, {1, 2, 7, 8}});
+    commontypes::Matrix expected(
+        {{20, 22, 50, 48}, {44, 54, 114, 108}, {40, 58, 110, 102}, {16, 26, 46, 42}});
+    ASSERT_TRUE(a * b == expected);
+}
+
+TEST(MatrixTests, TestMatrixMultiplyByTuple) {
+    commontypes::Matrix a({{1, 2, 3, 4}, {2, 4, 4, 2}, {8, 6, 4, 1}, {0, 0, 0, 1}});
+    commontypes::Tuple b{1, 2, 3, 1};
+    commontypes::Tuple expected{18, 24, 33, 1};
+    ASSERT_TRUE(a * b == expected);
+}

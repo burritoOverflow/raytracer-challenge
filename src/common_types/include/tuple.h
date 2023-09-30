@@ -60,7 +60,6 @@ class Tuple {
     Tuple& operator+=(const Tuple& t);
     Tuple& operator-=(const Tuple& t);
 
-   protected:
     double e_[4]{};  // individual tuple elements
 };
 }  // namespace commontypes
