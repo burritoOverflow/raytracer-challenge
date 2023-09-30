@@ -20,7 +20,10 @@ add_subdirectory(test)
 
 # strip release binary
 set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_RELEASE -s)
-target_compile_options(${PROJECT_NAME} PRIVATE -march=native)
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(${PROJECT_NAME} PRIVATE -march=native)
+endif ()
 
 set_target_properties(${PROJECT_NAME}
         PROPERTIES
