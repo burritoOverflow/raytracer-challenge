@@ -25,6 +25,30 @@ double commontypes::Matrix::Determinant() const {
     }
 }
 
+commontypes::Matrix commontypes::Matrix::Submatrix(const size_t row_idx, const size_t column_idx) {
+    assert(row_idx >= 0 && row_idx < n_rows_);
+    assert(column_idx >= 0 && column_idx < n_columns_);
+
+    commontypes::Matrix submatrix{n_rows_ - 1, n_columns_ - 1};
+
+    for (size_t row = 0; row < n_rows_; ++row) {
+        if (row == row_idx)
+            continue;
+
+        for (size_t column = 0; column < n_columns_; ++column) {
+            if (column == column_idx)
+                continue;
+
+            // true when the previous iteration == the corresponding index
+            const size_t r = row >= row_idx ? row - 1 : row;
+            const size_t c = column >= column_idx ? column - 1 : column;
+            submatrix(r, c) = (*this)(row, column);
+        }
+    }
+
+    return submatrix;
+}
+
 static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
                                               const commontypes::Tuple& t) {
     assert(m.n_rows() == 4 && m.n_columns() == 4);

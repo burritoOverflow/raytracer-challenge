@@ -80,3 +80,17 @@ TEST(MatrixTests, TestMatrix2x2Determinant) {
     const double expected = 17.0;
     ASSERT_DOUBLE_EQ(a.Determinant(), expected);
 }
+
+TEST(MatrixTests, TestSubmatrixOf3x3MatrixIs2x2Matrix) {
+    commontypes::Matrix a({{1, 5, 0}, {-3, 2, 7}, {0, 6, -3}});
+    commontypes::Matrix expected_submatrix({{-3, 2}, {0, 6}});
+    commontypes::Matrix result = a.Submatrix(0, 2);
+    ASSERT_TRUE(result == expected_submatrix);
+}
+
+TEST(MatrixTests, TestSubmatrixOf4x4MatrixIs3x3Matrix) {
+    commontypes::Matrix a({{-6, 1, 1, 6}, {-8, 5, 8, 6}, {-1, 0, 8, 2}, {-7, 1, -1, 1}});
+    commontypes::Matrix expected_submatrix({{-6, 1, 6}, {-8, 8, 6}, {-7, -1, 1}});
+    commontypes::Matrix result = a.Submatrix(2, 1);
+    ASSERT_TRUE(result == expected_submatrix);
+}

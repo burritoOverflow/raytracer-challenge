@@ -50,6 +50,9 @@ class Matrix {
 
     double Determinant() const;
 
+    // Returns a new submatrix of this matrix with the row at `row_idx` and the column at `column_idx` removed
+    Matrix Submatrix(const size_t row_idx, const size_t column_idx);
+
     inline double& operator()(const size_t row_idx, const size_t column_idx) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);
