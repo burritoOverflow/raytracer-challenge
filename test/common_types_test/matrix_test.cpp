@@ -94,3 +94,12 @@ TEST(MatrixTests, TestSubmatrixOf4x4MatrixIs3x3Matrix) {
     commontypes::Matrix result = a.Submatrix(2, 1);
     ASSERT_TRUE(result == expected_submatrix);
 }
+
+TEST(MatrixTests, TestCalculateMinorOf3x3Matrix) {
+    commontypes::Matrix a({{3, 5, 0}, {2, -1, 7}, {6, -1, 5}});
+    commontypes::Matrix b = a.Submatrix(1, 0);
+    const double expected_determinant{25.0};
+    ASSERT_TRUE(b.Determinant() == expected_determinant);
+    ASSERT_TRUE(a.Minor(1, 0) == expected_determinant);
+    ASSERT_TRUE(b.Determinant() == a.Minor(1, 0));
+}

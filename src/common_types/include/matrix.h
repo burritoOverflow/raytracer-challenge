@@ -50,8 +50,12 @@ class Matrix {
 
     double Determinant() const;
 
-    // Returns a new submatrix of this matrix with the row at `row_idx` and the column at `column_idx` removed
-    Matrix Submatrix(const size_t row_idx, const size_t column_idx);
+    // Returns a new submatrix of this matrix with the row at `row_idx` and the column at
+    // `column_idx` removed
+    Matrix Submatrix(size_t row_idx, size_t column_idx);
+
+    // Minor at row_idx, column_idx is the determinant of the submatrix at row_idx, column_idx
+    double Minor(size_t row_idx, size_t column_idx);
 
     inline double& operator()(const size_t row_idx, const size_t column_idx) {
         assert(row_idx >= 0 && row_idx < n_rows_);

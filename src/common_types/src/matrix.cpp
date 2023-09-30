@@ -49,6 +49,10 @@ commontypes::Matrix commontypes::Matrix::Submatrix(const size_t row_idx, const s
     return submatrix;
 }
 
+double commontypes::Matrix::Minor(size_t row_idx, size_t column_idx) {
+    return Submatrix(row_idx, column_idx).Determinant();
+}
+
 static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
                                               const commontypes::Tuple& t) {
     assert(m.n_rows() == 4 && m.n_columns() == 4);
