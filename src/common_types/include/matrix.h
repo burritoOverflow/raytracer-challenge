@@ -59,6 +59,12 @@ class Matrix {
 
     double Cofactor(size_t row_idx, size_t column_idx) const;
 
+    inline bool IsInvertible() const {
+        const double determinant = Determinant();
+        // invertible as long as the determinant is not 0
+        return !utility::NearEquals(0.0, determinant);
+    }
+
     inline double& operator()(const size_t row_idx, const size_t column_idx) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);

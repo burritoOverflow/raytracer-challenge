@@ -128,3 +128,15 @@ TEST(MatrixTests, TestDeterminantOf4x4Matrix) {
     ASSERT_DOUBLE_EQ(a.Cofactor(0, 3), 51.0);
     ASSERT_DOUBLE_EQ(a.Determinant(), -4071.0);
 }
+
+TEST(MatrixTests, TestInvertibleMatrixForInvertibility) {
+    commontypes::Matrix a({{6, 4, 4, 4}, {5, 5, 7, 6}, {4, -9, 3, -7}, {9, 1, 7, -6}});
+    ASSERT_DOUBLE_EQ(a.Determinant(), -2120.0);
+    ASSERT_TRUE(a.IsInvertible());
+}
+
+TEST(MatrixTests, TestNonInvertibleMatrixForInvertibility) {
+    commontypes::Matrix a({{-4, 2, -2, -3}, {9, 6, 2, 6}, {0, -5, 1, -5}, {0, 0, 0, 0}});
+    ASSERT_DOUBLE_EQ(a.Determinant(), 0.0);
+    ASSERT_FALSE(a.IsInvertible());
+}
