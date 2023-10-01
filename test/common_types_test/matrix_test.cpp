@@ -3,6 +3,7 @@
 #include "point.h"
 #include "rotationmatrix.h"
 #include "scalingmatrix.h"
+#include "shearingmatrix.h"
 #include "translationmatrix.h"
 #include "vector.h"
 
@@ -264,4 +265,40 @@ TEST(MatrixTests, TestRotatingPointAroundZaxis) {
     commontypes::RotationMatrixZ full_quarter{M_PI / 2};
     ASSERT_TRUE(half_quarter * p == commontypes::Point(-sqrt(2) / 2, sqrt(2) / 2, 0));
     ASSERT_TRUE(full_quarter * p == commontypes::Point(-1, 0, 0));
+}
+
+TEST(MatrixTests, TestShearingTransformationMovesXinProportionToY) {
+    commontypes::ShearingMatrix transform{1, 0, 0, 0, 0, 0};
+    commontypes::Point p{2, 3, 4};
+    ASSERT_TRUE(transform * p == commontypes::Point(5, 3, 4));
+}
+
+TEST(MatrixTests, TestShearingTransformationMovesXinProportionToZ) {
+    commontypes::ShearingMatrix transform{0, 1, 0, 0, 0, 0};
+    commontypes::Point p{2, 3, 4};
+    ASSERT_TRUE(transform * p == commontypes::Point(6, 3, 4));
+}
+
+TEST(MatrixTests, TestShearingTransformationMovesYinProportionToX) {
+    commontypes::ShearingMatrix transform{0, 0, 1, 0, 0, 0};
+    commontypes::Point p{2, 3, 4};
+    ASSERT_TRUE(transform * p == commontypes::Point(2, 5, 4));
+}
+
+TEST(MatrixTests, TestShearingTransformationMovesYinProportionToZ) {
+    commontypes::ShearingMatrix transform{0, 0, 0, 1, 0, 0};
+    commontypes::Point p{2, 3, 4};
+    ASSERT_TRUE(transform * p == commontypes::Point(2, 7, 4));
+}
+
+TEST(MatrixTests, TestShearingTransformationMovesZinProportionToX) {
+    commontypes::ShearingMatrix transform{0, 0, 0, 0, 1, 0};
+    commontypes::Point p{2, 3, 4};
+    ASSERT_TRUE(transform * p == commontypes::Point(2, 3, 6));
+}
+
+TEST(MatrixTests, TestShearingTransformationMovesZinProportionToY) {
+    commontypes::ShearingMatrix transform{0, 0, 0, 0, 0, 1};
+    commontypes::Point p{2, 3, 4};
+    ASSERT_TRUE(transform * p == commontypes::Point(2, 3, 7));
 }
