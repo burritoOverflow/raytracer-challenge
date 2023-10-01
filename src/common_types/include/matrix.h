@@ -23,10 +23,8 @@ class Matrix {
         }
     }
 
-    Matrix(matrixtype matrix) : matrix_(std::move(matrix)) {
-        n_rows_ = matrix_.size();
-        n_columns_ = matrix_[0].size();
-    }
+    explicit Matrix(matrixtype matrix)
+        : matrix_(std::move(matrix)), n_rows_(matrix.size()), n_columns_(matrix[0].size()) {}
 
     ~Matrix() = default;
 
@@ -34,7 +32,9 @@ class Matrix {
 
     inline size_t n_columns() const { return n_columns_; }
 
-    void SetElement(const size_t row_idx, const size_t column_idx, const double value) {
+    [[maybe_unused]] void SetElement(const size_t row_idx,
+                                     const size_t column_idx,
+                                     const double value) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);
         matrix_.at(row_idx).at(column_idx) = value;
@@ -59,11 +59,7 @@ class Matrix {
 
     double Cofactor(size_t row_idx, size_t column_idx) const;
 
-    inline bool IsInvertible() const {
-        const double determinant = Determinant();
-        // invertible as long as the determinant is not 0
-        return !utility::NearEquals(0.0, determinant);
-    }
+    bool IsInvertible() const;
 
     // return the inverse of the current matrix
     Matrix Inverse() const;

@@ -23,6 +23,7 @@ double commontypes::Matrix::Determinant() const {
 
     double determinant{0.0};
     const size_t row_idx{0};
+
     // for each element multiply the element by its cofactor; add these products together
     for (size_t column = 0; column < n_columns_; ++column) {
         determinant += GetElement(row_idx, column) * Cofactor(row_idx, column);
@@ -69,6 +70,12 @@ double commontypes::Matrix::Cofactor(const size_t row_idx, const size_t column_i
     return -minor;
 }
 
+bool commontypes::Matrix::IsInvertible() const {
+    const double determinant = Determinant();
+    // invertible as long as the determinant is not 0
+    return !utility::NearEquals(0.0, determinant);
+}
+
 commontypes::Matrix commontypes::Matrix::Inverse() const {
     if (!IsInvertible()) {
         throw std::invalid_argument("Matrix is not invertible");
@@ -76,7 +83,6 @@ commontypes::Matrix commontypes::Matrix::Inverse() const {
 
     Matrix inverse_matrix{n_rows_, n_columns_};
     const double determinant = Determinant();
-
     for (int row_idx = 0; row_idx < n_rows_; ++row_idx) {
         for (int column_idx = 0; column_idx < n_columns_; ++column_idx) {
             const double cofactor = Cofactor(row_idx, column_idx);
@@ -92,7 +98,10 @@ static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
     assert(m.n_rows() == 4 && m.n_columns() == 4);
     commontypes::Tuple result{};
 
+    // treat Tuple as a single column matrix
     for (size_t row = 0; row < m.n_rows(); ++row) {
+        // each element is the sum of the products of each tuple element and the matrix's
+        // elements in that row (see page 31)--i.e dot product of each row and the other tuple
         double row_result = 0.0;
         for (size_t i = 0; i < m.n_columns(); ++i) {
             row_result += m.GetElement(row, i) * t.e_[i];
@@ -103,16 +112,24 @@ static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
     return result;
 }
 
+// The number of columns in the first matrix must be equal to the number of rows in the second
+// matrix; Resulting matrix has the number of rows from the first and the number of columns
+// from the second
 commontypes::Matrix operator*(const commontypes::Matrix& m1, const commontypes::Matrix& m2) {
+    // necessary pre-condition
     assert(m1.n_columns() == m2.n_rows());
+
+    // construct matrix product based on the discussion above
     commontypes::Matrix result(m1.n_rows(), m2.n_columns());
 
     for (int row = 0; row < m1.n_rows(); ++row) {
         for (int column = 0; column < m2.n_columns(); ++column) {
             double accum{0.0};
+
             for (size_t idx = 0; idx < m1.n_columns(); ++idx) {
                 accum += m1.GetElement(row, idx) * m2.GetElement(idx, column);
             }
+
             result(row, column) = accum;
         }
     }
@@ -120,7 +137,7 @@ commontypes::Matrix operator*(const commontypes::Matrix& m1, const commontypes::
     return result;
 }
 
-// expected the only use case is a 4x4 Matrix, implicity in the book
+//  the only expected use case is a 4x4 Matrix, implicitly in this book
 commontypes::Tuple operator*(const commontypes::Matrix& m, const commontypes::Tuple& t) {
     return MultiplyMatrixTuple(m, t);
 }

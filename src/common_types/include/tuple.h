@@ -9,8 +9,8 @@ namespace commontypes {
 class Tuple {
    public:
     Tuple() {
-        for (size_t i = 0; i < 4; i++) {
-            e_[i] = 0;
+        for (double& i : e_) {
+            i = 0;
         }
     }
 
