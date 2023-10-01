@@ -4,7 +4,7 @@
 #include "matrix.h"
 
 namespace commontypes {
-class IdentityMatrix final : public Matrix {
+class IdentityMatrix : public Matrix {
    public:
     IdentityMatrix() : Matrix(4, 4) {
         for (size_t i = 0; i < 4; ++i) {

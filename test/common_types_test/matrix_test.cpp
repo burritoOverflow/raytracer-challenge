@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
 #include "identitymatrix.h"
+#include "point.h"
+#include "scalingmatrix.h"
+#include "translationmatrix.h"
+#include "vector.h"
 
 TEST(MatrixTests, TestConstructAndInspect4x4Matrix) {
     commontypes::Matrix matrix(
@@ -183,4 +187,49 @@ TEST(MatrixTests, TestMultiplyMatrixByItsInverse) {
     commontypes::Matrix b({{8, 2, 2, 2}, {3, -1, 7, 0}, {7, 0, 5, 4}, {6, -2, 0, 5}});
     commontypes::Matrix c = a * b;
     ASSERT_TRUE(c * b.Inverse() == a);
+}
+
+TEST(MatrixTests, TestMultiplyByATranslationMatrix) {
+    commontypes::TranslationMatrix transform{5, -3, 2};
+    commontypes::Point p{-3, 4, 5};
+    ASSERT_TRUE(transform * p == commontypes::Point(2, 1, 7));
+}
+
+TEST(MatrixTests, TestMultiplyByInverseOfTranslationMatrix) {
+    commontypes::TranslationMatrix transform{5, -3, 2};
+    commontypes::Matrix inverse_translation = transform.Inverse();
+    commontypes::Point p{-3, 4, 5};
+    ASSERT_TRUE(inverse_translation * p == commontypes::Point(-8, 7, 3));
+}
+
+TEST(MatrixTests, TestTranslationDoesNotAffectVectors) {
+    commontypes::TranslationMatrix transform{5, -3, 2};
+    commontypes::Vector v{-3, 4, 5};
+    EXPECT_TRUE(transform * v == v);
+}
+
+TEST(MatrixTests, TestScalingMatrixAppliedToAPoint) {
+    commontypes::ScalingMatrix transform{2, 3, 4};
+    commontypes::Point p{-4, 6, 8};
+    ASSERT_TRUE(transform * p == commontypes::Point(-8, 18, 32));
+}
+
+TEST(MatrixTests, TestScalingMatrixAppliedToAVector) {
+    commontypes::ScalingMatrix transform{2, 3, 4};
+    commontypes::Vector v{-4, 6, 8};
+    ASSERT_TRUE(transform * v == commontypes::Vector(-8, 18, 32));
+}
+
+TEST(MatrixTests, TestMultiplyingByTheInverseOfAScalingMatrix) {
+    commontypes::ScalingMatrix transform{2, 3, 4};
+    commontypes::Matrix transform_inverse = transform.Inverse();
+    commontypes::Vector v{-4, 6, 8};
+    ASSERT_TRUE(transform_inverse * v == commontypes::Vector(-2, 2, 2));
+}
+
+TEST(MatrixTests, TestReflectionScalingByNegativeValue) {
+    commontypes::ScalingMatrix transform{-1, 1, 1};
+    commontypes::Point p{2, 3, 4};
+    // test reflecting the point across the x axis from positive to negative
+    ASSERT_TRUE(transform * p == commontypes::Point(-2, 3, 4));
 }
