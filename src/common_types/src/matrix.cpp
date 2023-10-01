@@ -62,10 +62,29 @@ double commontypes::Matrix::Minor(const size_t row_idx, const size_t column_idx)
 
 double commontypes::Matrix::Cofactor(const size_t row_idx, const size_t column_idx) const {
     const double minor = Minor(row_idx, column_idx);
-    if (row_idx + column_idx % 2 == 0) {
+    if ((row_idx + column_idx) % 2 == 0) {
         return minor;
     }
+
     return -minor;
+}
+
+commontypes::Matrix commontypes::Matrix::Inverse() const {
+    if (!IsInvertible()) {
+        throw std::invalid_argument("Matrix is not invertible");
+    }
+
+    Matrix inverse_matrix{n_rows_, n_columns_};
+    const double determinant = Determinant();
+
+    for (int row_idx = 0; row_idx < n_rows_; ++row_idx) {
+        for (int column_idx = 0; column_idx < n_columns_; ++column_idx) {
+            const double cofactor = Cofactor(row_idx, column_idx);
+            inverse_matrix(column_idx, row_idx) = cofactor / determinant;
+        }
+    }
+
+    return inverse_matrix;
 }
 
 static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
