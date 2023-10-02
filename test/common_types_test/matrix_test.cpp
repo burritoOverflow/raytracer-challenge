@@ -302,3 +302,31 @@ TEST(MatrixTests, TestShearingTransformationMovesZinProportionToY) {
     commontypes::Point p{2, 3, 4};
     ASSERT_TRUE(transform * p == commontypes::Point(2, 3, 7));
 }
+
+TEST(MatrixTests, TestIndividualTransformationsAreAppliedInSequence) {
+    commontypes::Point p{1, 0, 1};
+    commontypes::Matrix a = commontypes::RotationMatrixX(M_PI / 2);
+    commontypes::Matrix b = commontypes::ScalingMatrix(5, 5, 5);
+    commontypes::Matrix c = commontypes::TranslationMatrix(10, 5, 7);
+
+    // apply rotation
+    commontypes::Point p2 = commontypes::Point(a * static_cast<commontypes::Tuple>(p));
+    ASSERT_TRUE(p2 == commontypes::Point(1, -1, 0));
+
+    // apply scaling
+    commontypes::Point p3{b * p2};
+    ASSERT_TRUE(p3 == commontypes::Point(5, -5, 0));
+
+    // apply translation
+    commontypes::Point p4{c * p3};
+    ASSERT_TRUE(p4 == commontypes::Point(15, 0, 7));
+}
+
+TEST(MatrixTests, TestChainedTransformationsMustBeAppliedInReverseOrder) {
+    commontypes::Point p{1, 0, 1};
+    commontypes::Matrix a = commontypes::RotationMatrixX(M_PI / 2);
+    commontypes::Matrix b = commontypes::ScalingMatrix(5, 5, 5);
+    commontypes::Matrix c = commontypes::TranslationMatrix(10, 5, 7);
+    commontypes::Matrix t = c * b * a;
+    ASSERT_TRUE(commontypes::Point(t * p) == commontypes::Point(15, 0, 7));
+}
