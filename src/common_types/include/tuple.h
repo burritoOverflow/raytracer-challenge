@@ -64,10 +64,10 @@ class Tuple {
 };
 }  // namespace commontypes
 
-commontypes::Tuple operator+(commontypes::Tuple& t1, commontypes::Tuple& t2);
-commontypes::Tuple operator-(commontypes::Tuple& t1, commontypes::Tuple& t2);
-commontypes::Tuple operator*(commontypes::Tuple& t, double d);
-commontypes::Tuple operator/(commontypes::Tuple& t, double d);
+commontypes::Tuple operator+(const commontypes::Tuple& t1, const commontypes::Tuple& t2);
+commontypes::Tuple operator-(const commontypes::Tuple& t1, const commontypes::Tuple& t2);
+commontypes::Tuple operator*(const commontypes::Tuple& t, double d);
+commontypes::Tuple operator/(const commontypes::Tuple& t, double d);
 
 bool operator==(const commontypes::Tuple& t1, const commontypes::Tuple& t2);
 bool operator!=(const commontypes::Tuple& t1, const commontypes::Tuple& t2);
