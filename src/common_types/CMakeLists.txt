@@ -1,4 +1,4 @@
-add_library(Common src/matrix.cpp)
+add_library(Common)
 
 target_sources(Common
         PRIVATE

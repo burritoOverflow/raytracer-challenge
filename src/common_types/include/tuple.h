@@ -10,7 +10,7 @@ class Tuple {
    public:
     Tuple() {
         for (double& i : e_) {
-            i = 0;
+            i = 0.0;
         }
     }
 
