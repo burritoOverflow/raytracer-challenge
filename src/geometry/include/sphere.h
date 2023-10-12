@@ -29,4 +29,4 @@ class Sphere {
 
 }  // namespace geometry
 
-#endif
+#endif  // SPHERE_H
