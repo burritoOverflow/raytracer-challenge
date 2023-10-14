@@ -17,6 +17,10 @@ class Sphere {
     // containing the t val for an intersection and the id for the Sphere
     std::vector<Intersection> Intersect(const commontypes::Ray& ray);
 
+    inline double radii() const { return radii_; }
+    inline uint64_t id() const { return id_; }
+    inline commontypes::Point origin() const { return origin_; }
+
    private:
     uint64_t id_;   // each sphere must have a unique identifier
     double radii_;  // expectation is that by default these are all unit spheres (see page 59)
@@ -28,5 +32,7 @@ class Sphere {
 };
 
 }  // namespace geometry
+
+bool operator==(const geometry::Sphere& s1, const geometry::Sphere& s2);
 
 #endif  // SPHERE_H

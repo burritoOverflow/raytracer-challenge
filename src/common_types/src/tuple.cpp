@@ -32,6 +32,10 @@ bool operator==(const Tuple& t1, const Tuple& t2) {
     return true;
 }
 
+bool operator!=(const Tuple& t1, const Tuple& t2) {
+    return !(t1 == t2);
+}
+
 Tuple& Tuple::operator+=(const Tuple& t) {
     e_[0] += t.e_[0];
     e_[1] += t.e_[1];

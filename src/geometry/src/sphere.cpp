@@ -19,9 +19,24 @@ std::vector<geometry::Intersection> geometry::Sphere::Intersect(const commontype
     const double t2 = (-b + sqrt(discriminant)) / (2 * a);
 
     // return t values in increasing order
+    std::shared_ptr<Sphere> object = std::make_shared<Sphere>(*this);
+
     if (t1 >= t2) {
-        return {geometry::Intersection{t2, id_}, geometry::Intersection{t1, id_}};
+        return {geometry::Intersection{t2, object}, geometry::Intersection{t1, object}};
     } else {
-        return {geometry::Intersection{t1, id_}, geometry::Intersection{t2, id_}};
+        return {geometry::Intersection{t1, object}, geometry::Intersection{t2, object}};
     }
+}
+
+bool operator==(const geometry::Sphere& s1, const geometry::Sphere& s2) {
+    if (s1.id() != s2.id())
+        return false;
+
+    if (!utility::NearEquals(s1.radii(), s2.radii()))
+        return false;
+
+    if (s1.origin() != s2.origin())
+        return false;
+
+    return true;
 }
