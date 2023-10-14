@@ -32,9 +32,7 @@ class Matrix {
 
     inline size_t n_columns() const { return n_columns_; }
 
-    [[maybe_unused]] void SetElement(const size_t row_idx,
-                                     const size_t column_idx,
-                                     const double value) {
+    void SetElement(const size_t row_idx, const size_t column_idx, const double value) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);
         matrix_.at(row_idx).at(column_idx) = value;
