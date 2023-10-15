@@ -23,7 +23,7 @@ std::string CurrentDateStr() {
     return oss.str();
 }
 
-void Chapter5RenderFirstRenderExample(std::optional<commontypes::Matrix> transform_matrix) {
+void Chapter5RenderFirstRenderExample(const std::optional<commontypes::Matrix>& transform_matrix) {
     commontypes::Point ray_origin{0, 0, -5};
     double wall_z = 10;
     double wall_size = 7.0;
