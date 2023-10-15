@@ -1,6 +1,7 @@
 #include "sphere.h"
 #include <gtest/gtest.h>
 #include "ray.h"
+#include "rotationmatrix.h"
 #include "scalingmatrix.h"
 #include "translationmatrix.h"
 
@@ -77,4 +78,46 @@ TEST(SphereTest, TestIntersectingTranslatedSphereWithRay) {
     s.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
     std::vector<geometry::Intersection> xs = s.Intersect(r);
     ASSERT_EQ(xs.size(), 0);
+}
+
+TEST(SphereTest, TestNormalToSphereOnXaxis) {
+    geometry::Sphere s;
+    commontypes::Vector n = s.NormalAt(commontypes::Point{1, 0, 0});
+    ASSERT_TRUE(n == commontypes::Vector(1, 0, 0));
+}
+
+TEST(SphereTest, TestNormalToSphereOnYaxis) {
+    geometry::Sphere s;
+    commontypes::Vector n = s.NormalAt(commontypes::Point{0, 1, 0});
+    ASSERT_TRUE(n == commontypes::Vector(0, 1, 0));
+}
+
+TEST(SphereTest, TestNormalToSphereOnZaxis) {
+    geometry::Sphere s;
+    commontypes::Vector n = s.NormalAt(commontypes::Point{0, 0, 1});
+    ASSERT_TRUE(n == commontypes::Vector(0, 0, 1));
+}
+
+TEST(SphereTest, TestNormalIsNormalizedVector) {
+    geometry::Sphere s;
+    const double d = sqrt(3) / 3;
+    commontypes::Vector n = s.NormalAt(commontypes::Point{d, d, d});
+    ASSERT_TRUE(n == n.Normalize());
+}
+
+TEST(SphereTest, TestComputingNormalOnTranslatedSphere) {
+    geometry::Sphere s;
+    s.SetTransform(commontypes::TranslationMatrix{0, 1, 0});
+    commontypes::Vector n = s.NormalAt(commontypes::Point{0, 1.70711, -0.70711});
+    ASSERT_TRUE(n == commontypes::Vector(0, 0.70711, -0.70711));
+}
+
+TEST(SphereTest, TestComputingNormalOnTransformedSphere) {
+    geometry::Sphere s{};
+    commontypes::Matrix transform =
+        commontypes::ScalingMatrix{1, 0.5, 1} * commontypes::RotationMatrixZ{M_PI};
+    s.SetTransform(transform);
+    const double d = sqrt(2) / 2;
+    commontypes::Vector n = s.NormalAt(commontypes::Point{0, d, -d});
+    ASSERT_TRUE(n == commontypes::Vector(0, 0.97014, -0.24254));
 }

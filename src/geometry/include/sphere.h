@@ -31,6 +31,8 @@ class Sphere {
         transform_ = transformation_matrix;
     }
 
+    commontypes::Vector NormalAt(const commontypes::Point& p) const;
+
    private:
     uint64_t id_;   // each sphere must have a unique identifier
     double radii_;  // expectation is that by default these are all unit spheres (see page 59)
