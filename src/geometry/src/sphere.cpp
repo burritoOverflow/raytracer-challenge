@@ -4,10 +4,14 @@
 uint64_t geometry::Sphere::SPHERE_ID = 0;
 
 std::vector<geometry::Intersection> geometry::Sphere::Intersect(const commontypes::Ray& ray) {
+    // ray is transformed by the inverse of the Sphere's transformation Matrix (see pg 69)
+    // must be translated before performing calculations
+    commontypes::Ray transformed_ray = ray.Transform(transform_.Inverse());
+
     // vector from Sphere's center to Ray's origin (pg. 62)
-    const commontypes::Vector sphere_to_ray = ray.origin() - origin_;
-    const double a = ray.direction().Dot(ray.direction());
-    const double b = 2 * ray.direction().Dot(sphere_to_ray);
+    const commontypes::Vector sphere_to_ray = transformed_ray.origin() - origin_;
+    const double a = transformed_ray.direction().Dot(transformed_ray.direction());
+    const double b = 2 * transformed_ray.direction().Dot(sphere_to_ray);
     const double c = sphere_to_ray.Dot(sphere_to_ray) - 1;
     const double discriminant = b * b - 4 * a * c;
 
