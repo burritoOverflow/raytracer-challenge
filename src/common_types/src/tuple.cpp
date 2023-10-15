@@ -53,3 +53,7 @@ Tuple& Tuple::operator-=(const Tuple& t) {
 
     return *this;
 }
+
+Tuple Tuple::Reflect(const Tuple& normal) const {
+    return *this - normal * 2.0 * this->Dot(normal);
+}

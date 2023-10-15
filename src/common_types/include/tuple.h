@@ -45,6 +45,8 @@ class Tuple {
         return this->x() * t.x() + this->y() * t.y() + this->z() * t.z() + this->w() + t.w();
     }
 
+    Tuple Reflect(const Tuple& normal) const;
+
     inline Tuple operator-() {
         return Tuple{
             -e_[0],

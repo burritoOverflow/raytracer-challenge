@@ -1,5 +1,6 @@
 #include "tuple.h"
 #include <gtest/gtest.h>
+#include "vector.h"
 
 TEST(TupleTests, TestTupleIsPoint) {
     commontypes::Tuple a{4.3, -4.2, 3.1, 1.0};
@@ -57,4 +58,19 @@ TEST(TupleTests, TestDivideTupleByScalar) {
     commontypes::Tuple a{1, -2, 3, -4};
     commontypes::Tuple expected{0.5, -1, 1.5, -2};
     EXPECT_TRUE(a / 2 == expected);
+}
+
+TEST(TupleTests, TestReflectingVectorApproachingAt45Degrees) {
+    commontypes::Vector v{1, -1, 0};
+    commontypes::Vector n{0, 1, 0};
+    commontypes::Vector r = v.Reflect(n);
+    ASSERT_TRUE(r == commontypes::Vector(1, 1, 0));
+}
+
+TEST(TupleTests, TestReflectingVectorOffSlantedSurface) {
+    commontypes::Vector v{0, -1, 0};
+    const double d = sqrt(2) / 2;
+    commontypes::Vector n{d, d, 0};
+    commontypes::Vector r = v.Reflect(n);
+    ASSERT_TRUE(r == commontypes::Vector(1, 0, 0));
 }
