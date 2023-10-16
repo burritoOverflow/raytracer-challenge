@@ -5,6 +5,20 @@
 #include "scalingmatrix.h"
 #include "translationmatrix.h"
 
+TEST(SphereTest, TestEachSphereHasUniqueId) {
+    std::set<uint64_t> sphere_id_set{};
+    const size_t n_elems{1000};
+
+    for (int i = 0; i < n_elems; ++i) {
+        geometry::Sphere sphere{};
+        uint64_t sphere_id = sphere.id();
+        auto result = sphere_id_set.insert(sphere_id);
+        ASSERT_TRUE(result.second);
+    }
+
+    ASSERT_EQ(sphere_id_set.size(), n_elems);
+}
+
 TEST(SphereTest, TestRayIntersectsSphereAtTwoPoints) {
     commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere s{};
