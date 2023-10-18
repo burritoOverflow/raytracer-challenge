@@ -3,6 +3,8 @@
 #include <iostream>
 #include "canvas.h"
 #include "color.h"
+#include "lighting.h"
+#include "pointlight.h"
 #include "ray.h"
 #include "scalingmatrix.h"
 #include "shearingmatrix.h"
@@ -23,7 +25,7 @@ std::string CurrentDateStr() {
     return oss.str();
 }
 
-void Chapter5RenderFirstRenderExample(const std::optional<commontypes::Matrix>& transform_matrix) {
+void Chapter6RenderRenderExample(const std::optional<commontypes::Matrix>& transform_matrix) {
     commontypes::Point ray_origin{0, 0, -5};
     double wall_z = 10;
     double wall_size = 7.0;
@@ -32,27 +34,37 @@ void Chapter5RenderFirstRenderExample(const std::optional<commontypes::Matrix>& 
     double pixel_size = wall_size / canvas_pixels;
     Canvas canvas{canvas_pixels, canvas_pixels};
 
-    commontypes::Color red{1, 0, 0};
     geometry::Sphere shape;
     if (transform_matrix.has_value()) {
         shape.SetTransform(transform_matrix.value());
     }
 
-    // each row of pixels in the Canvas
+    std::shared_ptr<lighting::Material> m_ptr = std::make_shared<lighting::Material>();
+    shape.SetMaterial(m_ptr);
+    m_ptr->SetColor(commontypes::Color{1, 0.2, 1});
+
+    commontypes::Point light_position{-10, 10, -10};
+    commontypes::Color light_color{1, 1, 1};
+    lighting::PointLight light{light_position, light_color};
+
     for (int y = 0; y < canvas.height() - 1; ++y) {
         std::clog << '\r' << "Scanlines remaining: " << (canvas.height() - y) << " " << std::flush;
 
-        // world y coordinate top == +half, bottom = -half
         double world_y = half - pixel_size * y;
 
-        // each pixel in the row
         for (int x = 0; x < canvas.width() - 1; ++x) {
             double world_x = -half + pixel_size * x;
             commontypes::Point position{world_x, world_y, wall_z};
             commontypes::Ray r{ray_origin, (position - ray_origin).Normalize()};
             auto xs = shape.Intersect(r);
             if (!xs.empty()) {
-                canvas.WritePixel(x, y, red);
+                geometry::Intersection hit = xs.at(0);
+                commontypes::Point point = r.Position(hit.t_);
+                commontypes::Vector normal = hit.object_->NormalAt(point);
+                commontypes::Vector eye = -r.direction();
+                auto mat = *(hit.object_->material());
+                commontypes::Color color = lighting::Lighting(mat, light, point, eye, normal);
+                canvas.WritePixel(x, y, color);
             }
         }
     }
@@ -66,9 +78,5 @@ void Chapter5RenderFirstRenderExample(const std::optional<commontypes::Matrix>& 
 }
 
 int main() {
-    // example from book
-    commontypes::ShearingMatrix shearing_matrix{1, 0, 0, 0, 0, 0};
-    commontypes::ScalingMatrix scaling_matrix{0.5, 1, 1};
-    commontypes::Matrix transform = shearing_matrix * scaling_matrix;
-    Chapter5RenderFirstRenderExample(transform);
+    Chapter6RenderRenderExample(std::nullopt);
 }

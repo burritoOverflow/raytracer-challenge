@@ -138,14 +138,15 @@ TEST(SphereTest, TestComputingNormalOnTransformedSphere) {
 
 TEST(SphereTest, TestSphereHasDefaultMaterial) {
     geometry::Sphere s{};
-    lighting::Material m = s.material();
+    lighting::Material m = *(s.material());
     ASSERT_TRUE(m == lighting::Material());
 }
 
 TEST(SphereTest, TestSphereMayBeAssignedMaterial) {
     geometry::Sphere s{};
     lighting::Material m{};
-    m.SetAmbient(1);
-    s.SetMaterial(m);
-    ASSERT_TRUE(s.material() == m);
+    auto m_ptr = std::make_shared<lighting::Material>(m);
+    s.SetMaterial(m_ptr);
+    m_ptr->SetAmbient(1);
+    ASSERT_TRUE(*(s.material()) == *m_ptr);
 }

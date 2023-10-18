@@ -14,6 +14,15 @@ class Material {
           shininess_(200.0),
           color_(commontypes::Color{1, 1, 1}) {}
 
+    Material(Material&& material) noexcept
+        : ambient_(material.ambient_),
+          diffuse_(material.diffuse_),
+          specular_(material.specular_),
+          shininess_(material.shininess_),
+          color_(material.color_) {}
+
+    Material(Material const& material) = default;
+
     Material(const double ambient,
              const double diffuse,
              const double specular,
@@ -39,6 +48,21 @@ class Material {
 
     inline commontypes::Color Color() const { return color_; }
     inline void SetColor(const commontypes::Color& color) { color_ = color; }
+
+    Material operator=(const Material& other) = delete;
+
+    inline Material& operator=(Material&& other) noexcept {
+        if (this == &other)
+            return *this;
+
+        ambient_ = other.ambient_;
+        diffuse_ = other.diffuse_;
+        specular_ = other.specular_;
+        shininess_ = other.shininess_;
+        color_ = other.color_;
+
+        return *this;
+    }
 
    private:
     // ambient, diffuse, and specular should be between 0-1, shininess should be between 10-200

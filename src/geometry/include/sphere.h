@@ -18,7 +18,7 @@ class Sphere {
           radii_(1.0),
           id_(SPHERE_ID++),
           transform_(commontypes::IdentityMatrix{}),
-          material_(lighting::Material{}) {}
+          material_(std::make_shared<lighting::Material>()) {}
 
     // "collection of t values where Ray intersects the Sphere" -- we're using vec of Structs
     // containing the t val for an intersection and the id for the Sphere
@@ -28,14 +28,14 @@ class Sphere {
     inline uint64_t id() const { return id_; }
     inline commontypes::Point origin() const { return origin_; }
     inline commontypes::Matrix transform() const { return transform_; }
-    inline lighting::Material material() const { return material_; }
+    inline std::shared_ptr<lighting::Material> material() const { return material_; }
 
     inline void SetTransform(const commontypes::Matrix& transformation_matrix) {
         transform_ = transformation_matrix;
     }
 
-    inline void SetMaterial(const lighting::Material& material) {
-        material_ = std::move(material);
+    inline void SetMaterial(const std::shared_ptr<lighting::Material>& material) {
+        material_ = material;
     }
 
     commontypes::Vector NormalAt(const commontypes::Point& p) const;
@@ -47,8 +47,7 @@ class Sphere {
                                  // origin (0,0,0) (also 59)
     // each Sphere has a "default translation" (see page 69) here it's the IdentityMatrix
     commontypes::Matrix transform_;
-
-    lighting::Material material_;  // each Sphere has a Material
+    std::shared_ptr<lighting::Material> material_;  // each Sphere has a Material
 
     // must be incremented in each ctor, as above (see uniqueness constraint)
     static uint64_t SPHERE_ID;
