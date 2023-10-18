@@ -38,7 +38,7 @@ class Material {
     inline void SetShininess(const double shininess) { shininess_ = shininess; }
 
     inline commontypes::Color Color() const { return color_; }
-    inline void SetColor(const commontypes::Color& color) { color_ = std::move(color); }
+    inline void SetColor(const commontypes::Color& color) { color_ = color; }
 
    private:
     // ambient, diffuse, and specular should be between 0-1, shininess should be between 10-200
