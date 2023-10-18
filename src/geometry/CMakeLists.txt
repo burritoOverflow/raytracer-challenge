@@ -8,4 +8,4 @@ target_sources(Geometry
 
 target_include_directories(Geometry PUBLIC include)
 
-target_link_libraries(Geometry PRIVATE Common)
+target_link_libraries(Geometry PRIVATE Common Lighting)

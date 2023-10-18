@@ -135,3 +135,17 @@ TEST(SphereTest, TestComputingNormalOnTransformedSphere) {
     commontypes::Vector n = s.NormalAt(commontypes::Point{0, d, -d});
     ASSERT_TRUE(n == commontypes::Vector(0, 0.97014, -0.24254));
 }
+
+TEST(SphereTest, TestSphereHasDefaultMaterial) {
+    geometry::Sphere s{};
+    lighting::Material m = s.material();
+    ASSERT_TRUE(m == lighting::Material());
+}
+
+TEST(SphereTest, TestSphereMayBeAssignedMaterial) {
+    geometry::Sphere s{};
+    lighting::Material m{};
+    m.SetAmbient(1);
+    s.SetMaterial(m);
+    ASSERT_TRUE(s.material() == m);
+}
