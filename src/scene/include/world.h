@@ -21,6 +21,8 @@ class World {
     void AddObject(std::shared_ptr<geometry::Sphere> object);
     void SetLight(std::shared_ptr<lighting::PointLight> light);
 
+    bool WorldContains(std::shared_ptr<geometry::Sphere> object) const;
+
     std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray);
 
    private:

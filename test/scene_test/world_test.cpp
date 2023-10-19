@@ -25,14 +25,8 @@ TEST(WorldTest, TestDefaultWorld) {
 
     auto world_light = *default_world.light();
     ASSERT_TRUE(world_light == light);
-
-    ASSERT_FALSE(std::find(default_world.objects().begin(), default_world.objects().end(),
-                           std::make_shared<geometry::Sphere>(s1)) ==
-                 default_world.objects().end());
-
-    ASSERT_FALSE(std::find(default_world.objects().begin(), default_world.objects().end(),
-                           std::make_shared<geometry::Sphere>(s2)) ==
-                 default_world.objects().end());
+    ASSERT_TRUE(default_world.WorldContains(std::make_shared<geometry::Sphere>(s1)));
+    ASSERT_TRUE(default_world.WorldContains(std::make_shared<geometry::Sphere>(s2)));
 }
 
 TEST(WorldTest, TestIntersectWorldWithRay) {
