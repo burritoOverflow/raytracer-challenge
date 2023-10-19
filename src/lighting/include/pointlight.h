@@ -20,4 +20,7 @@ class PointLight {
     commontypes::Color intensity_;
 };
 }  // namespace lighting
+
+bool operator==(const lighting::PointLight& pl1, const lighting::PointLight& pl2);
+
 #endif  // POINT_LIGHT_H

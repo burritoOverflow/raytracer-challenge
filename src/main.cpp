@@ -7,7 +7,6 @@
 #include "pointlight.h"
 #include "ray.h"
 #include "scalingmatrix.h"
-#include "shearingmatrix.h"
 #include "sphere.h"
 
 void CreateImageOutdir(const std::string_view dirname) {

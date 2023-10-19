@@ -1,0 +1,29 @@
+#ifndef WORLD_H
+#define WORLD_H
+
+#include <memory>
+#include <vector>
+
+#include "pointlight.h"
+#include "sphere.h"
+
+namespace scene {
+class World {
+   public:
+    World() = default;
+
+    inline std::shared_ptr<lighting::PointLight> light() const { return light_; }
+    inline std::vector<std::shared_ptr<geometry::Sphere>> objects() const { return objects_; }
+
+    static World DefaultWorld();
+
+    void AddObject(const std::shared_ptr<geometry::Sphere>& object);
+    void SetLight(std::shared_ptr<lighting::PointLight> light);
+
+   private:
+    std::shared_ptr<lighting::PointLight> light_;
+    std::vector<std::shared_ptr<geometry::Sphere>> objects_;
+};
+}  // namespace scene
+
+#endif  // WORLD_H
