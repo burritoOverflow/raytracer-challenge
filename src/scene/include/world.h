@@ -15,12 +15,13 @@ class World {
     inline std::shared_ptr<lighting::PointLight> light() const { return light_; }
     inline std::vector<std::shared_ptr<geometry::Sphere>> objects() const { return objects_; }
 
+    // factory fn for constructing what the book describes as the "Default World"
     static World DefaultWorld();
 
-    void AddObject(const std::shared_ptr<geometry::Sphere>& object);
+    void AddObject(std::shared_ptr<geometry::Sphere> object);
     void SetLight(std::shared_ptr<lighting::PointLight> light);
 
-    std::vector<geometry::Intersection> Intersect(const commontypes::Ray & ray);
+    std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray);
 
    private:
     std::shared_ptr<lighting::PointLight> light_;

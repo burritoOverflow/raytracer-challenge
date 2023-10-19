@@ -16,7 +16,7 @@ scene::World scene::World::DefaultWorld() {
     material.SetSpecular(0.2);
 
     geometry::Sphere s1{};
-    s1.SetMaterial(std::make_shared<lighting::Material>(material));
+    s1.SetMaterial(std::make_shared<lighting::Material>(std::move(material)));
 
     geometry::Sphere s2{};
     s2.SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
@@ -27,8 +27,8 @@ scene::World scene::World::DefaultWorld() {
     return world;
 }
 
-void scene::World::AddObject(const std::shared_ptr<geometry::Sphere>& object) {
-    objects_.insert(objects_.end(), object);
+void scene::World::AddObject(std::shared_ptr<geometry::Sphere> object) {
+    objects_.insert(objects_.end(), std::move(object));
 }
 
 void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
@@ -37,8 +37,9 @@ void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
 
 std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::Ray& ray) {
     std::vector<geometry::Intersection> intersections{};
+
     for (const auto& object : objects_) {
-        auto xs = object->Intersect(ray);
+        const auto xs = object->Intersect(ray);
         intersections.insert(intersections.end(), xs.begin(), xs.end());
     }
 
