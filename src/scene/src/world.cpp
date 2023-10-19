@@ -1,5 +1,6 @@
 #include "world.h"
 
+#include <algorithm>
 #include <utility>
 #include "scalingmatrix.h"
 
@@ -32,4 +33,17 @@ void scene::World::AddObject(const std::shared_ptr<geometry::Sphere>& object) {
 
 void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
     light_ = std::move(light);
+}
+
+std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::Ray& ray) {
+    std::vector<geometry::Intersection> intersections{};
+    for (const auto& object : objects_) {
+        auto xs = object->Intersect(ray);
+        intersections.insert(intersections.end(), xs.begin(), xs.end());
+    }
+
+    // return flattened intersections of all objects in ascending order (see rationale on page 93)
+    std::sort(intersections.begin(), intersections.end(),
+              [](const auto& lhs, const auto& rhs) { return lhs.t_ < rhs.t_; });
+    return intersections;
 }

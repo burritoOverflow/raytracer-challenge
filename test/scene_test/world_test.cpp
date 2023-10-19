@@ -34,3 +34,14 @@ TEST(WorldTest, TestDefaultWorld) {
                            std::make_shared<geometry::Sphere>(s2)) ==
                  default_world.objects().end());
 }
+
+TEST(WorldTest, TestIntersectWorldWithRay) {
+    scene::World default_world = scene::World::DefaultWorld();
+    commontypes::Ray ray{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
+    std::vector<geometry::Intersection> xs = default_world.Intersect(ray);
+    ASSERT_TRUE(xs.size() == 4);
+    ASSERT_DOUBLE_EQ(xs.at(0).t_, 4);
+    ASSERT_DOUBLE_EQ(xs.at(1).t_, 4.5);
+    ASSERT_DOUBLE_EQ(xs.at(2).t_, 5.5);
+    ASSERT_DOUBLE_EQ(xs.at(3).t_, 6);
+}

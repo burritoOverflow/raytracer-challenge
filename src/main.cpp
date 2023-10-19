@@ -61,6 +61,7 @@ void Chapter6RenderRenderExample(const std::optional<commontypes::Matrix>& trans
                 commontypes::Point point = r.Position(hit.t_);
                 commontypes::Vector normal = hit.object_->NormalAt(point);
                 commontypes::Vector eye = -r.direction();
+
                 auto mat = *(hit.object_->material());
                 commontypes::Color color = lighting::Lighting(mat, light, point, eye, normal);
                 canvas.WritePixel(x, y, color);

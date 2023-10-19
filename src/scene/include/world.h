@@ -20,6 +20,8 @@ class World {
     void AddObject(const std::shared_ptr<geometry::Sphere>& object);
     void SetLight(std::shared_ptr<lighting::PointLight> light);
 
+    std::vector<geometry::Intersection> Intersect(const commontypes::Ray & ray);
+
    private:
     std::shared_ptr<lighting::PointLight> light_;
     std::vector<std::shared_ptr<geometry::Sphere>> objects_;
