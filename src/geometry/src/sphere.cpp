@@ -47,14 +47,5 @@ commontypes::Vector geometry::Sphere::NormalAt(const commontypes::Point& p) cons
 }
 
 bool operator==(const geometry::Sphere& s1, const geometry::Sphere& s2) {
-    if (s1.id() != s2.id())
-        return false;
-
-    if (!utility::NearEquals(s1.radii(), s2.radii()))
-        return false;
-
-    if (s1.origin() != s2.origin())
-        return false;
-
-    return true;
+    return utility::NearEquals(s1.radii(), s2.radii()) && s1.origin() == s2.origin();
 }

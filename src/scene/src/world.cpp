@@ -35,13 +35,8 @@ void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
     light_ = std::move(light);
 }
 
-bool scene::World::WorldContains(std::shared_ptr<geometry::Sphere> object) const {
-    for (const auto& o : objects_) {
-        if (*o == *object) {
-            return true;
-        }
-    }
-    return false;
+bool scene::World::WorldContains(const std::shared_ptr<geometry::Sphere>& object) const {
+    return std::any_of(begin(objects_), end(objects_), [object](auto o) { return *o == *object; });
 }
 
 std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::Ray& ray) {
