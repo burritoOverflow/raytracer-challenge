@@ -24,7 +24,8 @@ std::string CurrentDateStr() {
     return oss.str();
 }
 
-void Chapter6RenderRenderExample(const std::optional<commontypes::Matrix>& transform_matrix) {
+void Chapter6RenderRenderExample(
+    const std::optional<commontypes::Matrix>& transform_matrix = std::nullopt) {
     commontypes::Point ray_origin{0, 0, -5};
     double wall_z = 10;
     double wall_size = 7.0;
@@ -78,5 +79,5 @@ void Chapter6RenderRenderExample(const std::optional<commontypes::Matrix>& trans
 }
 
 int main() {
-    Chapter6RenderRenderExample(std::nullopt);
+    Chapter6RenderRenderExample();
 }

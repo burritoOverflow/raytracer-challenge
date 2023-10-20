@@ -1,5 +1,6 @@
 #include "intersection.h"
 #include <algorithm>
+#include "sphere.h"
 
 // returns the hit from a vector of Intersections
 std::optional<geometry::Intersection> geometry::Intersection::Hit(
@@ -17,6 +18,17 @@ std::optional<geometry::Intersection> geometry::Intersection::Hit(
             return intersection;
     }
     return std::nullopt;
+}
+
+geometry::Computations geometry::Intersection::PrepareComputations(commontypes::Ray& r) const {
+    geometry::Computations computations{};
+    computations.t_ = t_;
+    computations.object_ = object_;
+    computations.point_ = r.Position(computations.t_);
+    computations.eye_vector_ = -r.direction();
+    auto sphere = *computations.object_;
+    computations.normal_vector_ = sphere.NormalAt(computations.point_);
+    return computations;
 }
 
 bool operator==(const geometry::Intersection& i1, const geometry::Intersection& i2) {

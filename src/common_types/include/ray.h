@@ -12,7 +12,7 @@ class Ray {
     Point origin() const { return origin_; }
     Vector direction() const { return direction_; }
 
-    Point Position(const double t) { return Point(origin_ + direction_ * t); }
+    Point Position(const double t) const { return Point(origin_ + direction_ * t); }
 
     // applies the transformation Matrix to the Ray, returning a new Ray with a transformed origin
     // and direction; new Ray is returned as the original is used to calculate locations in World

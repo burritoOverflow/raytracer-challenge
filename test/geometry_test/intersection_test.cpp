@@ -88,3 +88,15 @@ TEST(IntersectionTest, TestHitIsAlwaysTheLowestNonnegativeIntersection) {
     ASSERT_TRUE(oi.has_value());
     ASSERT_TRUE(oi.value() == i4);
 }
+
+TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
+    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    geometry::Sphere shape;
+    geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
+    geometry::Computations comps = i.PrepareComputations(r);
+    ASSERT_TRUE(comps.t_ == i.t_);
+    ASSERT_TRUE(*comps.object_ == *i.object_);
+    ASSERT_TRUE(comps.point_ == commontypes::Point(0, 0, -1));
+    ASSERT_TRUE(comps.eye_vector_ == commontypes::Vector(0, 0, -1));
+    ASSERT_TRUE(comps.normal_vector_ == commontypes::Vector(0, 0, -1));
+}
