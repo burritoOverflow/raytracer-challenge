@@ -11,3 +11,13 @@ TEST(CameraTest, TestConstructingACamera) {
     ASSERT_DOUBLE_EQ(c.field_of_view(), field_of_view);
     ASSERT_TRUE(c.transform() == commontypes::IdentityMatrix());
 }
+
+TEST(CameraTest, TestPixelSizeHorizontalCanvas) {
+    scene::Camera c{200, 125, M_PI / 2};
+    ASSERT_DOUBLE_EQ(c.pixel_size(), 0.01);
+}
+
+TEST(CameraTest, TestPixelSizeVerticalCanvas) {
+    scene::Camera c{125, 200, M_PI / 2};
+    ASSERT_DOUBLE_EQ(c.pixel_size(), 0.01);
+}
