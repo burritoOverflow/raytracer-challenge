@@ -10,6 +10,8 @@ TEST(TransformationTest, TestTransformationMatrixForDefaultOrientation) {
     commontypes::Point to{0, 0, -1};
     commontypes::Vector up{0, 1, 0};
     commontypes::ViewTransform t{from, to, up};
+    ASSERT_EQ(t.n_rows(), 4);
+    ASSERT_EQ(t.n_columns(), 4);
     ASSERT_TRUE(t == commontypes::IdentityMatrix());
 }
 
@@ -18,6 +20,8 @@ TEST(TransformationTest, TestTransformationMatrixLookingInPositiveZDirection) {
     commontypes::Point to{0, 0, 1};
     commontypes::Vector up{0, 1, 0};
     commontypes::ViewTransform t{from, to, up};
+    ASSERT_EQ(t.n_rows(), 4);
+    ASSERT_EQ(t.n_columns(), 4);
     ASSERT_TRUE(t == commontypes::ScalingMatrix(-1, 1, -1));
 }
 
@@ -26,6 +30,8 @@ TEST(TransformationTest, TestViewTransformationMovesTheWorld) {
     commontypes::Point to{0, 0, 0};
     commontypes::Vector up{0, 1, 0};
     commontypes::ViewTransform t{from, to, up};
+    ASSERT_EQ(t.n_rows(), 4);
+    ASSERT_EQ(t.n_columns(), 4);
     ASSERT_TRUE(t == commontypes::TranslationMatrix(0, 0, -8));
 }
 
@@ -34,6 +40,9 @@ TEST(TransformationTest, TestArbitraryViewTransformation) {
     commontypes::Point to{4, -2, 8};
     commontypes::Vector up{1, 1, 0};
     commontypes::ViewTransform t{from, to, up};
+    
+    ASSERT_EQ(t.n_rows(), 4);
+    ASSERT_EQ(t.n_columns(), 4);
 
     std::vector<double> first{-0.50709, 0.50709, 0.67612, -2.36643};
     std::vector<double> second{0.76772, 0.60609, 0.12122, -2.82843};
