@@ -25,6 +25,8 @@ class World {
 
     std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray);
 
+    commontypes::Color ShadeHit(geometry::Computations& comps) const;
+
    private:
     std::shared_ptr<lighting::PointLight> light_;
     std::vector<std::shared_ptr<geometry::Sphere>> objects_;

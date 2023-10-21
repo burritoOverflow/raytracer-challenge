@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <utility>
+#include "lighting.h"
 #include "scalingmatrix.h"
 
 // see description of the "Default World" on pg. 92
@@ -51,4 +52,9 @@ std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::R
     std::sort(intersections.begin(), intersections.end(),
               [](const auto& lhs, const auto& rhs) { return lhs.t_ < rhs.t_; });
     return intersections;
+}
+
+commontypes::Color scene::World::ShadeHit(geometry::Computations& comps) const {
+    return lighting::Lighting(comps.object_->material(), light_, comps.point_, comps.eye_vector_,
+                              comps.normal_vector_);
 }

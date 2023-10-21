@@ -1,11 +1,14 @@
 #include "lighting.h"
 
-commontypes::Color lighting::Lighting(const Material& material,
-                                      const PointLight& point_light,
+commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_ptr,
+                                      const std::shared_ptr<PointLight>& point_light_ptr,
                                       const commontypes::Point& point,
                                       const commontypes::Vector& eye_vector,
                                       const commontypes::Vector& normal_vector) {
     // surface color with the light's color/intensity
+    auto material = *material_ptr;
+    auto point_light = *point_light_ptr;
+
     const auto effective_color = material.Color() * point_light.intensity();
 
     // direction to the light source

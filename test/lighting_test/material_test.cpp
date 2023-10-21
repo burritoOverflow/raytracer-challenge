@@ -30,7 +30,9 @@ TEST(MaterialTest, TestLightingWithEyeBetweenLightAndSurface) {
     commontypes::Vector eye_v{0, 0, -1};
     commontypes::Vector normal_v{0, 0, -1};
     lighting::PointLight light{{0, 0, -10}, {1, 1, 1}};
-    auto result = lighting::Lighting(m, light, position, eye_v, normal_v);
+    auto result = lighting::Lighting(std::make_shared<lighting::Material>(m),
+                                     std::make_shared<lighting::PointLight>(light), position,
+                                     eye_v, normal_v);
     ASSERT_TRUE(result == commontypes::Color(1.9, 1.9, 1.9));
 }
 
@@ -42,7 +44,9 @@ TEST(MaterialTest, TestLightingWithEyeBetweenLightAndSurfaceEyeOffset45Degrees) 
     commontypes::Vector eye_v{0, sqrt(2) / 2, -sqrt(2) / 2};
     commontypes::Vector normal_v{0, 0, -1};
     lighting::PointLight light{{0, 0, -10}, {1, 1, 1}};
-    auto result = lighting::Lighting(m, light, position, eye_v, normal_v);
+    auto result = lighting::Lighting(std::make_shared<lighting::Material>(m),
+                                     std::make_shared<lighting::PointLight>(light), position,
+                                     eye_v, normal_v);
     ASSERT_TRUE(result == commontypes::Color(1.0, 1.0, 1.0));
 }
 
@@ -55,7 +59,9 @@ TEST(MaterialTest, TestLightingWithEyeOppositeSurfaceLightOffset45Degrees) {
     commontypes::Vector eye_v{0, 0, -1};
     commontypes::Vector normal_v{0, 0, -1};
     lighting::PointLight light{{0, 10, -10}, {1, 1, 1}};
-    auto result = lighting::Lighting(m, light, position, eye_v, normal_v);
+    auto result = lighting::Lighting(std::make_shared<lighting::Material>(m),
+                                     std::make_shared<lighting::PointLight>(light), position,
+                                     eye_v, normal_v);
     ASSERT_TRUE(result == commontypes::Color(0.7364, 0.7364, 0.7364));
 }
 
@@ -67,7 +73,9 @@ TEST(MaterialTest, TestLightingWithEyeInThePathOfTheReflectionVector) {
     commontypes::Vector eye_v{0, -sqrt(2) / 2, -sqrt(2) / 2};
     commontypes::Vector normal_v{0, 0, -1};
     lighting::PointLight light{{0, 10, -10}, {1, 1, 1}};
-    auto result = lighting::Lighting(m, light, position, eye_v, normal_v);
+    auto result = lighting::Lighting(std::make_shared<lighting::Material>(m),
+                                     std::make_shared<lighting::PointLight>(light), position,
+                                     eye_v, normal_v);
     ASSERT_TRUE(result == commontypes::Color(1.6364, 1.6364, 1.6364));
 }
 
@@ -78,6 +86,8 @@ TEST(MaterialTest, TestLightingWithLightBehindTheSurface) {
     commontypes::Vector eye_v{0, 0, -1};
     commontypes::Vector normal_v{0, 0, -1};
     lighting::PointLight light{{0, 0, 10}, {1, 1, 1}};
-    auto result = lighting::Lighting(m, light, position, eye_v, normal_v);
+    auto result = lighting::Lighting(std::make_shared<lighting::Material>(m),
+                                     std::make_shared<lighting::PointLight>(light), position,
+                                     eye_v, normal_v);
     ASSERT_TRUE(result == commontypes::Color(0.1, 0.1, 0.1));
 }

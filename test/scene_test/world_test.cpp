@@ -39,3 +39,25 @@ TEST(WorldTest, TestIntersectWorldWithRay) {
     ASSERT_DOUBLE_EQ(xs.at(2).t_, 5.5);
     ASSERT_DOUBLE_EQ(xs.at(3).t_, 6);
 }
+
+TEST(WorldTest, TestShadingAnIntersection) {
+    scene::World default_world = scene::World::DefaultWorld();
+    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    auto shape = default_world.objects().at(0);
+    geometry::Intersection i{4, shape};
+    geometry::Computations comps = i.PrepareComputations(r);
+    commontypes::Color c = default_world.ShadeHit(comps);
+    ASSERT_TRUE(c == commontypes::Color(0.38066, 0.47583, 0.2855));
+}
+
+TEST(WorldTest, TestShadingAnIntersectionFromInside) {
+    scene::World default_world = scene::World::DefaultWorld();
+    lighting::PointLight point_light{{0, 0.25, 0}, {1, 1, 1}};
+    default_world.SetLight(std::make_shared<lighting::PointLight>(point_light));
+    commontypes::Ray r{{0, 0, 0}, {0, 0, 1}};
+    auto shape = default_world.objects().at(1);
+    geometry::Intersection i{0.5, shape};
+    geometry::Computations comps = i.PrepareComputations(r);
+    commontypes::Color c = default_world.ShadeHit(comps);
+    ASSERT_TRUE(c == commontypes::Color(0.90498, 0.90498, 0.90498));
+}

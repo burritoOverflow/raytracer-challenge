@@ -63,8 +63,9 @@ void Chapter6RenderRenderExample(
                 commontypes::Vector normal = hit.object_->NormalAt(point);
                 commontypes::Vector eye = -r.direction();
 
-                auto mat = *(hit.object_->material());
-                commontypes::Color color = lighting::Lighting(mat, light, point, eye, normal);
+                commontypes::Color color = lighting::Lighting(
+                    hit.object_->material(), std::make_shared<lighting::PointLight>(light), point,
+                    eye, normal);
                 canvas.WritePixel(x, y, color);
             }
         }
