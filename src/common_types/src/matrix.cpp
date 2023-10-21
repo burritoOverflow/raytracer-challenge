@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include <stdexcept>
 #include "utility.h"
 
 commontypes::Matrix commontypes::Matrix::Transpose() const {
