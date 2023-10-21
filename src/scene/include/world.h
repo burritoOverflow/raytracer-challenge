@@ -23,9 +23,11 @@ class World {
 
     bool WorldContains(const std::shared_ptr<geometry::Sphere>& object) const;
 
-    std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray);
+    std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray) const;
 
     commontypes::Color ShadeHit(geometry::Computations& comps) const;
+
+    commontypes::Color ColorAt(commontypes::Ray& r) const;
 
    private:
     std::shared_ptr<lighting::PointLight> light_;

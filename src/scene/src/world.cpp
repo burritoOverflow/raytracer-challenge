@@ -1,5 +1,4 @@
 #include "world.h"
-
 #include <algorithm>
 #include <utility>
 #include "lighting.h"
@@ -40,7 +39,7 @@ bool scene::World::WorldContains(const std::shared_ptr<geometry::Sphere>& object
     return std::any_of(begin(objects_), end(objects_), [object](auto o) { return *o == *object; });
 }
 
-std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::Ray& ray) {
+std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::Ray& ray) const {
     std::vector<geometry::Intersection> intersections{};
 
     for (const auto& object : objects_) {
@@ -57,4 +56,15 @@ std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::R
 commontypes::Color scene::World::ShadeHit(geometry::Computations& comps) const {
     return lighting::Lighting(comps.object_->material(), light_, comps.point_, comps.eye_vector_,
                               comps.normal_vector_);
+}
+
+commontypes::Color scene::World::ColorAt(commontypes::Ray& r) const {
+    auto intersections = scene::World::Intersect(r);
+    auto maybe_hit = geometry::Intersection::Hit(intersections);
+    if (maybe_hit.has_value()) {
+        auto comps = maybe_hit->PrepareComputations(r);
+        return ShadeHit(comps);
+    }
+    // default color is black when no intersections are present
+    return commontypes::Color::Black();
 }

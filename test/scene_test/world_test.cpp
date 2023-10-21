@@ -61,3 +61,31 @@ TEST(WorldTest, TestShadingAnIntersectionFromInside) {
     commontypes::Color c = default_world.ShadeHit(comps);
     ASSERT_TRUE(c == commontypes::Color(0.90498, 0.90498, 0.90498));
 }
+
+TEST(WorldTest, TestColorWhenRayMisses) {
+    scene::World default_world = scene::World::DefaultWorld();
+    commontypes::Ray r{{0, 0, -5}, {0, 1, 0}};
+    commontypes::Color c = default_world.ColorAt(r);
+    ASSERT_TRUE(c == commontypes::Color(0, 0, 0));
+}
+
+TEST(WorldTest, TestColorWhenRayHits) {
+    scene::World default_world = scene::World::DefaultWorld();
+    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    commontypes::Color c = default_world.ColorAt(r);
+    ASSERT_TRUE(c == commontypes::Color(0.38066, 0.47583, 0.2855));
+}
+
+TEST(WorldTest, TestColorWhenIntersectionBehindRay) {
+    scene::World default_world = scene::World::DefaultWorld();
+
+    auto outer = default_world.objects().at(0);
+    outer->material()->SetAmbient(1);
+
+    auto inner = default_world.objects().at(1);
+    inner->material()->SetAmbient(1);
+
+    commontypes::Ray r{{0, 0, 0.75}, {0, 0, -1}};
+    commontypes::Color c = default_world.ColorAt(r);
+    ASSERT_TRUE(c == inner->material()->Color());
+}
