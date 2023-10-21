@@ -2,7 +2,8 @@ add_library(Scene)
 
 target_sources(Scene
         PRIVATE
-        src/world.cpp)
+        src/world.cpp
+        src/camera.cpp)
 
 target_include_directories(Scene PUBLIC include)
 
