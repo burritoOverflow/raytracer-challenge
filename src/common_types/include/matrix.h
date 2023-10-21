@@ -32,6 +32,8 @@ class Matrix {
 
     inline size_t n_columns() const { return n_columns_; }
 
+    inline matrixtype matrix() const { return matrix_; }
+
     void SetElement(const size_t row_idx, const size_t column_idx, const double value) {
         assert(row_idx >= 0 && row_idx < n_rows_);
         assert(column_idx >= 0 && column_idx < n_columns_);
@@ -68,7 +70,7 @@ class Matrix {
         return matrix_.at(row_idx).at(column_idx);
     }
 
-   private:
+   protected:
     size_t n_rows_;
     size_t n_columns_;
     matrixtype matrix_;
