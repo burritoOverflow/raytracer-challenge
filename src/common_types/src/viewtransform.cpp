@@ -14,6 +14,6 @@ commontypes::ViewTransform::ViewTransform(commontypes::Point& from,
     orientation.emplace_back(std::vector<double>{-forward.x(), -forward.y(), -forward.z(), 0});
     orientation.emplace_back(std::vector<double>{0, 0, 0, 1});
 
-    auto result = Matrix(orientation) * TranslationMatrix(-from.x(), -from.y(), -from.z());
+    const auto result = Matrix(orientation) * TranslationMatrix(-from.x(), -from.y(), -from.z());
     matrix_ = result.matrix();
 }

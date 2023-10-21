@@ -6,7 +6,7 @@
 namespace commontypes {
 
 // start with an identity matrix and change the desired x,y,z values to
-// at the t03, t123, t23 elements, respectively
+// at the t03, t13, t23 elements, respectively
 class TranslationMatrix final : public IdentityMatrix {
    public:
     TranslationMatrix(const double x_translation,

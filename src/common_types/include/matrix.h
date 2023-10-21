@@ -12,6 +12,9 @@ using matrixtype = std::vector<std::vector<double>>;
 namespace commontypes {
 class Matrix {
    public:
+    Matrix() = delete;
+
+    // default initialize to 0.0
     Matrix(const size_t n_rows, const size_t n_columns) : n_rows_(n_rows), n_columns_(n_columns) {
         const std::vector<double> col_vec(n_columns_);
         matrix_.resize(n_rows_, col_vec);
@@ -35,14 +38,12 @@ class Matrix {
     inline matrixtype matrix() const { return matrix_; }
 
     void SetElement(const size_t row_idx, const size_t column_idx, const double value) {
-        assert(row_idx >= 0 && row_idx < n_rows_);
-        assert(column_idx >= 0 && column_idx < n_columns_);
+        AssertBounds(row_idx, column_idx);
         matrix_.at(row_idx).at(column_idx) = value;
     }
 
     double GetElement(const size_t row_idx, const size_t column_idx) const {
-        assert(row_idx >= 0 && row_idx < n_rows_);
-        assert(column_idx >= 0 && column_idx < n_columns_);
+        AssertBounds(row_idx, column_idx);
         return matrix_.at(row_idx).at(column_idx);
     }
 
@@ -65,8 +66,7 @@ class Matrix {
     Matrix Inverse() const;
 
     inline double& operator()(const size_t row_idx, const size_t column_idx) {
-        assert(row_idx >= 0 && row_idx < n_rows_);
-        assert(column_idx >= 0 && column_idx < n_columns_);
+        AssertBounds(row_idx, column_idx);
         return matrix_.at(row_idx).at(column_idx);
     }
 
@@ -74,6 +74,12 @@ class Matrix {
     size_t n_rows_;
     size_t n_columns_;
     matrixtype matrix_;
+
+   private:
+    void AssertBounds(const size_t row_idx, const size_t column_idx) const {
+        assert(row_idx >= 0 && row_idx < n_rows_);
+        assert(column_idx >= 0 && column_idx < n_columns_);
+    }
 };
 }  // namespace commontypes
 

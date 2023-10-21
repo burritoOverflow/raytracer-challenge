@@ -1,5 +1,5 @@
-#ifndef VIEWTRANSFORM_H
-#define VIEWTRANSFORM_H
+#ifndef VIEW_TRANSFORM_H
+#define VIEW_TRANSFORM_H
 
 #include "matrix.h"
 #include "point.h"
@@ -14,4 +14,4 @@ class ViewTransform final : public Matrix {
 };
 }  // namespace commontypes
 
-#endif  // VIEWTRANSFORM_H
+#endif  // VIEW_TRANSFORM_H
