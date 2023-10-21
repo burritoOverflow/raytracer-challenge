@@ -9,7 +9,9 @@ namespace commontypes {
 class ViewTransform final : public Matrix {
    public:
     ViewTransform() = delete;
-    ViewTransform(commontypes::Point& from, commontypes::Point& to, commontypes::Vector& up);
+    ViewTransform(const commontypes::Point& from,
+                  const commontypes::Point& to,
+                  const commontypes::Vector& up);
 };
 }  // namespace commontypes
 

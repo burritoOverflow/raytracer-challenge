@@ -32,11 +32,11 @@ class Tuple {
     // w == 0 is a Vector
     bool IsVector() const { return fabs(w()) < utility::EPSILON_; }
 
-    inline double Magnitude() {
+    inline double Magnitude() const {
         return sqrt(e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2] + e_[3] * e_[3]);
     };
 
-    inline Tuple Normalize() {
+    inline Tuple Normalize() const {
         const double magnitude = this->Magnitude();
         return {e_[0] / magnitude, e_[1] / magnitude, e_[2] / magnitude, e_[3] / magnitude};
     }
