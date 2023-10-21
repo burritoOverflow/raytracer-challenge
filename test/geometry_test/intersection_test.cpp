@@ -100,3 +100,22 @@ TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
     ASSERT_TRUE(comps.eye_vector_ == commontypes::Vector(0, 0, -1));
     ASSERT_TRUE(comps.normal_vector_ == commontypes::Vector(0, 0, -1));
 }
+
+TEST(IntersectionTest, TestHitWhenIntersectionOccursOnOutside) {
+    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    geometry::Sphere shape{};
+    geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
+    geometry::Computations comps = i.PrepareComputations(r);
+    ASSERT_FALSE(comps.inside_);
+}
+
+TEST(IntersectionTest, TestHitWhenIntersectionOccursOnInside) {
+    commontypes::Ray r{{0, 0, 0}, {0, 0, 1}};
+    geometry::Sphere shape{};
+    geometry::Intersection i{1, std::make_shared<geometry::Sphere>(shape)};
+    geometry::Computations comps = i.PrepareComputations(r);
+    ASSERT_TRUE(comps.point_ == commontypes::Point(0, 0, 1));
+    ASSERT_TRUE(comps.eye_vector_ == commontypes::Vector(0, 0, -1));
+    ASSERT_TRUE(comps.inside_);
+    ASSERT_TRUE(comps.normal_vector_ == commontypes::Vector(0, 0, -1));
+}

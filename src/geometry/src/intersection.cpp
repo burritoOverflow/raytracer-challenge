@@ -27,7 +27,13 @@ geometry::Computations geometry::Intersection::PrepareComputations(commontypes::
     computations.point_ = r.Position(computations.t_);
     computations.eye_vector_ = -r.direction();
     auto sphere = *computations.object_;
+
     computations.normal_vector_ = sphere.NormalAt(computations.point_);
+    if (computations.normal_vector_.Dot(computations.eye_vector_) < 0) {
+        computations.inside_ = true;
+        computations.normal_vector_ = -computations.normal_vector_;
+    }
+
     return computations;
 }
 
