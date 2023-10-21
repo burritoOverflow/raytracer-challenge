@@ -98,14 +98,18 @@ static commontypes::Tuple MultiplyMatrixTuple(const commontypes::Matrix& m,
     commontypes::Tuple result{};
 
     // treat Tuple as a single column matrix
+    //    for (size_t row = 0; row < m.n_rows(); ++row) {
+    //        // each element is the sum of the products of each tuple element and the matrix's
+    //        // elements in that row (see page 31)--i.e dot product of each row and the other
+    //        tuple double row_result = 0.0; for (size_t i = 0; i < m.n_columns(); ++i) {
+    //            row_result += m.GetElement(row, i) * t.e_[i];
+    //        }
+    //        result.e_[row] = row_result;
+    //    }
+
     for (size_t row = 0; row < m.n_rows(); ++row) {
-        // each element is the sum of the products of each tuple element and the matrix's
-        // elements in that row (see page 31)--i.e dot product of each row and the other tuple
-        double row_result = 0.0;
-        for (size_t i = 0; i < m.n_columns(); ++i) {
-            row_result += m.GetElement(row, i) * t.e_[i];
-        }
-        result.e_[row] = row_result;
+        result.e_[row] = m.GetElement(row, 0) * t[0] + m.GetElement(row, 1) * t[1] +
+                         m.GetElement(row, 2) * t[2] + m.GetElement(row, 3) * t[3];
     }
 
     return result;

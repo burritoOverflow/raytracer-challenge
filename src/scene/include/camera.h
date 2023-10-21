@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "identitymatrix.h"
+#include "ray.h"
 
 namespace scene {
 class Camera {
@@ -19,6 +20,14 @@ class Camera {
     double field_of_view() const { return field_of_view_; }
     commontypes::Matrix transform() const { return transform_; }
     double pixel_size() const { return pixel_size_; }
+
+    inline void SetTransform(const commontypes::Matrix& transform_matrix) {
+        this->transform_ = transform_matrix;
+    }
+
+    // computes the world coords for the center of the given pixel and
+    // construct a ray that passes through that point
+    commontypes::Ray RayForPixel(const size_t px, const size_t py) const;
 
    private:
     size_t

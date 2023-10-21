@@ -1,5 +1,26 @@
 #include "camera.h"
 
+commontypes::Ray scene::Camera::RayForPixel(const size_t px, const size_t py) const {
+    // offset from edge of the canvas to the pixel's center
+    const double x_offset = (static_cast<double>(px) + 0.5) * pixel_size_;
+    const double y_offset = (static_cast<double>(py) + 0.5) * pixel_size_;
+
+    // untransformed coords of the pixel in world space
+    // recall that camera looks toward -z, so +x is "left"
+    const double world_x = this->half_width_ - x_offset;
+    const double world_y = this->half_height_ - y_offset;
+
+    commontypes::Matrix transform_inverse = this->transform_.Inverse();
+
+    commontypes::Point pixel =
+        commontypes::Point(transform_inverse * commontypes::Point{world_x, world_y, -1});
+    const commontypes::Point origin =
+        commontypes::Point(transform_inverse * commontypes::Point{0, 0, 0});
+    const commontypes::Vector direction = (pixel - origin).Normalize();
+
+    return {origin, direction};
+}
+
 // see discussion on p. 102
 void scene::Camera::SetPixelSize() {
     // cut the field of view in half
