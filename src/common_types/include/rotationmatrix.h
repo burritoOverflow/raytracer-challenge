@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include "matrix.h"
+
 namespace commontypes {
 class RotationMatrixX final : public Matrix {
    public:

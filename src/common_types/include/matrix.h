@@ -3,7 +3,6 @@
 
 #include <cassert>
 #include <cstddef>
-#include <utility>
 #include <vector>
 #include "tuple.h"
 

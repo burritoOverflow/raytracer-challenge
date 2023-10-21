@@ -8,7 +8,6 @@
 
 #include "point.h"
 #include "ray.h"
-#include "utility.h"
 #include "vector.h"
 
 namespace geometry {
@@ -22,7 +21,7 @@ struct Computations {
     commontypes::Point point_;
     commontypes::Vector eye_vector_;
     commontypes::Vector normal_vector_;
-    bool inside_ = false;  // true if hit occurs inside the object
+    bool inside_{false};  // true if hit occurs inside the object
 };
 
 struct Intersection {

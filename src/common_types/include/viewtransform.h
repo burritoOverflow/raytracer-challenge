@@ -1,7 +1,6 @@
 #ifndef VIEW_TRANSFORM_H
 #define VIEW_TRANSFORM_H
 
-#include "matrix.h"
 #include "point.h"
 #include "translationmatrix.h"
 #include "vector.h"

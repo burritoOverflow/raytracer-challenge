@@ -75,7 +75,7 @@ TEST(VectorTests, TestCrossProduct) {
     commontypes::Vector b{2, 3, 4};
     commontypes::Vector expected1{-1, 2, -1};
     commontypes::Vector expected2{1, -2, 1};
-    
+
     EXPECT_TRUE(a.Cross(b) == expected1);
     EXPECT_TRUE(b.Cross(a) == expected2);
 }
