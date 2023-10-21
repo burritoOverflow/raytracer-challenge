@@ -238,31 +238,31 @@ TEST(MatrixTests, TestReflectionScalingByNegativeValue) {
 
 TEST(MatrixTests, TestRotatingPointAroundXaxis) {
     commontypes::Point p{0, 1, 0};
-    commontypes::RotationMatrixX half_quarter{M_PI / 4};
-    commontypes::RotationMatrixX full_quarter{M_PI / 2};
+    commontypes::RotationMatrixX half_quarter{M_PI_4};
+    commontypes::RotationMatrixX full_quarter{M_PI_2};
     ASSERT_TRUE(half_quarter * p == commontypes::Point(0, sqrt(2) / 2, sqrt(2) / 2));
     ASSERT_TRUE(full_quarter * p == commontypes::Point(0, 0, 1));
 }
 
 TEST(MatrixTests, TestInverseOfXrotationRotatesInOppositeDirection) {
     commontypes::Point p{0, 1, 0};
-    commontypes::RotationMatrixX half_quarter{M_PI / 4};
+    commontypes::RotationMatrixX half_quarter{M_PI_4};
     commontypes::Matrix inverse = half_quarter.Inverse();
     ASSERT_TRUE(inverse * p == commontypes::Point(0, sqrt(2) / 2, -(sqrt(2) / 2)));
 }
 
 TEST(MatrixTests, TestRotatingPointAroundYaxis) {
     commontypes::Point p{0, 0, 1};
-    commontypes::RotationMatrixY half_quarter{M_PI / 4};
-    commontypes::RotationMatrixY full_quarter{M_PI / 2};
+    commontypes::RotationMatrixY half_quarter{M_PI_4};
+    commontypes::RotationMatrixY full_quarter{M_PI_2};
     ASSERT_TRUE(half_quarter * p == commontypes::Point(sqrt(2) / 2, 0, sqrt(2) / 2));
     ASSERT_TRUE(full_quarter * p == commontypes::Point(1, 0, 0));
 }
 
 TEST(MatrixTests, TestRotatingPointAroundZaxis) {
     commontypes::Point p{0, 1, 0};
-    commontypes::RotationMatrixZ half_quarter{M_PI / 4};
-    commontypes::RotationMatrixZ full_quarter{M_PI / 2};
+    commontypes::RotationMatrixZ half_quarter{M_PI_4};
+    commontypes::RotationMatrixZ full_quarter{M_PI_2};
     ASSERT_TRUE(half_quarter * p == commontypes::Point(-sqrt(2) / 2, sqrt(2) / 2, 0));
     ASSERT_TRUE(full_quarter * p == commontypes::Point(-1, 0, 0));
 }
@@ -324,7 +324,7 @@ TEST(MatrixTests, TestIndividualTransformationsAreAppliedInSequence) {
 
 TEST(MatrixTests, TestChainedTransformationsMustBeAppliedInReverseOrder) {
     commontypes::Point p{1, 0, 1};
-    commontypes::Matrix a = commontypes::RotationMatrixX(M_PI / 2);
+    commontypes::Matrix a = commontypes::RotationMatrixX(M_PI_2);
     commontypes::Matrix b = commontypes::ScalingMatrix(5, 5, 5);
     commontypes::Matrix c = commontypes::TranslationMatrix(10, 5, 7);
     commontypes::Matrix t = c * b * a;
