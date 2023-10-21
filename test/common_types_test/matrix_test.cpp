@@ -305,7 +305,7 @@ TEST(MatrixTests, TestShearingTransformationMovesZinProportionToY) {
 
 TEST(MatrixTests, TestIndividualTransformationsAreAppliedInSequence) {
     commontypes::Point p{1, 0, 1};
-    commontypes::Matrix a = commontypes::RotationMatrixX(M_PI / 2);
+    commontypes::Matrix a = commontypes::RotationMatrixX(M_PI_2);
     commontypes::Matrix b = commontypes::ScalingMatrix(5, 5, 5);
     commontypes::Matrix c = commontypes::TranslationMatrix(10, 5, 7);
 
