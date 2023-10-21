@@ -11,7 +11,7 @@ class Camera {
           vsize_(vsize),
           field_of_view_(field_of_view),
           transform_(commontypes::IdentityMatrix{}) {
-        GetPixelSize();
+        SetPixelSize();
     }
 
     size_t hsize() const { return hsize_; }
@@ -31,7 +31,8 @@ class Camera {
     double half_height_;
     double pixel_size_;
 
-    void GetPixelSize();
+    // calculate (and set) the size of the pixels on the Canvas (in world-space units)
+    void SetPixelSize();
 };
 }  // namespace scene
 #endif  // CAMERA_H
