@@ -7,7 +7,7 @@
 namespace commontypes {
 class RotationMatrixX final : public Matrix {
    public:
-    RotationMatrixX(const double radians) : Matrix(4, 4) {
+    explicit RotationMatrixX(const double radians) : Matrix(4, 4) {
         (*this)(0, 0) = 1;
         (*this)(1, 1) = cos(radians);
         (*this)(1, 2) = -sin(radians);
@@ -19,7 +19,7 @@ class RotationMatrixX final : public Matrix {
 
 class RotationMatrixY final : public Matrix {
    public:
-    RotationMatrixY(const double radians) : Matrix(4, 4) {
+    explicit RotationMatrixY(const double radians) : Matrix(4, 4) {
         (*this)(0, 0) = cos(radians);
         (*this)(0, 2) = sin(radians);
         (*this)(1, 1) = 1;
@@ -31,7 +31,7 @@ class RotationMatrixY final : public Matrix {
 
 class RotationMatrixZ final : public Matrix {
    public:
-    RotationMatrixZ(const double radians) : Matrix(4, 4) {
+    explicit RotationMatrixZ(const double radians) : Matrix(4, 4) {
         (*this)(0, 0) = cos(radians);
         (*this)(0, 1) = -sin(radians);
         (*this)(1, 0) = sin(radians);
