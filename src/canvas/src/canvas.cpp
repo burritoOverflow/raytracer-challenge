@@ -12,7 +12,7 @@ double canvas::Canvas::Clamp(const double d, const double min, const double max)
     return d;
 }
 
-std::string canvas::Canvas::WritePPM() {
+std::string canvas::Canvas::WritePPM() const {
     // limit line length to 70 chars
     std::ostringstream out_str;
     /*

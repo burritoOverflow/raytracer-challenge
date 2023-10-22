@@ -21,14 +21,20 @@ scene::World scene::World::DefaultWorld() {
     geometry::Sphere s2{};
     s2.SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
 
-    world.AddObject(std::make_shared<geometry::Sphere>(s1));
-    world.AddObject(std::make_shared<geometry::Sphere>(s2));
-
+    world.AddObjects(
+        {std::make_shared<geometry::Sphere>(s1), std::make_shared<geometry::Sphere>(s2)});
     return world;
 }
 
-void scene::World::AddObject(std::shared_ptr<geometry::Sphere> object) {
-    objects_.insert(objects_.end(), std::move(object));
+void scene::World::AddObject(std::shared_ptr<geometry::Sphere> object_ptr) {
+    objects_.insert(objects_.end(), std::move(object_ptr));
+}
+
+void scene::World::AddObjects(
+    std::initializer_list<std::shared_ptr<geometry::Sphere>> object_ptrs) {
+    for (const auto& object_ptr : object_ptrs) {
+        this->objects_.emplace_back(object_ptr);
+    }
 }
 
 void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {

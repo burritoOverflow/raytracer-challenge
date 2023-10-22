@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <iostream>
 
 commontypes::Ray scene::Camera::RayForPixel(const size_t px, const size_t py) const {
     // offset from edge of the canvas to the pixel's center
@@ -47,6 +48,8 @@ canvas::Canvas scene::Camera::Render(scene::World& world) const {
     canvas::Canvas image{hsize_, vsize_};
 
     for (int y = 0; y < vsize_ - 1; ++y) {
+        std::clog << '\r' << "Scanlines remaining: " << (vsize_ - y) << " " << std::flush;
+
         for (int x = 0; x < hsize_ - 1; ++x) {
             commontypes::Ray ray = RayForPixel(x, y);
             commontypes::Color color = world.ColorAt(ray);

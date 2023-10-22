@@ -27,7 +27,7 @@ class Canvas final {
     inline size_t height() const { return height_; }
     inline raytracercanvas GetCurrentCanvas() { return canvas_; }
 
-    inline commontypes::Color GetPixel(const size_t x, const size_t y) {
+    inline commontypes::Color GetPixel(const size_t x, const size_t y) const {
         assert(x >= 0 && x < width_);
         assert(y >= 0 && y < height_);
         return canvas_.at(x).at(y);
@@ -40,7 +40,7 @@ class Canvas final {
     }
 
     // write the current canvas contents to a PPM file
-    std::string WritePPM();
+    std::string WritePPM() const;
 
    private:
     static double Clamp(double d, double min = 0.0, double max = 0.999);

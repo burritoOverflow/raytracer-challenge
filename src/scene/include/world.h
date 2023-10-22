@@ -1,9 +1,9 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include <initializer_list>
 #include <memory>
 #include <vector>
-
 #include "pointlight.h"
 #include "sphere.h"
 
@@ -18,7 +18,10 @@ class World {
     // factory fn for constructing what the book describes as the "Default World"
     static World DefaultWorld();
 
-    void AddObject(std::shared_ptr<geometry::Sphere> object);
+    void AddObject(std::shared_ptr<geometry::Sphere> object_ptr);
+
+    void AddObjects(std::initializer_list<std::shared_ptr<geometry::Sphere>> object_ptrs);
+
     void SetLight(std::shared_ptr<lighting::PointLight> light);
 
     bool WorldContains(const std::shared_ptr<geometry::Sphere>& object) const;
