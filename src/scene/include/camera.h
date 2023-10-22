@@ -32,7 +32,7 @@ class Camera {
     commontypes::Ray RayForPixel(const size_t px, const size_t py) const;
 
     // render the contents of the "world" to a Canvas
-    Canvas Render(scene::World& world) const;
+    canvas::Canvas Render(scene::World& world) const;
 
    private:
     size_t

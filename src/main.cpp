@@ -32,7 +32,7 @@ void Chapter6RenderRenderExample(
     double half = wall_size / 2;
     uint16_t canvas_pixels = 1000;
     double pixel_size = wall_size / canvas_pixels;
-    Canvas canvas{canvas_pixels, canvas_pixels};
+    canvas::Canvas canvas{canvas_pixels, canvas_pixels};
 
     geometry::Sphere shape;
     if (transform_matrix.has_value()) {

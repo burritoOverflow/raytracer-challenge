@@ -1,6 +1,6 @@
 #include "canvas.h"
 
-double Canvas::Clamp(const double d, const double min, const double max) {
+double canvas::Canvas::Clamp(const double d, const double min, const double max) {
     if (d < 0.0) {
         return 0.0;
     }
@@ -12,7 +12,7 @@ double Canvas::Clamp(const double d, const double min, const double max) {
     return d;
 }
 
-std::string Canvas::WritePPM() {
+std::string canvas::Canvas::WritePPM() {
     // limit line length to 70 chars
     std::ostringstream out_str;
     /*

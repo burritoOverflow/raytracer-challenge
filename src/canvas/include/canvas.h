@@ -9,6 +9,7 @@
 
 using raytracercanvas = std::vector<std::vector<commontypes::Color>>;
 
+namespace canvas {
 class Canvas final {
    public:
     Canvas(const size_t width, const size_t height) : width_(width), height_(height) {
@@ -48,5 +49,6 @@ class Canvas final {
     size_t height_;
     raytracercanvas canvas_;
 };
+}  // namespace canvas
 
 #endif  // CANVAS_H

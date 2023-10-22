@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 TEST(CanvasTests, TestCreateCanvas) {
-    Canvas canvas{10, 20};
+    canvas::Canvas canvas{10, 20};
     commontypes::Color expected{};
 
     for (size_t i = 0; i < canvas.width(); i++) {
@@ -13,7 +13,7 @@ TEST(CanvasTests, TestCreateCanvas) {
 }
 
 TEST(CanvasTests, TestWritePixelToCanvas) {
-    Canvas canvas{10, 20};
+    canvas::Canvas canvas{10, 20};
     commontypes::Color red{1, 0, 0};
     const size_t x = 2;
     const size_t y = 3;
@@ -22,7 +22,7 @@ TEST(CanvasTests, TestWritePixelToCanvas) {
 }
 
 TEST(CanvasTests, TestWritePPMHeader) {
-    Canvas canvas{5, 3};
+    canvas::Canvas canvas{5, 3};
     std::string canvas_str = canvas.WritePPM();
     std::istringstream canvas_istream(canvas_str);
 
@@ -40,7 +40,7 @@ TEST(CanvasTests, TestWritePPMHeader) {
 }
 
 TEST(CanvasTests, TestWritePixelDataToPPM) {
-    Canvas canvas{5, 3};
+    canvas::Canvas canvas{5, 3};
     commontypes::Color c1{1.5, 0, 0};
     commontypes::Color c2{0, 0.5, 0};
     commontypes::Color c3{-0.5, 0, 1};
@@ -76,8 +76,9 @@ TEST(CanvasTests, TestWritePixelDataToPPM) {
 TEST(CanvasTests, TestSplittingLongLinesPPM) {
     const size_t width = 10;
     const size_t height = 2;
-    Canvas canvas{width, height};
+    canvas::Canvas canvas{width, height};
     commontypes::Color color{1.0, 0.8, 0.6};
+
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
             canvas.WritePixel(x, y, color);
@@ -110,7 +111,7 @@ TEST(CanvasTests, TestSplittingLongLinesPPM) {
 }
 
 TEST(CanvasTests, TestCanvasPPMFilesAreNewlineTerminated) {
-    Canvas canvas{5, 3};
+    canvas::Canvas canvas{5, 3};
     const std::string ppm_str = canvas.WritePPM();
     // verify the final line has a newline
     EXPECT_EQ('\n', ppm_str.at(ppm_str.size() - 1));

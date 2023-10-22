@@ -43,8 +43,8 @@ void scene::Camera::SetPixelSize() {
     pixel_size_ = (half_width_ * 2) / static_cast<double>(hsize_);
 }
 
-Canvas scene::Camera::Render(scene::World& world) const {
-    Canvas image{hsize_, vsize_};
+canvas::Canvas scene::Camera::Render(scene::World& world) const {
+    canvas::Canvas image{hsize_, vsize_};
 
     for (int y = 0; y < vsize_ - 1; ++y) {
         for (int x = 0; x < hsize_ - 1; ++x) {
