@@ -1,8 +1,10 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "canvas.h"
 #include "identitymatrix.h"
 #include "ray.h"
+#include "world.h"
 
 namespace scene {
 class Camera {
@@ -28,6 +30,9 @@ class Camera {
     // computes the world coords for the center of the given pixel and
     // construct a ray that passes through that point
     commontypes::Ray RayForPixel(const size_t px, const size_t py) const;
+
+    // render the contents of the "world" to a Canvas
+    Canvas Render(scene::World& world) const;
 
    private:
     size_t

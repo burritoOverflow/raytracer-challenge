@@ -1,7 +1,10 @@
 #include "camera.h"
 #include <gtest/gtest.h>
+#include "color.h"
 #include "rotationmatrix.h"
 #include "translationmatrix.h"
+#include "viewtransform.h"
+#include "world.h"
 
 TEST(CameraTest, TestConstructingACamera) {
     const size_t hsize = 160;
@@ -46,4 +49,17 @@ TEST(CameraTest, TestConstructingRayWhenCameraIsTransformed) {
     auto r = c.RayForPixel(100, 50);
     ASSERT_TRUE(r.origin() == commontypes::Point(0, 2, -5));
     ASSERT_TRUE(r.direction() == commontypes::Vector(sqrt(2) / 2, 0, -sqrt(2) / 2));
+}
+
+TEST(CameraTest, TestRenderingWorldWithCamera) {
+    scene::World world = scene::World::DefaultWorld();
+    scene::Camera camera{11, 11, M_PI_2};
+    const commontypes::Point from{0, 0, -5};
+    const commontypes::Point to{0, 0, 0};
+    const commontypes::Vector up{0, 1, 0};
+    const commontypes::ViewTransform t{from, to, up};
+    camera.SetTransform(t);
+    Canvas image = camera.Render(world);
+    const commontypes::Color pixel_at = image.GetPixel(5, 5);
+    ASSERT_TRUE(pixel_at == commontypes::Color(0.38066, 0.47583, 0.2855));
 }

@@ -7,4 +7,4 @@ target_sources(Scene
 
 target_include_directories(Scene PUBLIC include)
 
-target_link_libraries(Scene PRIVATE Common Lighting Geometry)
+target_link_libraries(Scene PRIVATE Common Lighting Canvas Geometry)

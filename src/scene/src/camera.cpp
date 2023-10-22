@@ -42,3 +42,16 @@ void scene::Camera::SetPixelSize() {
     // full width of the canvas by the horizontal size (in pixels) of the canvas
     pixel_size_ = (half_width_ * 2) / static_cast<double>(hsize_);
 }
+
+Canvas scene::Camera::Render(scene::World& world) const {
+    Canvas image{hsize_, vsize_};
+
+    for (int y = 0; y < vsize_ - 1; ++y) {
+        for (int x = 0; x < hsize_ - 1; ++x) {
+            commontypes::Ray ray = RayForPixel(x, y);
+            commontypes::Color color = world.ColorAt(ray);
+            image.WritePixel(x, y, color);
+        }
+    }
+    return image;
+}
