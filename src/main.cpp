@@ -14,13 +14,14 @@
 #include "viewtransform.h"
 #include "world.h"
 
-void CreateImageOutdir(const std::string_view dirname) {
+namespace {
+static void CreateImageOutdir(const std::string_view dirname) {
     if (!std::filesystem::exists(dirname)) {
         std::filesystem::create_directory(dirname);
     }
 }
 
-std::string CurrentDateStr() {
+static std::string CurrentDateStr() {
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
     std::ostringstream oss;
@@ -98,7 +99,7 @@ static void RenderChapter7Scene() {
     const auto canvas = camera.Render(world);
     const std::string image_outdir_name = "images";
     CreateImageOutdir(image_outdir_name);
-    std::ofstream out{image_outdir_name + "/" + CurrentDateStr() + "image.ppm"};
+    std::ofstream out{std::move(image_outdir_name) + "/" + CurrentDateStr() + "image.ppm"};
 
     out << canvas.WritePPM();
     out.close();
@@ -158,6 +159,7 @@ static void Chapter6RenderRenderExample(
     out << canvas.WritePPM();
     out.close();
 }
+}  // namespace
 
 int main() {
     RenderChapter7Scene();

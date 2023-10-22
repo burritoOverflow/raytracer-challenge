@@ -49,7 +49,6 @@ canvas::Canvas scene::Camera::Render(scene::World& world) const {
 
     for (int y = 0; y < vsize_ - 1; ++y) {
         std::clog << '\r' << "Scanlines remaining: " << (vsize_ - y) << " " << std::flush;
-
         for (int x = 0; x < hsize_ - 1; ++x) {
             commontypes::Ray ray = RayForPixel(x, y);
             commontypes::Color color = world.ColorAt(ray);
