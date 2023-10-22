@@ -27,10 +27,10 @@ class Tuple {
     inline double w() const { return e_[3]; }
 
     // w == 1.0 is a Point
-    bool IsPoint() const { return fabs(w() - 1.0) < utility::EPSILON_; }
+    inline bool IsPoint() const { return fabs(w() - 1.0) < utility::EPSILON_; }
 
     // w == 0 is a Vector
-    bool IsVector() const { return fabs(w()) < utility::EPSILON_; }
+    inline bool IsVector() const { return fabs(w()) < utility::EPSILON_; }
 
     inline double Magnitude() const {
         return sqrt(e_[0] * e_[0] + e_[1] * e_[1] + e_[2] * e_[2] + e_[3] * e_[3]);

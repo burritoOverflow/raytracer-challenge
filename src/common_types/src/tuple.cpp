@@ -1,24 +1,22 @@
 #include "tuple.h"
 
-using namespace commontypes;
-
-Tuple operator+(const Tuple& t1, const Tuple& t2) {
+commontypes::Tuple operator+(const commontypes::Tuple& t1, const commontypes::Tuple& t2) {
     return {t1.x() + t2.x(), t1.y() + t2.y(), t1.z() + t2.z(), t1.w() + t2.w()};
 }
 
-Tuple operator-(const Tuple& t1, const Tuple& t2) {
+commontypes::Tuple operator-(const commontypes::Tuple& t1, const commontypes::Tuple& t2) {
     return {t1.x() - t2.x(), t1.y() - t2.y(), t1.z() - t2.z(), t1.w() - t2.w()};
 }
 
-Tuple operator*(const Tuple& t, const double d) {
+commontypes::Tuple operator*(const commontypes::Tuple& t, const double d) {
     return {t.x() * d, t.y() * d, t.z() * d, t.w() * d};
 }
 
-Tuple operator/(const Tuple& t, const double d) {
+commontypes::Tuple operator/(const commontypes::Tuple& t, const double d) {
     return {t.x() / d, t.y() / d, t.z() / d, t.w() / d};
 }
 
-bool operator==(const Tuple& t1, const Tuple& t2) {
+bool operator==(const commontypes::Tuple& t1, const commontypes::Tuple& t2) {
     const double t1_elements[] = {t1.x(), t1.y(), t1.z(), t1.w()};
     const double t2_elements[] = {t2.x(), t2.y(), t2.z(), t2.w()};
 
@@ -28,15 +26,14 @@ bool operator==(const Tuple& t1, const Tuple& t2) {
             return false;
         }
     }
-
     return true;
 }
 
-bool operator!=(const Tuple& t1, const Tuple& t2) {
+bool operator!=(const commontypes::Tuple& t1, const commontypes::Tuple& t2) {
     return !(t1 == t2);
 }
 
-Tuple& Tuple::operator+=(const Tuple& t) {
+commontypes::Tuple& commontypes::Tuple::operator+=(const commontypes::Tuple& t) {
     e_[0] += t.e_[0];
     e_[1] += t.e_[1];
     e_[2] += t.e_[2];
@@ -45,7 +42,7 @@ Tuple& Tuple::operator+=(const Tuple& t) {
     return *this;
 }
 
-Tuple& Tuple::operator-=(const Tuple& t) {
+commontypes::Tuple& commontypes::Tuple::operator-=(const commontypes::Tuple& t) {
     e_[0] -= t.e_[0];
     e_[1] -= t.e_[1];
     e_[2] -= t.e_[2];
@@ -54,6 +51,6 @@ Tuple& Tuple::operator-=(const Tuple& t) {
     return *this;
 }
 
-Tuple Tuple::Reflect(const Tuple& normal) const {
+commontypes::Tuple commontypes::Tuple::Reflect(const commontypes::Tuple& normal) const {
     return *this - normal * 2.0 * this->Dot(normal);
 }
