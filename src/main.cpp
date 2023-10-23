@@ -89,12 +89,12 @@ void RenderChapter7Scene() {
     auto world_light = lighting::PointLight{{-10, 10, -10}, {1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
-    world.AddObjects({std::make_shared<geometry::Sphere>(floor),
-                      std::make_shared<geometry::Sphere>(left_wall),
-                      std::make_shared<geometry::Sphere>(right_wall),
-                      std::make_shared<geometry::Sphere>(middle_sphere),
-                      std::make_shared<geometry::Sphere>(left_sphere),
-                      std::make_shared<geometry::Sphere>(right_sphere)});
+    world.AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>(
+        {std::make_shared<geometry::Sphere>(floor), std::make_shared<geometry::Sphere>(left_wall),
+         std::make_shared<geometry::Sphere>(right_wall),
+         std::make_shared<geometry::Sphere>(middle_sphere),
+         std::make_shared<geometry::Sphere>(left_sphere),
+         std::make_shared<geometry::Sphere>(right_sphere)}));
 
     const auto canvas = camera.Render(world);
     std::string image_outdir_name = "images";

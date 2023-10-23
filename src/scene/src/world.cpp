@@ -4,6 +4,8 @@
 #include "lighting.h"
 #include "scalingmatrix.h"
 
+using sphereptr = std::shared_ptr<geometry::Sphere>;
+
 // see description of the "Default World" on pg. 92
 scene::World scene::World::DefaultWorld() {
     scene::World world{};
@@ -23,25 +25,29 @@ scene::World scene::World::DefaultWorld() {
 
     world.AddObjects(
         {std::make_shared<geometry::Sphere>(s1), std::make_shared<geometry::Sphere>(s2)});
+
     return world;
 }
 
-void scene::World::AddObject(std::shared_ptr<geometry::Sphere> object_ptr) {
+void scene::World::AddObject(sphereptr object_ptr) {
     objects_.insert(objects_.end(), std::move(object_ptr));
 }
 
-void scene::World::AddObjects(
-    std::initializer_list<std::shared_ptr<geometry::Sphere>> object_ptrs) {
+void scene::World::AddObjects(std::initializer_list<sphereptr> object_ptrs) {
     for (const auto& object_ptr : object_ptrs) {
-        this->objects_.emplace_back(object_ptr);
+        objects_.emplace_back(object_ptr);
     }
+}
+
+void scene::World::AddObjects(std::vector<sphereptr>&& sphere_vec) {
+    objects_ = sphere_vec;
 }
 
 void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
     light_ = std::move(light);
 }
 
-bool scene::World::WorldContains(const std::shared_ptr<geometry::Sphere>& object) const {
+bool scene::World::WorldContains(const sphereptr& object) const {
     return std::any_of(begin(objects_), end(objects_), [object](auto o) { return *o == *object; });
 }
 

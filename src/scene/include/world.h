@@ -22,6 +22,8 @@ class World {
 
     void AddObjects(std::initializer_list<std::shared_ptr<geometry::Sphere>> object_ptrs);
 
+    void AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>&& sphere_vec);
+
     void SetLight(std::shared_ptr<lighting::PointLight> light);
 
     bool WorldContains(const std::shared_ptr<geometry::Sphere>& object) const;
