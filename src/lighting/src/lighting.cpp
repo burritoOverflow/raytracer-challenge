@@ -4,7 +4,8 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
                                       const std::shared_ptr<PointLight>& point_light_ptr,
                                       const commontypes::Point& point,
                                       const commontypes::Vector& eye_vector,
-                                      const commontypes::Vector& normal_vector) {
+                                      const commontypes::Vector& normal_vector,
+                                      const bool in_shadow) {
     // surface color with the light's color/intensity
     auto material = *material_ptr;
     auto point_light = *point_light_ptr;
@@ -16,6 +17,11 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
 
     // ambient color contribution
     const auto ambient = commontypes::Color{effective_color * material.Ambient()};
+
+    // when shadow, ignore the contributions of diffuse and specular
+    if (in_shadow) {
+        return commontypes::Color{ambient};
+    }
 
     // represents the cosine of the angle between the light vector and the normal vector
     // negative number means the light is on the other side of the surface

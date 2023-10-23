@@ -91,3 +91,16 @@ TEST(MaterialTest, TestLightingWithLightBehindTheSurface) {
                                      eye_v, normal_v);
     ASSERT_TRUE(result == commontypes::Color(0.1, 0.1, 0.1));
 }
+
+TEST(MaterialTest, TestLightingWithSurfaceInShadow) {
+    lighting::Material m{};
+    commontypes::Point position{0, 0, 0};
+    commontypes::Vector eye_v{0, 0, -1};
+    commontypes::Vector normal_v{0, 0, -1};
+    lighting::PointLight light{{0, 0, -10}, {1, 1, 1}};
+    const bool in_shadow{true};
+    auto result = lighting::Lighting(std::make_shared<lighting::Material>(m),
+                                     std::make_shared<lighting::PointLight>(light), position,
+                                     eye_v, normal_v, in_shadow);
+    ASSERT_TRUE(result == commontypes::Color(0.1, 0.1, 0.1));
+}

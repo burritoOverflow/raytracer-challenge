@@ -15,13 +15,13 @@
 #include "world.h"
 
 namespace {
-static void CreateImageOutdir(const std::string_view dirname) {
+void CreateImageOutdir(const std::string_view dirname) {
     if (!std::filesystem::exists(dirname)) {
         std::filesystem::create_directory(dirname);
     }
 }
 
-static std::string CurrentDateStr() {
+std::string CurrentDateStr() {
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
     std::ostringstream oss;
@@ -30,7 +30,7 @@ static std::string CurrentDateStr() {
     return oss.str();
 }
 
-static void RenderChapter7Scene() {
+void RenderChapter7Scene() {
     scene::World world{};
     scene::Camera camera{900, 750, M_PI / 3};
     camera.SetTransform(commontypes::ViewTransform{{0, 1.5, -5}, {0, 1, 0}, {0, 1, 0}});
@@ -97,7 +97,7 @@ static void RenderChapter7Scene() {
                       std::make_shared<geometry::Sphere>(right_sphere)});
 
     const auto canvas = camera.Render(world);
-    const std::string image_outdir_name = "images";
+    std::string image_outdir_name = "images";
     CreateImageOutdir(image_outdir_name);
     std::ofstream out{std::move(image_outdir_name) + "/" + CurrentDateStr() + "image.ppm"};
 
@@ -105,7 +105,7 @@ static void RenderChapter7Scene() {
     out.close();
 }
 
-static void Chapter6RenderRenderExample(
+void Chapter6RenderRenderExample(
     const std::optional<commontypes::Matrix>& transform_matrix = std::nullopt) {
     commontypes::Point ray_origin{0, 0, -5};
     double wall_z = 10;
