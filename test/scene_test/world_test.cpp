@@ -89,3 +89,31 @@ TEST(WorldTest, TestColorWhenIntersectionBehindRay) {
     commontypes::Color c = default_world.ColorAt(r);
     ASSERT_TRUE(c == inner->material()->Color());
 }
+
+TEST(WorldTest, TestNoShadowWhenNothingIsCollinearWithPointAndLight) {
+    scene::World w = scene::World::DefaultWorld();
+    commontypes::Point p{0, 10, 0};
+    const auto is_shadowed = w.IsShadowed(p);
+    EXPECT_FALSE(is_shadowed);
+}
+
+TEST(WorldTest, TestTheShadowWhenObjectIsBetweenPointAndLight) {
+    scene::World w = scene::World::DefaultWorld();
+    commontypes::Point p{10, -10, 10};
+    const auto is_shadowed = w.IsShadowed(p);
+    EXPECT_TRUE(is_shadowed);
+}
+
+TEST(WorldTest, TestThereIsNoShadowWhenObjectIsBehindTheLight) {
+    scene::World w = scene::World::DefaultWorld();
+    commontypes::Point p{-20, 20, -20};
+    const auto is_shadowed = w.IsShadowed(p);
+    EXPECT_FALSE(is_shadowed);
+}
+
+TEST(WorldTest, TestThereIsNoShadowWhenObjectIsBehindThePoint) {
+    scene::World w = scene::World::DefaultWorld();
+    commontypes::Point p{-2, 2, -2};
+    const auto is_shadowed = w.IsShadowed(p);
+    EXPECT_FALSE(is_shadowed);
+}

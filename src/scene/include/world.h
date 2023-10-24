@@ -34,6 +34,8 @@ class World {
 
     commontypes::Color ColorAt(commontypes::Ray& r) const;
 
+    bool IsShadowed(const commontypes::Point& point) const;
+
    private:
     std::shared_ptr<lighting::PointLight> light_;
     std::vector<std::shared_ptr<geometry::Sphere>> objects_;

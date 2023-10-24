@@ -62,6 +62,7 @@ std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::R
     // return flattened intersections of all objects in ascending order (see rationale on page 93)
     std::sort(intersections.begin(), intersections.end(),
               [](const auto& lhs, const auto& rhs) { return lhs.t_ < rhs.t_; });
+
     return intersections;
 }
 
@@ -79,4 +80,18 @@ commontypes::Color scene::World::ColorAt(commontypes::Ray& r) const {
     }
     // default color is black when no intersections are present
     return commontypes::Color::Black();
+}
+
+bool scene::World::IsShadowed(const commontypes::Point& point) const {
+    const commontypes::Vector v = this->light_->position() - point;
+    const double distance = v.Magnitude();
+    const commontypes::Vector direction = commontypes::Vector{v.Normalize()};
+    const commontypes::Ray r{point, direction};
+
+    const auto intersections = this->Intersect(r);
+    const auto maybe_hit = geometry::Intersection::Hit(intersections);
+    if (maybe_hit.has_value() && maybe_hit.value().t_ < distance) {
+        return true;
+    }
+    return false;
 }
