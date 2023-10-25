@@ -1,6 +1,7 @@
 #include "intersection.h"
 #include <gtest/gtest.h>
 #include "sphere.h"
+#include "translationmatrix.h"
 
 TEST(IntersectionTest, TestIntersectionEncapsulatesTandObject) {
     geometry::Sphere s{};
@@ -114,8 +115,22 @@ TEST(IntersectionTest, TestHitWhenIntersectionOccursOnInside) {
     geometry::Sphere shape{};
     geometry::Intersection i{1, std::make_shared<geometry::Sphere>(shape)};
     geometry::Computations comps = i.PrepareComputations(r);
+
     ASSERT_TRUE(comps.point_ == commontypes::Point(0, 0, 1));
     ASSERT_TRUE(comps.eye_vector_ == commontypes::Vector(0, 0, -1));
     ASSERT_TRUE(comps.inside_);
     ASSERT_TRUE(comps.normal_vector_ == commontypes::Vector(0, 0, -1));
+}
+
+TEST(IntersectionTest, TestHitShouldOffsetThePoint) {
+    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    geometry::Sphere s{};
+    s.SetTransform(commontypes::TranslationMatrix{0, 0, 1});
+
+    const geometry::Intersection i{5, std::make_shared<geometry::Sphere>(s)};
+    const geometry::Computations comps = i.PrepareComputations(r);
+
+    // check that the point has been adjusted in the correct direction
+    ASSERT_TRUE(comps.over_point_.z() < -utility::EPSILON_ / 2);
+    ASSERT_TRUE(comps.point_.z() > comps.over_point_.z());
 }

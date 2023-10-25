@@ -4,7 +4,7 @@
 #include <cmath>
 
 namespace utility {
-static constexpr double EPSILON_ = 0.0001;
+constexpr double EPSILON_ = 0.0001;
 
 inline bool NearEquals(const double a, const double b) {
     return (fabs(a - b) <= EPSILON_ || a == b);

@@ -19,6 +19,9 @@ struct Computations {
     std::shared_ptr<Sphere> object_;
     double t_;
     commontypes::Point point_;
+    commontypes::Point
+        over_point_;  // for avoiding self-shadowing (adjust the point slightly in the direction of
+                      // the normal, just before testing for shadows (see pg. 114)
     commontypes::Vector eye_vector_;
     commontypes::Vector normal_vector_;
     bool inside_{false};  // true if hit occurs inside the object

@@ -1,6 +1,7 @@
 #include "world.h"
 #include <gtest/gtest.h>
 #include "scalingmatrix.h"
+#include "translationmatrix.h"
 
 TEST(WorldTest, TestCreatingWorld) {
     scene::World world{};
@@ -116,4 +117,22 @@ TEST(WorldTest, TestThereIsNoShadowWhenObjectIsBehindThePoint) {
     commontypes::Point p{-2, 2, -2};
     const auto is_shadowed = w.IsShadowed(p);
     EXPECT_FALSE(is_shadowed);
+}
+
+TEST(WorldTest, TestShadeHitIsGivenAnIntersectionInShadow) {
+    scene::World w{};
+    lighting::PointLight point_light{{0, 0, -10}, {1, 1, 1}};
+    w.SetLight(std::make_shared<lighting::PointLight>(point_light));
+
+    auto s1 = std::make_shared<geometry::Sphere>(geometry::Sphere{});
+    auto s2 = std::make_shared<geometry::Sphere>(geometry::Sphere{});
+    s2->SetTransform(commontypes::TranslationMatrix{0, 0, 10});
+
+    w.AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>{s1, s2});
+    commontypes::Ray r{{0, 0, 5}, {0, 0, 1}};
+    geometry::Intersection i{4, s2};
+    auto comps = i.PrepareComputations(r);
+    commontypes::Color c = w.ShadeHit(comps);
+
+    ASSERT_TRUE(c == commontypes::Color(0.1, 0.1, 0.1));
 }
