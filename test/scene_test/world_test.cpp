@@ -9,6 +9,32 @@ TEST(WorldTest, TestCreatingWorld) {
     ASSERT_TRUE(world.objects().empty());
 }
 
+TEST(WorldTest, TestAddObjectsToWorld) {
+    scene::World world{};
+    geometry::Sphere s1{};
+    geometry::Sphere s2{};
+    geometry::Sphere s3{};
+    geometry::Sphere s4{};
+
+    auto s1_ptr = std::make_shared<geometry::Sphere>(s1);
+    auto s2_ptr = std::make_shared<geometry::Sphere>(s2);
+    std::vector<std::shared_ptr<geometry::Sphere>> v1{s1_ptr, s2_ptr};
+
+    world.AddObjects(std::move(v1));
+    ASSERT_EQ(world.objects().size(), 2);
+    ASSERT_TRUE(world.WorldContains(s1_ptr));
+    ASSERT_TRUE(world.WorldContains(s2_ptr));
+
+    auto s3_ptr = std::make_shared<geometry::Sphere>(s3);
+    auto s4_ptr = std::make_shared<geometry::Sphere>(s4);
+    std::vector<std::shared_ptr<geometry::Sphere>> v2{s3_ptr, s4_ptr};
+
+    world.AddObjects(std::move(v2));
+    ASSERT_EQ(world.objects().size(), 4);
+    ASSERT_TRUE(world.WorldContains(s3_ptr));
+    ASSERT_TRUE(world.WorldContains(s4_ptr));
+}
+
 TEST(WorldTest, TestDefaultWorld) {
     scene::World default_world = scene::World::DefaultWorld();
 

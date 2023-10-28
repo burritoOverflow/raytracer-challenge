@@ -30,7 +30,45 @@ std::string CurrentDateStr() {
     return oss.str();
 }
 
-void RenderChapter7Scene() {
+std::vector<std::shared_ptr<geometry::Sphere>> GetSpheresForCh7Render() {
+    auto left_sphere = geometry::Sphere{};
+    const auto left_transform = commontypes::TranslationMatrix{-1.5, 0.33, -0.75} *
+                                commontypes::ScalingMatrix{0.33, 0.33, 0.33};
+    left_sphere.SetTransform(left_transform);
+
+    auto left_sphere_mat = lighting::Material{};
+    left_sphere_mat.SetColor({1, 0.8, 0.1});
+    left_sphere_mat.SetDiffuse(0.7);
+    left_sphere_mat.SetSpecular(0.3);
+    left_sphere.SetMaterial(std::make_shared<lighting::Material>(left_sphere_mat));
+
+    auto middle_sphere = geometry::Sphere{};
+    middle_sphere.SetTransform(commontypes::TranslationMatrix{-0.5, 1, 0.5});
+
+    auto middle_sphere_mat = lighting::Material{};
+    middle_sphere_mat.SetColor(commontypes::Color{0.1, 1, 0.5});
+    middle_sphere_mat.SetDiffuse(0.7);
+    middle_sphere_mat.SetSpecular(0.3);
+    middle_sphere.SetMaterial(std::make_shared<lighting::Material>(middle_sphere_mat));
+
+    auto right_sphere = geometry::Sphere{};
+    const auto right_sphere_transform =
+        commontypes::TranslationMatrix{1.5, 0.5, -0.5} * commontypes::ScalingMatrix{0.5, 0.5, 0.5};
+
+    auto right_sphere_mat = lighting::Material{};
+    right_sphere.SetTransform(right_sphere_transform);
+    right_sphere_mat.SetColor({0.5, 1, 0.1});
+    right_sphere_mat.SetDiffuse(0.7);
+    right_sphere_mat.SetSpecular(0.3);
+    right_sphere.SetMaterial(std::make_shared<lighting::Material>(right_sphere_mat));
+
+    return std::vector<std::shared_ptr<geometry::Sphere>>{
+        std::make_shared<geometry::Sphere>(left_sphere),
+        std::make_shared<geometry::Sphere>(middle_sphere),
+        std::make_shared<geometry::Sphere>(right_sphere)};
+}
+
+void RenderChapter7Scene(std::vector<std::shared_ptr<geometry::Sphere>>& sphere_vec) {
     scene::World world{};
     scene::Camera camera{900, 750, M_PI / 3};
     camera.SetTransform(commontypes::ViewTransform{{0, 1.5, -5}, {0, 1, 0}, {0, 1, 0}});
@@ -58,43 +96,16 @@ void RenderChapter7Scene() {
     right_wall.SetTransform(r_transform);
     right_wall.SetMaterial(floor_mat_ptr);
 
-    auto left_sphere = geometry::Sphere{};
-    const auto left_transform = commontypes::TranslationMatrix{-1.5, 0.33, -0.75} *
-                                commontypes::ScalingMatrix{0.33, 0.33, 0.33};
-    left_sphere.SetTransform(left_transform);
-    auto left_sphere_mat = lighting::Material{};
-    left_sphere_mat.SetColor({1, 0.8, 0.1});
-    left_sphere_mat.SetDiffuse(0.7);
-    left_sphere_mat.SetSpecular(0.3);
-    left_sphere.SetMaterial(std::make_shared<lighting::Material>(left_sphere_mat));
-
-    auto middle_sphere = geometry::Sphere{};
-    middle_sphere.SetTransform(commontypes::TranslationMatrix{-0.5, 1, 0.5});
-    auto middle_sphere_mat = lighting::Material{};
-    middle_sphere_mat.SetColor(commontypes::Color{0.1, 1, 0.5});
-    middle_sphere_mat.SetDiffuse(0.7);
-    middle_sphere_mat.SetSpecular(0.3);
-    middle_sphere.SetMaterial(std::make_shared<lighting::Material>(middle_sphere_mat));
-
-    auto right_sphere = geometry::Sphere{};
-    const auto right_sphere_transform =
-        commontypes::TranslationMatrix{1.5, 0.5, -0.5} * commontypes::ScalingMatrix{0.5, 0.5, 0.5};
-    auto right_sphere_mat = lighting::Material{};
-    right_sphere.SetTransform(right_sphere_transform);
-    right_sphere_mat.SetColor({0.5, 1, 0.1});
-    right_sphere_mat.SetDiffuse(0.7);
-    right_sphere_mat.SetSpecular(0.3);
-    right_sphere.SetMaterial(std::make_shared<lighting::Material>(right_sphere_mat));
-
     auto world_light = lighting::PointLight{{-10, 10, -10}, {1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
-    world.AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>(
-        {std::make_shared<geometry::Sphere>(floor), std::make_shared<geometry::Sphere>(left_wall),
-         std::make_shared<geometry::Sphere>(right_wall),
-         std::make_shared<geometry::Sphere>(middle_sphere),
-         std::make_shared<geometry::Sphere>(left_sphere),
-         std::make_shared<geometry::Sphere>(right_sphere)}));
+    world.AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>({
+        std::make_shared<geometry::Sphere>(floor),
+        std::make_shared<geometry::Sphere>(left_wall),
+        std::make_shared<geometry::Sphere>(right_wall),
+    }));
+
+    world.AddObjects(std::move(sphere_vec));
 
     const auto canvas = camera.Render(world);
     std::string image_outdir_name = "images";
@@ -162,5 +173,6 @@ void Chapter6RenderRenderExample(
 }  // namespace
 
 int main() {
-    RenderChapter7Scene();
+    auto sphere_vec = GetSpheresForCh7Render();
+    RenderChapter7Scene(sphere_vec);
 }

@@ -40,7 +40,7 @@ void scene::World::AddObjects(std::initializer_list<sphereptr> object_ptrs) {
 }
 
 void scene::World::AddObjects(std::vector<sphereptr>&& sphere_vec) {
-    objects_ = sphere_vec;
+    objects_.insert(objects_.end(), sphere_vec.begin(), sphere_vec.end());
 }
 
 void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
