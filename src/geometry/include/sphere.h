@@ -20,11 +20,10 @@ class Sphere : public Shape {
 
     inline double radii() const { return radii_; }
 
-    commontypes::Vector NormalAt(const commontypes::Point& p) const;
-
-    // "collection of t values where Ray intersects the Sphere" -- we're using vec of Structs
     // containing the t val for an intersection and the id for the Sphere
     std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;
+
+    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
 
    private:
     double radii_;  // expectation is that by default these are all unit spheres (see page 59)

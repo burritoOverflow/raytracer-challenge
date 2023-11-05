@@ -28,32 +28,29 @@ class Shape {
         material_ = material;
     }
 
+    // when intersecting the shape with a Ray, all shapes need to first convert the Ray into
+    // object space, transforming it by the inverse of the shape's transformation Matrix
     std::vector<Intersection> Intersect(const commontypes::Ray& ray);
+
+    // responsible for transforming the point, invokes the shape-implemented `LocalNormalAt`
+    // fn, transforms and returns the resulting normal
+    commontypes::Vector NormalAt(const commontypes::Point& point);
 
    protected:
     commontypes::Matrix transform_;  // each Shape has a transformation matrix (see page 118); here
                                      // it's the IdentityMatrix
-    std::shared_ptr<lighting::Material> material_;  // each Sphere has a Material
+    std::shared_ptr<lighting::Material>
+        material_;  // each Shape has a Material (the default one (see pg. 118 & 83)
 
-    // each shape provides its own appropriate implementation
+    // each shape provides its own appropriate implementation for both local intersection and
+    // local normal calculation
     virtual std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) = 0;
+
+    virtual commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) = 0;
 
    private:
     static uint64_t SHAPE_ID;  // each shape must have a unique identifier
     uint64_t id_;              // this shape's identifier
-};
-
-class TestShape : public Shape {
-   public:
-    TestShape() : Shape(), saved_ray_{commontypes::Point{}, commontypes::Vector{}} {};
-
-    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override {
-        saved_ray_ = ray;
-        return {};
-    }
-
-    // see pg. 120
-    commontypes::Ray saved_ray_;
 };
 }  // namespace geometry
 #endif  // SHAPE_H
