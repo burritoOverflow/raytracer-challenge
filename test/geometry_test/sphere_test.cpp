@@ -5,20 +5,6 @@
 #include "scalingmatrix.h"
 #include "translationmatrix.h"
 
-TEST(SphereTest, TestEachSphereHasUniqueId) {
-    std::set<uint64_t> sphere_id_set{};
-    const size_t n_elems{1000};
-
-    for (int i = 0; i < n_elems; ++i) {
-        geometry::Sphere sphere{};
-        uint64_t sphere_id = sphere.id();
-        auto result = sphere_id_set.insert(sphere_id);
-        ASSERT_TRUE(result.second);
-    }
-
-    ASSERT_EQ(sphere_id_set.size(), n_elems);
-}
-
 TEST(SphereTest, TestRayIntersectsSphereAtTwoPoints) {
     commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere s{};
@@ -61,19 +47,6 @@ TEST(SphereTest, TestSphereIsBehindRay) {
     const std::vector<geometry::Intersection> xs = s.Intersect(r);
     EXPECT_DOUBLE_EQ(xs.at(0).t_, -6.0);
     EXPECT_DOUBLE_EQ(xs.at(1).t_, -4.0);
-}
-
-TEST(SphereTest, TestSpheresDefaultTranslation) {
-    geometry::Sphere s{};
-    commontypes::IdentityMatrix im{};
-    ASSERT_TRUE(s.transform() == im);
-}
-
-TEST(SphereTest, TestChangingSpheresTransformation) {
-    geometry::Sphere s{};
-    commontypes::TranslationMatrix t{2, 3, 4};
-    s.SetTransform(t);
-    ASSERT_TRUE(s.transform() == t);
 }
 
 TEST(SphereTest, TestIntersectingScaledSphereWithRay) {
@@ -134,19 +107,4 @@ TEST(SphereTest, TestComputingNormalOnTransformedSphere) {
     const double d = sqrt(2) / 2;
     commontypes::Vector n = s.NormalAt(commontypes::Point{0, d, -d});
     ASSERT_TRUE(n == commontypes::Vector(0, 0.97014, -0.24254));
-}
-
-TEST(SphereTest, TestSphereHasDefaultMaterial) {
-    geometry::Sphere s{};
-    lighting::Material m = *(s.material());
-    ASSERT_TRUE(m == lighting::Material());
-}
-
-TEST(SphereTest, TestSphereMayBeAssignedMaterial) {
-    geometry::Sphere s{};
-    lighting::Material m{};
-    auto m_ptr = std::make_shared<lighting::Material>(m);
-    s.SetMaterial(m_ptr);
-    m_ptr->SetAmbient(1);
-    ASSERT_TRUE(*(s.material()) == *m_ptr);
 }

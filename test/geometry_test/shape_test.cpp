@@ -27,6 +27,20 @@ class TestShape : public Shape {
 };
 }  // namespace geometry
 
+TEST(ShapeTest, TestEachShapeHasUniqueId) {
+    std::set<uint64_t> shape_id_set{};
+    const size_t n_elems{1000};
+
+    for (int i = 0; i < n_elems; ++i) {
+        geometry::TestShape shape{};
+        uint64_t shape_id = shape.id();
+        auto result = shape_id_set.insert(shape_id);
+        ASSERT_TRUE(result.second);
+    }
+
+    ASSERT_EQ(shape_id_set.size(), n_elems);
+}
+
 TEST(ShapeTest, TestTheDefaultTransformation) {
     geometry::TestShape s{};
     ASSERT_TRUE(s.transform() == commontypes::IdentityMatrix());
