@@ -2,6 +2,7 @@ add_library(Geometry)
 
 target_sources(Geometry
         PRIVATE
+        src/shape.cpp
         src/sphere.cpp
         src/intersection.cpp
 )
