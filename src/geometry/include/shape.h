@@ -53,4 +53,7 @@ class Shape {
     uint64_t id_;              // this shape's identifier
 };
 }  // namespace geometry
+
+bool operator==(const geometry::Shape& s1, const geometry::Shape& s2);
+
 #endif  // SHAPE_H

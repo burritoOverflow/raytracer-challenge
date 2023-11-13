@@ -16,3 +16,7 @@ commontypes::Vector geometry::Shape::NormalAt(const commontypes::Point& point) {
     world_normal.e_[3] = 0.0;
     return commontypes::Vector{world_normal.Normalize()};
 }
+
+bool operator==(const geometry::Shape& s1, const geometry::Shape& s2) {
+    return s1.id() == s2.id();
+}

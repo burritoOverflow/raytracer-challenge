@@ -11,12 +11,11 @@
 #include "vector.h"
 
 namespace geometry {
-// forward declare the Sphere here as this is a circular dependency
-class Sphere;
+class Shape;
 
 // encapsulates some computations related to the intersection
 struct Computations {
-    std::shared_ptr<Sphere> object_;
+    std::shared_ptr<Shape> object_;
     double t_;
     commontypes::Point point_;
     commontypes::Point
@@ -30,7 +29,7 @@ struct Computations {
 struct Intersection {
     // the t value where a Ray intersects the Sphere
     double t_;
-    std::shared_ptr<Sphere>
+    std::shared_ptr<Shape>
         object_;  // the id of the Sphere for which this intersection was located
 
     static std::optional<Intersection> Hit(const std::vector<Intersection>& xs);

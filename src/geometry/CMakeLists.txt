@@ -4,6 +4,7 @@ target_sources(Geometry
         PRIVATE
         src/shape.cpp
         src/sphere.cpp
+        src/plane.cpp
         src/intersection.cpp
 )
 

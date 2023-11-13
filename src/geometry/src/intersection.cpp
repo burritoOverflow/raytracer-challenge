@@ -22,13 +22,13 @@ std::optional<geometry::Intersection> geometry::Intersection::Hit(
 
 geometry::Computations geometry::Intersection::PrepareComputations(commontypes::Ray& r) const {
     geometry::Computations computations{};
+
     computations.t_ = t_;
     computations.object_ = object_;
     computations.point_ = r.Position(computations.t_);
     computations.eye_vector_ = -r.direction();
-    auto sphere = *computations.object_;
 
-    computations.normal_vector_ = sphere.NormalAt(computations.point_);
+    computations.normal_vector_ = (*computations.object_).NormalAt(computations.point_);
     if (computations.normal_vector_.Dot(computations.eye_vector_) < 0) {
         computations.inside_ = true;
         computations.normal_vector_ = -computations.normal_vector_;
