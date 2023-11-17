@@ -55,5 +55,6 @@ cmake-build-debug/
 .idea/
 
 # for the rendered images
-images/build_deb/
+images/
+build_deb/
 pi_images/
