@@ -1,0 +1,12 @@
+build*/
+cmake-build-debug/
+Dockerfile
+compile_commands.json
+.gitignore
+docker/
+images/
+*.md
+.git/
+.idea/
+.vscode/
+.cache/
