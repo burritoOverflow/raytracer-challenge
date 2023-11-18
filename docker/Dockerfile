@@ -20,6 +20,6 @@ RUN cd ninja && git checkout release && cmake -S . -B build && make -C build/ -j
 WORKDIR /raytracer-challenge
 
 RUN ls -la
-RUN cmake -S . -B build_docker -G Ninja -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_CXX_COMPILER=clang++-15 
+RUN cmake -S . -B build_docker -G Ninja -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_CXX_COMPILER=clang++-15  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
 RUN cmake --build build_docker/ --verbose
 RUN ctest --test-dir build_docker/ -VV
