@@ -30,7 +30,7 @@ std::string CurrentDateStr() {
     return oss.str();
 }
 
-std::vector<std::shared_ptr<geometry::Sphere>> GetSpheresForCh7Render() {
+std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
     auto left_sphere = geometry::Sphere{};
     const auto left_transform = commontypes::TranslationMatrix{-1.5, 0.33, -0.75} *
                                 commontypes::ScalingMatrix{0.33, 0.33, 0.33};
@@ -62,13 +62,13 @@ std::vector<std::shared_ptr<geometry::Sphere>> GetSpheresForCh7Render() {
     right_sphere_mat.SetSpecular(0.3);
     right_sphere.SetMaterial(std::make_shared<lighting::Material>(right_sphere_mat));
 
-    return std::vector<std::shared_ptr<geometry::Sphere>>{
+    return std::vector<std::shared_ptr<geometry::Shape>>{
         std::make_shared<geometry::Sphere>(left_sphere),
         std::make_shared<geometry::Sphere>(middle_sphere),
         std::make_shared<geometry::Sphere>(right_sphere)};
 }
 
-void RenderChapter7Scene(std::vector<std::shared_ptr<geometry::Sphere>>& sphere_vec) {
+void RenderChapter7Scene(std::vector<std::shared_ptr<geometry::Shape>>& sphere_vec) {
     scene::World world{};
     scene::Camera camera{900, 750, M_PI / 3};
     camera.SetTransform(commontypes::ViewTransform{{0, 1.5, -5}, {0, 1, 0}, {0, 1, 0}});
@@ -99,7 +99,7 @@ void RenderChapter7Scene(std::vector<std::shared_ptr<geometry::Sphere>>& sphere_
     auto world_light = lighting::PointLight{{-10, 10, -10}, {1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
-    world.AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>({
+    world.AddObjects(std::vector<std::shared_ptr<geometry::Shape>>({
         std::make_shared<geometry::Sphere>(floor),
         std::make_shared<geometry::Sphere>(left_wall),
         std::make_shared<geometry::Sphere>(right_wall),
@@ -142,7 +142,7 @@ void Chapter6RenderRenderExample(
     for (int y = 0; y < canvas.height() - 1; ++y) {
         std::clog << '\r' << "Scanlines remaining: " << (canvas.height() - y) << " " << std::flush;
 
-        double world_y = half - pixel_size * y;
+        const double world_y = half - pixel_size * y;
 
         for (int x = 0; x < canvas.width() - 1; ++x) {
             double world_x = -half + pixel_size * x;

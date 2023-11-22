@@ -13,20 +13,20 @@ class World {
     World() = default;
 
     inline std::shared_ptr<lighting::PointLight> light() const { return light_; }
-    inline std::vector<std::shared_ptr<geometry::Sphere>> objects() const { return objects_; }
+    inline std::vector<std::shared_ptr<geometry::Shape>> objects() const { return objects_; }
 
     // factory fn for constructing what the book describes as the "Default World"
     static World DefaultWorld();
 
-    void AddObject(std::shared_ptr<geometry::Sphere> object_ptr);
+    void AddObject(std::shared_ptr<geometry::Shape> object_ptr);
 
-    void AddObjects(std::initializer_list<std::shared_ptr<geometry::Sphere>> object_ptrs);
+    void AddObjects(std::initializer_list<std::shared_ptr<geometry::Shape>> object_ptrs);
 
-    void AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>&& sphere_vec);
+    void AddObjects(std::vector<std::shared_ptr<geometry::Shape>>&& Shape_vec);
 
     void SetLight(std::shared_ptr<lighting::PointLight> light);
 
-    bool WorldContains(const std::shared_ptr<geometry::Sphere>& object) const;
+    bool WorldContains(const std::shared_ptr<geometry::Shape>& object) const;
 
     std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray) const;
 
@@ -38,7 +38,7 @@ class World {
 
    private:
     std::shared_ptr<lighting::PointLight> light_;
-    std::vector<std::shared_ptr<geometry::Sphere>> objects_;
+    std::vector<std::shared_ptr<geometry::Shape>> objects_;
 };
 }  // namespace scene
 

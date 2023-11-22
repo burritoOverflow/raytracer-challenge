@@ -3,6 +3,22 @@
 #include "scalingmatrix.h"
 #include "translationmatrix.h"
 
+// workaround for testing for the presence of the expected Spheres for the default world
+static bool DefaultWorldContains(const scene::World& default_world,
+                                 const std::shared_ptr<geometry::Sphere>& sphere_ptr) {
+    const auto default_world_objects = default_world.objects();
+    for (const std::shared_ptr<geometry::Shape>& default_world_obj : default_world_objects) {
+        const auto world_sphere = dynamic_cast<geometry::Sphere*>(default_world_obj.get());
+        const geometry::Sphere sphere = *sphere_ptr;
+
+        if (*world_sphere == sphere) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 TEST(WorldTest, TestCreatingWorld) {
     scene::World world{};
     ASSERT_TRUE(world.light() == nullptr);
@@ -18,7 +34,7 @@ TEST(WorldTest, TestAddObjectsToWorld) {
 
     auto s1_ptr = std::make_shared<geometry::Sphere>(s1);
     auto s2_ptr = std::make_shared<geometry::Sphere>(s2);
-    std::vector<std::shared_ptr<geometry::Sphere>> v1{s1_ptr, s2_ptr};
+    std::vector<std::shared_ptr<geometry::Shape>> v1{s1_ptr, s2_ptr};
 
     world.AddObjects(std::move(v1));
     ASSERT_EQ(world.objects().size(), 2);
@@ -27,7 +43,7 @@ TEST(WorldTest, TestAddObjectsToWorld) {
 
     auto s3_ptr = std::make_shared<geometry::Sphere>(s3);
     auto s4_ptr = std::make_shared<geometry::Sphere>(s4);
-    std::vector<std::shared_ptr<geometry::Sphere>> v2{s3_ptr, s4_ptr};
+    std::vector<std::shared_ptr<geometry::Shape>> v2{s3_ptr, s4_ptr};
 
     world.AddObjects(std::move(v2));
     ASSERT_EQ(world.objects().size(), 4);
@@ -50,10 +66,14 @@ TEST(WorldTest, TestDefaultWorld) {
     geometry::Sphere s2{};
     s2.SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
 
-    auto world_light = *default_world.light();
+    const auto world_light = *default_world.light();
     ASSERT_TRUE(world_light == light);
-    ASSERT_TRUE(default_world.WorldContains(std::make_shared<geometry::Sphere>(s1)));
-    ASSERT_TRUE(default_world.WorldContains(std::make_shared<geometry::Sphere>(s2)));
+
+    // the default operator for the Shape base class compares by the object's id
+    // we cannot have the same id here considering we aren't instantiating the default_world's
+    // Shapes, so we'll fall back to this approach that uses the derived Sphere class' == operator
+    ASSERT_TRUE(DefaultWorldContains(default_world, std::make_shared<geometry::Sphere>(s1)));
+    ASSERT_TRUE(DefaultWorldContains(default_world, std::make_shared<geometry::Sphere>(s2)));
 }
 
 TEST(WorldTest, TestIntersectWorldWithRay) {
@@ -154,7 +174,7 @@ TEST(WorldTest, TestShadeHitIsGivenAnIntersectionInShadow) {
     auto s2 = std::make_shared<geometry::Sphere>(geometry::Sphere{});
     s2->SetTransform(commontypes::TranslationMatrix{0, 0, 10});
 
-    w.AddObjects(std::vector<std::shared_ptr<geometry::Sphere>>{s1, s2});
+    w.AddObjects(std::vector<std::shared_ptr<geometry::Shape>>{s1, s2});
     commontypes::Ray r{{0, 0, 5}, {0, 0, 1}};
     geometry::Intersection i{4, s2};
     auto comps = i.PrepareComputations(r);
