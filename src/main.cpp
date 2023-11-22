@@ -5,6 +5,7 @@
 #include "canvas.h"
 #include "color.h"
 #include "lighting.h"
+#include "plane.h"
 #include "pointlight.h"
 #include "ray.h"
 #include "rotationmatrix.h"
@@ -15,6 +16,9 @@
 #include "world.h"
 
 namespace {
+const int CAMERA_HEIGHT = 900;
+const int CAMERA_WIDTH = 750;
+
 void CreateImageOutdir(const std::string_view dirname) {
     if (!std::filesystem::exists(dirname)) {
         std::filesystem::create_directory(dirname);
@@ -28,6 +32,17 @@ std::string CurrentDateStr() {
     const std::string date_fmt_str = "%m-%d-%Y_%H-%M-%S";
     oss << std::put_time(&tm, date_fmt_str.c_str());
     return oss.str();
+}
+
+void WriteCanvasToPPM(const scene::Camera& camera, scene::World& world) {
+    const auto canvas = camera.Render(world);
+    std::string image_outdir_name = "images";
+
+    CreateImageOutdir(image_outdir_name);
+    std::ofstream out{std::move(image_outdir_name) + "/" + CurrentDateStr() + "image.ppm"};
+
+    out << canvas.WritePPM();
+    out.close();
 }
 
 std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
@@ -68,9 +83,9 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
         std::make_shared<geometry::Sphere>(right_sphere)};
 }
 
-void RenderChapter7Scene(std::vector<std::shared_ptr<geometry::Shape>>& sphere_vec) {
+void RenderChapter7Scene() {
     scene::World world{};
-    scene::Camera camera{900, 750, M_PI / 3};
+    scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 3};
     camera.SetTransform(commontypes::ViewTransform{{0, 1.5, -5}, {0, 1, 0}, {0, 1, 0}});
 
     auto floor_material = lighting::Material{};
@@ -105,15 +120,10 @@ void RenderChapter7Scene(std::vector<std::shared_ptr<geometry::Shape>>& sphere_v
         std::make_shared<geometry::Sphere>(right_wall),
     }));
 
+    auto sphere_vec = GetSpheresForCh7Render();
     world.AddObjects(std::move(sphere_vec));
 
-    const auto canvas = camera.Render(world);
-    std::string image_outdir_name = "images";
-    CreateImageOutdir(image_outdir_name);
-    std::ofstream out{std::move(image_outdir_name) + "/" + CurrentDateStr() + "image.ppm"};
-
-    out << canvas.WritePPM();
-    out.close();
+    WriteCanvasToPPM(camera, world);
 }
 
 void Chapter6RenderRenderExample(
@@ -170,9 +180,33 @@ void Chapter6RenderRenderExample(
     out << canvas.WritePPM();
     out.close();
 }
+
+// example fromm chapter 9 using the previous chapters' Spheres with the addition of a
+// Plane for the "floor" in the image
+void Chapter9PlaneRender() {
+    scene::World world{};
+    scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 3};
+
+    const commontypes::Point from{0, 1.5, -5};
+    const commontypes::Point to{0, 1, 0};
+    const commontypes::Vector up{0, 1, 0};
+
+    const commontypes::ViewTransform camera_transform{from, to, up};
+    camera.SetTransform(camera_transform);
+
+    auto world_light = lighting::PointLight{{-10, 10, -10}, {1, 1, 1}};
+    world.SetLight(std::make_shared<lighting::PointLight>(world_light));
+
+    auto plane = geometry::Plane{};
+    world.AddObject(std::make_shared<geometry::Plane>(plane));
+
+    auto sphere_vec = GetSpheresForCh7Render();
+    world.AddObjects(std::move(sphere_vec));
+
+    WriteCanvasToPPM(camera, world);
+}
 }  // namespace
 
 int main() {
-    auto sphere_vec = GetSpheresForCh7Render();
-    RenderChapter7Scene(sphere_vec);
+    Chapter9PlaneRender();
 }
