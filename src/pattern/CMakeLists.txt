@@ -3,6 +3,7 @@ add_library(Pattern)
 target_sources(Pattern
         PRIVATE
         src/stripepattern.cpp
+        src/gradientpattern.cpp
         src/pattern.cpp
 ) 
 

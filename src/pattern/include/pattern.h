@@ -32,6 +32,9 @@ class Pattern {
    private:
     commontypes::Matrix pattern_transform_;
 };
+
+const commontypes::Color BLACK = {0, 0, 0};
+const commontypes::Color WHITE = {1, 1, 1};
 }  // namespace pattern
 
 #endif  // PATTERN_H
