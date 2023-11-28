@@ -1,6 +1,9 @@
 #include "lighting.h"
+#include "color.h"
+#include "pattern.h"
 
 commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_ptr,
+                                      const commontypes::Matrix& object_transform,
                                       const std::shared_ptr<PointLight>& point_light_ptr,
                                       const commontypes::Point& point,
                                       const commontypes::Vector& eye_vector,
@@ -10,7 +13,13 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
     auto material = *material_ptr;
     auto point_light = *point_light_ptr;
 
-    const auto effective_color = material.Color() * point_light.intensity();
+    // with no pattern present, use the Material's color.
+    commontypes::Color color = material.Color();
+    if (material.HasPattern()) {
+        color = material.Pattern()->PatternAtShape(object_transform, point);
+    }
+
+    const auto effective_color = color * point_light.intensity();
 
     // direction to the light source
     commontypes::Vector light_vector = (point_light.position() - point).Normalize();

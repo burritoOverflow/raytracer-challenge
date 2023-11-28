@@ -3,6 +3,7 @@ add_subdirectory(canvas)
 add_subdirectory(geometry)
 add_subdirectory(lighting)
 add_subdirectory(scene)
+add_subdirectory(pattern)
 
 add_executable(${PROJECT_NAME} "")
 

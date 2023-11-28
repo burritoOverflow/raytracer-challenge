@@ -4,7 +4,7 @@
 #include <memory>
 #include "identitymatrix.h"
 #include "intersection.h"
-#include "lighting.h"
+#include "material.h"
 #include "matrix.h"
 #include "point.h"
 
@@ -23,6 +23,8 @@ class Shape {
     inline void SetTransform(const commontypes::Matrix& transformation_matrix) {
         transform_ = transformation_matrix;
     }
+
+    inline commontypes::Matrix GetTransform() const { return transform_; }
 
     inline void SetMaterial(const std::shared_ptr<lighting::Material>& material) {
         material_ = material;

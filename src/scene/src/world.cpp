@@ -1,6 +1,7 @@
 #include "world.h"
 #include <algorithm>
 #include <utility>
+#include "identitymatrix.h"
 #include "lighting.h"
 #include "scalingmatrix.h"
 
@@ -68,8 +69,9 @@ std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::R
 
 commontypes::Color scene::World::ShadeHit(geometry::Computations& comps) const {
     const bool shadowed = this->IsShadowed(comps.over_point_);
-    return lighting::Lighting(comps.object_->material(), light_, comps.over_point_,
-                              comps.eye_vector_, comps.normal_vector_, shadowed);
+    return lighting::Lighting(comps.object_->material(), commontypes::IdentityMatrix{}, light_,
+                              comps.over_point_, comps.eye_vector_, comps.normal_vector_,
+                              shadowed);
 }
 
 commontypes::Color scene::World::ColorAt(commontypes::Ray& r) const {

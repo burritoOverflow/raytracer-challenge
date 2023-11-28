@@ -1,7 +1,13 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include <cstddef>
+#include <memory>
 #include "color.h"
+
+namespace pattern {
+class Pattern;
+}
 
 namespace lighting {
 class Material {
@@ -12,7 +18,9 @@ class Material {
           diffuse_(0.9),
           specular_(0.9),
           shininess_(200.0),
-          color_(commontypes::Color{1, 1, 1}) {}
+          color_(commontypes::Color{1, 1, 1}),
+          pattern_ptr_(nullptr)  // Pattern is optional for Materials
+    {}
 
     Material(Material&& material) noexcept
         : ambient_(material.ambient_),
@@ -49,6 +57,12 @@ class Material {
     inline commontypes::Color Color() const { return color_; }
     inline void SetColor(const commontypes::Color& color) { color_ = color; }
 
+    inline bool HasPattern() const { return pattern_ptr_ != nullptr; }
+    inline std::shared_ptr<pattern::Pattern> Pattern() { return pattern_ptr_; }
+    inline void SetPattern(const std::shared_ptr<pattern::Pattern> pattern_ptr) {
+        pattern_ptr_ = pattern_ptr;
+    }
+
     Material operator=(const Material& other) = delete;
 
     inline Material& operator=(Material&& other) noexcept {
@@ -71,6 +85,7 @@ class Material {
     double specular_;
     double shininess_;
     commontypes::Color color_;
+    std::shared_ptr<pattern::Pattern> pattern_ptr_;
 };
 }  // namespace lighting
 

@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "canvas.h"
 #include "color.h"
+#include "identitymatrix.h"
 #include "lighting.h"
 #include "plane.h"
 #include "pointlight.h"
@@ -166,8 +167,8 @@ void Chapter6RenderRenderExample(
                 commontypes::Vector eye = -r.direction();
 
                 commontypes::Color color = lighting::Lighting(
-                    hit.object_->material(), std::make_shared<lighting::PointLight>(light), point,
-                    eye, normal);
+                    hit.object_->material(), commontypes::IdentityMatrix{},
+                    std::make_shared<lighting::PointLight>(light), point, eye, normal);
                 canvas.WritePixel(x, y, color);
             }
         }

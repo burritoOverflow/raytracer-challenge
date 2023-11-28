@@ -9,4 +9,4 @@ target_sources(Lighting
 
 target_include_directories(Lighting PUBLIC include)
 
-target_link_libraries(Lighting PRIVATE Common)
+target_link_libraries(Lighting PRIVATE Common Pattern)

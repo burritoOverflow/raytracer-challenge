@@ -1,0 +1,1 @@
+target_sources(TestSuite PRIVATE pattern_test.cpp stripepattern_test.cpp)
