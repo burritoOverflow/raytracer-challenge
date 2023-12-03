@@ -1,1 +1,1 @@
-target_sources(TestSuite PRIVATE pattern_test.cpp gradientpattern_test.cpp stripepattern_test.cpp)
+target_sources(TestSuite PRIVATE pattern_test.cpp gradientpattern_test.cpp stripepattern_test.cpp ringpattern_test.cpp)

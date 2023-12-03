@@ -1,16 +1,15 @@
-#ifndef GRADIENT_PATTERN_H
-#define GRADIENT_PATTERN_H
+#ifndef RING_PATTERN_H
+#define RING_PATTERN_H
 
 #include "color.h"
 #include "pattern.h"
 
 namespace pattern {
-class GradientPattern : public Pattern {
+class RingPattern : public Pattern {
    public:
-    // as implemented in StripePattern
-    GradientPattern() : Pattern(), color_a_(WHITE), color_b_(BLACK) {}
+    RingPattern() : Pattern(), color_a_(WHITE), color_b_(BLACK) {}
 
-    GradientPattern(const commontypes::Color& color_a, const commontypes::Color& color_b)
+    RingPattern(const commontypes::Color& color_a, const commontypes::Color& color_b)
         : Pattern(), color_a_(color_a), color_b_(color_b) {}
 
     commontypes::Color PatternAt(const commontypes::Point& point) override;
@@ -25,4 +24,4 @@ class GradientPattern : public Pattern {
 };
 }  // namespace pattern
 
-#endif  // GRADIENT_PATTERN_H
+#endif
