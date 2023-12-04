@@ -1,7 +1,7 @@
 #include "stripepattern.h"
 #include <math.h>
 
-commontypes::Color pattern::StripePattern::PatternAt(const commontypes::Point& point) {
+const commontypes::Color pattern::StripePattern::PatternAt(const commontypes::Point& point) const {
     // as x coord changes, the pattern alternates between the two colors
     // i.e x coord between 0-1 return color_a, other wise color_b
     if (fmod(floor(point.x()), 2) == 0) {

@@ -1,11 +1,14 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include "camera.h"
 #include "canvas.h"
+#include "checkerpattern.h"
 #include "color.h"
 #include "identitymatrix.h"
 #include "lighting.h"
+#include "material.h"
 #include "plane.h"
 #include "pointlight.h"
 #include "ray.h"
@@ -184,7 +187,7 @@ void Chapter6RenderRenderExample(
 
 // example fromm chapter 9 using the previous chapters' Spheres with the addition of a
 // Plane for the "floor" in the image
-void Chapter9PlaneRender() {
+void Chapter10PatternPlaneRender() {
     scene::World world{};
     scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 3};
 
@@ -199,6 +202,15 @@ void Chapter9PlaneRender() {
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
     auto plane = geometry::Plane{};
+    auto mat_ptr = std::make_shared<lighting::Material>();
+    commontypes::Color red{1, 0, 0};
+    commontypes::Color green{0, 1, 0};
+
+    pattern::CheckerPattern checker_pattern(red, green);
+    auto pattern_ptr = std::make_shared<pattern::CheckerPattern>(checker_pattern);
+
+    mat_ptr->SetPattern(pattern_ptr);
+    plane.SetMaterial(mat_ptr);
     world.AddObject(std::make_shared<geometry::Plane>(plane));
 
     auto sphere_vec = GetSpheresForCh7Render();
@@ -209,5 +221,5 @@ void Chapter9PlaneRender() {
 }  // namespace
 
 int main() {
-    Chapter9PlaneRender();
+    Chapter10PatternPlaneRender();
 }

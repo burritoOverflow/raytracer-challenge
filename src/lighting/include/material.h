@@ -59,7 +59,7 @@ class Material {
 
     inline bool HasPattern() const { return pattern_ptr_ != nullptr; }
     inline std::shared_ptr<pattern::Pattern> Pattern() { return pattern_ptr_; }
-    inline void SetPattern(const std::shared_ptr<pattern::Pattern> pattern_ptr) {
+    inline void SetPattern(const std::shared_ptr<pattern::Pattern> &pattern_ptr) {
         pattern_ptr_ = pattern_ptr;
     }
 
