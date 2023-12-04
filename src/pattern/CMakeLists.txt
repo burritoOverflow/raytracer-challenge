@@ -5,6 +5,7 @@ target_sources(Pattern
         src/stripepattern.cpp
         src/gradientpattern.cpp
         src/ringpattern.cpp
+        src/checkerpattern.cpp
         src/pattern.cpp
 ) 
 
