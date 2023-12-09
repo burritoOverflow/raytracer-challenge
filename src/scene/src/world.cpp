@@ -69,9 +69,14 @@ std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::R
 
 commontypes::Color scene::World::ShadeHit(geometry::Computations& comps) const {
     const bool shadowed = this->IsShadowed(comps.over_point_);
-    return lighting::Lighting(comps.object_->material(), commontypes::IdentityMatrix{}, light_,
-                              comps.over_point_, comps.eye_vector_, comps.normal_vector_,
-                              shadowed);
+
+    const commontypes::Color surface =
+        lighting::Lighting(comps.object_->material(), commontypes::IdentityMatrix{}, light_,
+                           comps.over_point_, comps.eye_vector_, comps.normal_vector_, shadowed);
+
+    const commontypes::Color reflected_color = ReflectedColor(comps);
+
+    return commontypes::Color{surface + reflected_color};
 }
 
 commontypes::Color scene::World::ColorAt(commontypes::Ray& r) const {

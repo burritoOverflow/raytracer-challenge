@@ -221,3 +221,26 @@ TEST(WorldTest, TestReflectedColorForReflectiveMaterial) {
     const commontypes::Color reflected_color = w.ReflectedColor(comps);
     ASSERT_TRUE(reflected_color == commontypes::Color(0.19032, 0.2379, 0.14274));
 }
+
+TEST(WorldTest, TestShadeHitWithReflectedMaterial) {
+    scene::World w = scene::World::DefaultWorld();
+    geometry::Plane shape{};
+
+    lighting::Material shape_mat{};
+    shape_mat.SetReflective(0.5);
+
+    commontypes::TranslationMatrix translation{0, -1, 0};
+    shape.SetTransform(translation);
+    shape.SetMaterial(std::make_shared<lighting::Material>(shape_mat));
+
+    auto shape_ptr = std::make_shared<geometry::Plane>(shape);
+    w.AddObject(shape_ptr);
+
+    const double sqrt2over2 = sqrt(2) / 2;
+    commontypes::Ray r{commontypes::Point{0, 0, -3},
+                       commontypes::Vector{0, -sqrt2over2, sqrt2over2}};
+    geometry::Intersection i{sqrt(2), shape_ptr};
+    auto comps = i.PrepareComputations(r);
+    const commontypes::Color color = w.ShadeHit(comps);
+    ASSERT_TRUE(color == commontypes::Color(0.87677, 0.92436, 0.82918));
+}
