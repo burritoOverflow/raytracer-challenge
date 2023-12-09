@@ -18,6 +18,7 @@ class Material {
           diffuse_(0.9),
           specular_(0.9),
           shininess_(200.0),
+          reflective_(0.0),  // reflective is 0 surface is completely non-reflective; 1 is a mirror
           color_(commontypes::Color{1, 1, 1}),
           pattern_ptr_(nullptr)  // Pattern is optional for Materials
     {}
@@ -27,6 +28,7 @@ class Material {
           diffuse_(material.diffuse_),
           specular_(material.specular_),
           shininess_(material.shininess_),
+          reflective_(material.reflective_),
           color_(material.color_) {}
 
     Material(Material const& material) = default;
@@ -35,11 +37,13 @@ class Material {
              const double diffuse,
              const double specular,
              const double shininess,
+             const double reflective,
              commontypes::Color color)
         : ambient_(ambient),
           diffuse_(diffuse),
           specular_(specular),
           shininess_(shininess),
+          reflective_(reflective),
           color_(color) {}
 
     inline double Ambient() const { return ambient_; }
@@ -54,12 +58,15 @@ class Material {
     inline double Shininess() const { return shininess_; }
     inline void SetShininess(const double shininess) { shininess_ = shininess; }
 
+    inline double Reflective() const { return reflective_; }
+    inline void SetReflective(const double reflective) { reflective_ = reflective; }
+
     inline commontypes::Color Color() const { return color_; }
     inline void SetColor(const commontypes::Color& color) { color_ = color; }
 
     inline bool HasPattern() const { return pattern_ptr_ != nullptr; }
     inline std::shared_ptr<pattern::Pattern> Pattern() { return pattern_ptr_; }
-    inline void SetPattern(const std::shared_ptr<pattern::Pattern> &pattern_ptr) {
+    inline void SetPattern(const std::shared_ptr<pattern::Pattern>& pattern_ptr) {
         pattern_ptr_ = pattern_ptr;
     }
 
@@ -84,6 +91,7 @@ class Material {
     double diffuse_;
     double specular_;
     double shininess_;
+    double reflective_;
     commontypes::Color color_;
     std::shared_ptr<pattern::Pattern> pattern_ptr_;
 };

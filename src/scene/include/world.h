@@ -34,6 +34,8 @@ class World {
 
     commontypes::Color ColorAt(commontypes::Ray& r) const;
 
+    commontypes::Color ReflectedColor(geometry::Computations& comps) const;
+
     bool IsShadowed(const commontypes::Point& point) const;
 
    private:

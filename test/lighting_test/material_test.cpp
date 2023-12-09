@@ -17,6 +17,7 @@ TEST(MaterialTest, TestDefaultMaterial) {
     ASSERT_DOUBLE_EQ(m.Diffuse(), 0.9);
     ASSERT_DOUBLE_EQ(m.Specular(), 0.9);
     ASSERT_DOUBLE_EQ(m.Shininess(), 200.0);
+    ASSERT_DOUBLE_EQ(m.Reflective(), 0.0);
 }
 
 TEST(MaterialTest, TestMaterialEquality) {

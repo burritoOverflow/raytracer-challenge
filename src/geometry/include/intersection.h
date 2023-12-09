@@ -23,12 +23,14 @@ struct Computations {
                       // the normal, just before testing for shadows (see pg. 114)
     commontypes::Vector eye_vector_;
     commontypes::Vector normal_vector_;
+    commontypes::Vector reflect_vector_;
     bool inside_{false};  // true if hit occurs inside the object
 };
 
 struct Intersection {
     // the t value where a Ray intersects the Sphere
     double t_;
+
     std::shared_ptr<Shape>
         object_;  // the id of the Sphere for which this intersection was located
 

@@ -98,3 +98,15 @@ bool scene::World::IsShadowed(const commontypes::Point& point) const {
     }
     return false;
 }
+
+commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps) const {
+    const auto material_reflective = comps.object_->material()->Reflective();
+    if (material_reflective == 0) {
+        return commontypes::Color{0, 0, 0};
+    }
+
+    commontypes::Ray reflect_ray{comps.over_point_, comps.reflect_vector_};
+    const auto color = ColorAt(reflect_ray);
+
+    return commontypes::Color{color * material_reflective};
+}

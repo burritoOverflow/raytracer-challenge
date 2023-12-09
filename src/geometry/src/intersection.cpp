@@ -34,6 +34,9 @@ geometry::Computations geometry::Intersection::PrepareComputations(commontypes::
         computations.normal_vector_ = -computations.normal_vector_;
     }
 
+    // reflect the ray's direction around the object's normal vector
+    computations.reflect_vector_ = r.direction().Reflect(computations.normal_vector_);
+
     // bump the point a bit in the direction of the normal
     computations.over_point_ =
         commontypes::Point{computations.point_ + computations.normal_vector_ * utility::EPSILON_};

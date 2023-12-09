@@ -1,5 +1,6 @@
 #include "intersection.h"
 #include <gtest/gtest.h>
+#include "plane.h"
 #include "sphere.h"
 #include "translationmatrix.h"
 
@@ -134,4 +135,16 @@ TEST(IntersectionTest, TestHitShouldOffsetThePoint) {
     // check that the point has been adjusted in the correct direction
     ASSERT_TRUE(comps.over_point_.z() < -utility::EPSILON_ / 2);
     ASSERT_TRUE(comps.point_.z() > comps.over_point_.z());
+}
+
+TEST(IntersectionTest, TestPrecomputingTheReflectionVector) {
+    geometry::Plane shape{};
+    const double sqrt_2_over_2 = sqrt(2) / 2;
+    commontypes::Ray r{commontypes::Point{0, 1, -1},
+                       commontypes::Vector{0, -sqrt_2_over_2, sqrt_2_over_2}};
+
+    const geometry::Intersection i{sqrt(2), std::make_shared<geometry::Plane>(shape)};
+    const geometry::Computations comps = i.PrepareComputations(r);
+    // see pg. 143
+    ASSERT_TRUE(comps.reflect_vector_ == commontypes::Vector(0, sqrt_2_over_2, sqrt_2_over_2));
 }
