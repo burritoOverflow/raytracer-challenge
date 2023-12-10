@@ -11,10 +11,12 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
                                       const bool in_shadow) {
     // surface color with the light's color/intensity
     auto material = *material_ptr;
-    auto point_light = *point_light_ptr;
+    const auto point_light = *point_light_ptr;
 
     // with no pattern present, use the Material's color.
     commontypes::Color color = material.Color();
+
+    // otherwise, usee the material's pattern at the given Shape
     if (material.HasPattern()) {
         color = material.Pattern()->PatternAtShape(object_transform, point);
     }
@@ -22,12 +24,12 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
     const auto effective_color = color * point_light.intensity();
 
     // direction to the light source
-    commontypes::Vector light_vector = (point_light.position() - point).Normalize();
+    const commontypes::Vector light_vector = (point_light.position() - point).Normalize();
 
     // ambient color contribution
     const auto ambient = commontypes::Color{effective_color * material.Ambient()};
 
-    // when shadow, ignore the contributions of diffuse and specular
+    // when shadow, ignore the contributions of diffuse and specular (only ambient contributes)
     if (in_shadow) {
         return commontypes::Color{ambient};
     }
@@ -35,7 +37,9 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
     // represents the cosine of the angle between the light vector and the normal vector
     // negative number means the light is on the other side of the surface
     const double light_dot_normal = light_vector.Dot(normal_vector);
+
     commontypes::Color diffuse, specular;
+
     if (light_dot_normal < 0.0) {
         // other side of the surface
         diffuse = commontypes::Color::MakeBlack();
@@ -58,5 +62,6 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
             specular = commontypes::Color{point_light.intensity() * material.Specular() * factor};
         }
     }
+
     return commontypes::Color{ambient + diffuse + specular};
 }

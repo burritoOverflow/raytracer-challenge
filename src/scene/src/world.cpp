@@ -53,7 +53,7 @@ bool scene::World::WorldContains(const shapeptr& object) const {
 }
 
 std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::Ray& ray) const {
-    std::vector<geometry::Intersection> intersections{};
+    std::vector<geometry::Intersection> intersections;
 
     for (const auto& object : objects_) {
         const auto xs = object->Intersect(ray);
