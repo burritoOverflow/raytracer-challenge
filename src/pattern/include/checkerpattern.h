@@ -8,7 +8,10 @@
 namespace pattern {
 class CheckerPattern : public Pattern {
    public:
-    CheckerPattern() : Pattern(), color_a_(WHITE), color_b_(BLACK) {}
+    CheckerPattern()
+        : Pattern(),
+          color_a_(commontypes::Color::MakeWhite()),
+          color_b_(commontypes::Color::MakeBlack()) {}
 
     CheckerPattern(const commontypes::Color& color_a, const commontypes::Color& color_b)
         : Pattern(), color_a_(color_a), color_b_(color_b) {}

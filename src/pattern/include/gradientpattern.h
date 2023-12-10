@@ -7,7 +7,10 @@
 namespace pattern {
 class GradientPattern : public Pattern {
    public:
-    GradientPattern() : Pattern(), color_a_(WHITE), color_b_(BLACK) {}
+    GradientPattern()
+        : Pattern(),
+          color_a_(commontypes::Color::MakeWhite()),
+          color_b_(commontypes::Color::MakeBlack()) {}
 
     GradientPattern(const commontypes::Color& color_a, const commontypes::Color& color_b)
         : Pattern(), color_a_(color_a), color_b_(color_b) {}

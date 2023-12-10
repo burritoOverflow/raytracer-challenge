@@ -7,7 +7,10 @@ namespace pattern {
 class StripePattern : public Pattern {
    public:
     // set black, white as the default Colors
-    StripePattern() : Pattern(), color_a_(WHITE), color_b_(BLACK) {}
+    StripePattern()
+        : Pattern(),
+          color_a_(commontypes::Color::MakeWhite()),
+          color_b_(commontypes::Color::MakeBlack()) {}
 
     StripePattern(const commontypes::Color& color_a, const commontypes::Color& color_b)
         : Pattern(), color_a_(color_a), color_b_(color_b) {}

@@ -4,35 +4,45 @@
 #include "point.h"
 
 TEST(StripePatternTest, TestCreatingStripePattern) {
-    const pattern::StripePattern pattern{pattern::WHITE, pattern::BLACK};
-    ASSERT_TRUE(pattern.ColorA() == pattern::WHITE);
-    ASSERT_TRUE(pattern.ColorB() == pattern::BLACK);
+    const pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
+                                         commontypes::Color::MakeBlack()};
+    ASSERT_TRUE(pattern.ColorA() == commontypes::Color::MakeWhite());
+    ASSERT_TRUE(pattern.ColorB() == commontypes::Color::MakeBlack());
 }
 
 TEST(StripePatternTest, TestStripePatternConstantInY) {
-    pattern::StripePattern pattern{pattern::WHITE, pattern::BLACK};
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == pattern::WHITE);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 1, 0)) == pattern::WHITE);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 2, 0)) == pattern::WHITE);
+    pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
+                                   commontypes::Color::MakeBlack()};
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 1, 0)) == commontypes::Color::MakeWhite());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 2, 0)) == commontypes::Color::MakeWhite());
 }
 
 TEST(StripePatternTest, TestStripePatternConstantInZ) {
-    pattern::StripePattern pattern{pattern::WHITE, pattern::BLACK};
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == pattern::WHITE);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 1)) == pattern::WHITE);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 2)) == pattern::WHITE);
+    pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
+                                   commontypes::Color::MakeBlack()};
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 1)) == commontypes::Color::MakeWhite());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 2)) == commontypes::Color::MakeWhite());
 }
 
 TEST(StripePatternTest, TestStripePatternAlternatesInX) {
-    pattern::StripePattern pattern{pattern::WHITE, pattern::BLACK};
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == pattern::WHITE);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0.5, 0, 0)) == pattern::WHITE);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0.9, 0, 0)) == pattern::WHITE);
+    pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
+                                   commontypes::Color::MakeBlack()};
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0.5, 0, 0)) ==
+                commontypes::Color::MakeWhite());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0.9, 0, 0)) ==
+                commontypes::Color::MakeWhite());
 
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(1, 0, 0)) == pattern::BLACK);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(1.1, 0, 0)) == pattern::BLACK);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(-0.1, 0, 0)) == pattern::BLACK);
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(1, 0, 0)) == commontypes::Color::MakeBlack());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(1.1, 0, 0)) ==
+                commontypes::Color::MakeBlack());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(-0.1, 0, 0)) ==
+                commontypes::Color::MakeBlack());
 
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(-1, 0, 0)) == pattern::BLACK);
-    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(-1.1, 0, 0)) == pattern::WHITE);
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(-1, 0, 0)) ==
+                commontypes::Color::MakeBlack());
+    ASSERT_TRUE(pattern.PatternAt(commontypes::Point(-1.1, 0, 0)) ==
+                commontypes::Color::MakeWhite());
 }

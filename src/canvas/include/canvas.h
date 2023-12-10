@@ -7,9 +7,9 @@
 #include <vector>
 #include "color.h"
 
+namespace canvas {
 using raytracercanvas = std::vector<std::vector<commontypes::Color>>;
 
-namespace canvas {
 class Canvas final {
    public:
     Canvas(const size_t width, const size_t height) : width_(width), height_(height) {
