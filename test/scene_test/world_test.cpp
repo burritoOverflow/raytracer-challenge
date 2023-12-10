@@ -31,8 +31,8 @@ TEST(WorldTest, TestAddObjectsToWorld) {
     geometry::Sphere s3{};
     geometry::Sphere s4{};
 
-    auto s1_ptr = std::make_shared<geometry::Sphere>(s1);
-    auto s2_ptr = std::make_shared<geometry::Sphere>(s2);
+    const auto s1_ptr = std::make_shared<geometry::Sphere>(s1);
+    const auto s2_ptr = std::make_shared<geometry::Sphere>(s2);
     std::vector<std::shared_ptr<geometry::Shape>> v1{s1_ptr, s2_ptr};
 
     world.AddObjects(std::move(v1));
@@ -40,8 +40,8 @@ TEST(WorldTest, TestAddObjectsToWorld) {
     ASSERT_TRUE(world.WorldContains(s1_ptr));
     ASSERT_TRUE(world.WorldContains(s2_ptr));
 
-    auto s3_ptr = std::make_shared<geometry::Sphere>(s3);
-    auto s4_ptr = std::make_shared<geometry::Sphere>(s4);
+    const auto s3_ptr = std::make_shared<geometry::Sphere>(s3);
+    const auto s4_ptr = std::make_shared<geometry::Sphere>(s4);
     std::vector<std::shared_ptr<geometry::Shape>> v2{s3_ptr, s4_ptr};
 
     world.AddObjects(std::move(v2));
@@ -51,18 +51,21 @@ TEST(WorldTest, TestAddObjectsToWorld) {
 }
 
 TEST(WorldTest, TestDefaultWorld) {
-    scene::World default_world = scene::World::DefaultWorld();
+    const scene::World default_world = scene::World::DefaultWorld();
 
-    lighting::PointLight light{commontypes::Point{-10, 10, -10}, commontypes::Color{1, 1, 1}};
+    const lighting::PointLight light{commontypes::Point{-10, 10, -10},
+                                     commontypes::Color{1, 1, 1}};
 
-    geometry::Sphere s1{};
-    lighting::Material material{};
+    geometry::Sphere s1;
+
+    lighting::Material material;
     material.SetColor(commontypes::Color{0.8, 1.0, 0.6});
     material.SetDiffuse(0.7);
     material.SetSpecular(0.2);
+
     s1.SetMaterial(std::make_shared<lighting::Material>(material));
 
-    geometry::Sphere s2{};
+    geometry::Sphere s2;
     s2.SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
 
     const auto world_light = *default_world.light();
@@ -79,6 +82,7 @@ TEST(WorldTest, TestIntersectWorldWithRay) {
     scene::World default_world = scene::World::DefaultWorld();
     commontypes::Ray ray{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     std::vector<geometry::Intersection> xs = default_world.Intersect(ray);
+
     ASSERT_TRUE(xs.size() == 4);
     ASSERT_DOUBLE_EQ(xs.at(0).t_, 4);
     ASSERT_DOUBLE_EQ(xs.at(1).t_, 4.5);
@@ -92,7 +96,7 @@ TEST(WorldTest, TestShadingAnIntersection) {
     auto shape = default_world.objects().at(0);
     geometry::Intersection i{4, shape};
     geometry::Computations comps = i.PrepareComputations(r);
-    commontypes::Color c = default_world.ShadeHit(comps);
+    const commontypes::Color c = default_world.ShadeHit(comps);
     ASSERT_TRUE(c == commontypes::Color(0.38066, 0.47583, 0.2855));
 }
 
@@ -104,21 +108,21 @@ TEST(WorldTest, TestShadingAnIntersectionFromInside) {
     auto shape = default_world.objects().at(1);
     geometry::Intersection i{0.5, shape};
     geometry::Computations comps = i.PrepareComputations(r);
-    commontypes::Color c = default_world.ShadeHit(comps);
+    const commontypes::Color c = default_world.ShadeHit(comps);
     ASSERT_TRUE(c == commontypes::Color(0.90498, 0.90498, 0.90498));
 }
 
 TEST(WorldTest, TestColorWhenRayMisses) {
     scene::World default_world = scene::World::DefaultWorld();
     commontypes::Ray r{{0, 0, -5}, {0, 1, 0}};
-    commontypes::Color c = default_world.ColorAt(r);
+    const commontypes::Color c = default_world.ColorAt(r);
     ASSERT_TRUE(c == commontypes::Color(0, 0, 0));
 }
 
 TEST(WorldTest, TestColorWhenRayHits) {
     scene::World default_world = scene::World::DefaultWorld();
     commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
-    commontypes::Color c = default_world.ColorAt(r);
+    const commontypes::Color c = default_world.ColorAt(r);
     ASSERT_TRUE(c == commontypes::Color(0.38066, 0.47583, 0.2855));
 }
 
@@ -132,34 +136,34 @@ TEST(WorldTest, TestColorWhenIntersectionBehindRay) {
     inner->material()->SetAmbient(1);
 
     commontypes::Ray r{{0, 0, 0.75}, {0, 0, -1}};
-    commontypes::Color c = default_world.ColorAt(r);
+    const commontypes::Color c = default_world.ColorAt(r);
     ASSERT_TRUE(c == inner->material()->Color());
 }
 
 TEST(WorldTest, TestNoShadowWhenNothingIsCollinearWithPointAndLight) {
     scene::World w = scene::World::DefaultWorld();
-    commontypes::Point p{0, 10, 0};
+    const commontypes::Point p{0, 10, 0};
     const auto is_shadowed = w.IsShadowed(p);
     EXPECT_FALSE(is_shadowed);
 }
 
 TEST(WorldTest, TestTheShadowWhenObjectIsBetweenPointAndLight) {
     scene::World w = scene::World::DefaultWorld();
-    commontypes::Point p{10, -10, 10};
+    const commontypes::Point p{10, -10, 10};
     const auto is_shadowed = w.IsShadowed(p);
     EXPECT_TRUE(is_shadowed);
 }
 
 TEST(WorldTest, TestThereIsNoShadowWhenObjectIsBehindTheLight) {
     scene::World w = scene::World::DefaultWorld();
-    commontypes::Point p{-20, 20, -20};
+    const commontypes::Point p{-20, 20, -20};
     const auto is_shadowed = w.IsShadowed(p);
     EXPECT_FALSE(is_shadowed);
 }
 
 TEST(WorldTest, TestThereIsNoShadowWhenObjectIsBehindThePoint) {
     scene::World w = scene::World::DefaultWorld();
-    commontypes::Point p{-2, 2, -2};
+    const commontypes::Point p{-2, 2, -2};
     const auto is_shadowed = w.IsShadowed(p);
     EXPECT_FALSE(is_shadowed);
 }
@@ -203,7 +207,7 @@ TEST(WorldTest, TestReflectedColorForReflectiveMaterial) {
     lighting::Material shape_mat{};
     shape_mat.SetReflective(0.5);
 
-    commontypes::TranslationMatrix translation{0, -1, 0};
+    const commontypes::TranslationMatrix translation{0, -1, 0};
     shape.SetTransform(translation);
     shape.SetMaterial(std::make_shared<lighting::Material>(shape_mat));
 
@@ -226,7 +230,7 @@ TEST(WorldTest, TestShadeHitWithReflectedMaterial) {
     lighting::Material shape_mat{};
     shape_mat.SetReflective(0.5);
 
-    commontypes::TranslationMatrix translation{0, -1, 0};
+    const commontypes::TranslationMatrix translation{0, -1, 0};
     shape.SetTransform(translation);
     shape.SetMaterial(std::make_shared<lighting::Material>(shape_mat));
 
