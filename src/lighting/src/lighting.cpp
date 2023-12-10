@@ -38,8 +38,8 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
     commontypes::Color diffuse, specular;
     if (light_dot_normal < 0.0) {
         // other side of the surface
-        diffuse = commontypes::Color::Black();
-        specular = commontypes::Color::Black();
+        diffuse = commontypes::Color::MakeBlack();
+        specular = commontypes::Color::MakeBlack();
     } else {
         // diffuse contribution
         diffuse = commontypes::Color{effective_color * material.Diffuse() * light_dot_normal};
@@ -51,7 +51,7 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
         const double reflect_dot_eye = reflect_v.Dot(eye_vector);
 
         if (reflect_dot_eye <= 0.0) {
-            specular = commontypes::Color::Black();
+            specular = commontypes::Color::MakeBlack();
         } else {
             // contribute specular contribution
             const double factor = pow(reflect_dot_eye, material.Shininess());

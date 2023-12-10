@@ -11,7 +11,8 @@ class Color final : public Tuple {
     explicit Color(const Tuple& t) : Tuple(t.x(), t.y(), t.z(), 0.0) {}
 
     // redundant as "black" is the same as the default ctor, but nice for reading
-    static Color Black() { return {0, 0, 0}; }
+    static Color MakeBlack() { return {0, 0, 0}; }
+    static Color MakeWhite() { return {1, 1, 1}; }
 
     inline double Red() const { return e_[0]; }
     inline double Green() const { return e_[1]; }

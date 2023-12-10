@@ -249,7 +249,7 @@ TEST(WorldTest, TestColorAtWithMutuallyReflectiveSurfaces) {
 
     auto material = lighting::Material{};
     material.SetReflective(1);
-    auto mat_ptr = std::make_shared<lighting::Material>(material);
+    const auto mat_ptr = std::make_shared<lighting::Material>(material);
 
     geometry::Plane lower{};
     lower.SetMaterial(mat_ptr);
@@ -264,13 +264,12 @@ TEST(WorldTest, TestColorAtWithMutuallyReflectiveSurfaces) {
 
     // no assertions are present, as we are merely ensuring the recursion limit is effective in
     // preventing infinite recursion
-    commontypes::Ray r{{
+    commontypes::Ray r{commontypes::Point{
                            0,
                            0,
                            0,
                        },
-                       {0, 1, 0}};
-
+                       commontypes::Vector{0, 1, 0}};
     w.ColorAt(r);
 }
 
@@ -294,5 +293,5 @@ TEST(WorldTest, TestReflectedColorAtMaxRecursionDepth) {
 
     // no remaining recursive calls means we expect the color black
     const auto color = w.ReflectedColor(comps, 0);
-    ASSERT_TRUE(color == commontypes::Color::Black());
+    ASSERT_TRUE(color == commontypes::Color::MakeBlack());
 }

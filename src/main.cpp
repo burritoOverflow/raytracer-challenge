@@ -56,16 +56,18 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
     left_sphere.SetTransform(left_transform);
 
     auto left_sphere_mat = lighting::Material{};
-    left_sphere_mat.SetColor({1, 0.8, 0.1});
+    left_sphere_mat.SetColor({0, 0, 1});
     left_sphere_mat.SetDiffuse(0.7);
     left_sphere_mat.SetSpecular(0.3);
+    left_sphere_mat.SetReflective(0.7);
     left_sphere.SetMaterial(std::make_shared<lighting::Material>(left_sphere_mat));
 
     auto middle_sphere = geometry::Sphere{};
     middle_sphere.SetTransform(commontypes::TranslationMatrix{-0.5, 1, 0.5});
 
     auto middle_sphere_mat = lighting::Material{};
-    middle_sphere_mat.SetColor(commontypes::Color{0.1, 1, 0.5});
+    middle_sphere_mat.SetColor(commontypes::Color{1, 0, 0});
+    middle_sphere_mat.SetReflective(1);
     middle_sphere_mat.SetDiffuse(0.7);
     middle_sphere_mat.SetSpecular(0.3);
     middle_sphere.SetMaterial(std::make_shared<lighting::Material>(middle_sphere_mat));
@@ -76,7 +78,8 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
 
     auto right_sphere_mat = lighting::Material{};
     right_sphere.SetTransform(right_sphere_transform);
-    right_sphere_mat.SetColor({0.5, 1, 0.1});
+    right_sphere_mat.SetColor({0, 1, 0});
+    right_sphere_mat.SetReflective(0.5);
     right_sphere_mat.SetDiffuse(0.7);
     right_sphere_mat.SetSpecular(0.3);
     right_sphere.SetMaterial(std::make_shared<lighting::Material>(right_sphere_mat));
@@ -203,10 +206,10 @@ void Chapter10PatternPlaneRender() {
 
     auto plane = geometry::Plane{};
     auto mat_ptr = std::make_shared<lighting::Material>();
-    commontypes::Color red{1, 0, 0};
-    commontypes::Color green{0, 1, 0};
 
-    pattern::CheckerPattern checker_pattern(red, green);
+    pattern::CheckerPattern checker_pattern(commontypes::Color::MakeWhite(),
+                                            commontypes::Color::MakeBlack());
+
     auto pattern_ptr = std::make_shared<pattern::CheckerPattern>(checker_pattern);
 
     mat_ptr->SetPattern(pattern_ptr);

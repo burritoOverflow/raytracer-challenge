@@ -91,7 +91,7 @@ commontypes::Color scene::World::ColorAt(commontypes::Ray& r,
     }
 
     // default color is black when no intersections are present
-    return commontypes::Color::Black();
+    return commontypes::Color::MakeBlack();
 }
 
 bool scene::World::IsShadowed(const commontypes::Point& point) const {
@@ -112,7 +112,7 @@ commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
                                                 const uint8_t remaining_invocations) const {
     // recursion limit hit
     if (remaining_invocations <= 0)
-        return commontypes::Color::Black();
+        return commontypes::Color::MakeBlack();
 
     const auto material_reflective = comps.object_->material()->Reflective();
     if (material_reflective == 0) {
