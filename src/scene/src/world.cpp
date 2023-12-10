@@ -67,25 +67,29 @@ std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::R
     return intersections;
 }
 
-commontypes::Color scene::World::ShadeHit(geometry::Computations& comps) const {
+commontypes::Color scene::World::ShadeHit(geometry::Computations& comps,
+                                          const uint8_t remaining_invocations) const {
     const bool shadowed = this->IsShadowed(comps.over_point_);
 
     const commontypes::Color surface =
         lighting::Lighting(comps.object_->material(), commontypes::IdentityMatrix{}, light_,
                            comps.over_point_, comps.eye_vector_, comps.normal_vector_, shadowed);
 
-    const commontypes::Color reflected_color = ReflectedColor(comps);
+    const commontypes::Color reflected_color = ReflectedColor(comps, remaining_invocations);
 
     return commontypes::Color{surface + reflected_color};
 }
 
-commontypes::Color scene::World::ColorAt(commontypes::Ray& r) const {
+commontypes::Color scene::World::ColorAt(commontypes::Ray& r,
+                                         const uint8_t remaining_invocations) const {
     auto intersections = scene::World::Intersect(r);
     auto maybe_hit = geometry::Intersection::Hit(intersections);
+
     if (maybe_hit.has_value()) {
         auto comps = maybe_hit->PrepareComputations(r);
-        return ShadeHit(comps);
+        return ShadeHit(comps, remaining_invocations);
     }
+
     // default color is black when no intersections are present
     return commontypes::Color::Black();
 }
@@ -104,14 +108,21 @@ bool scene::World::IsShadowed(const commontypes::Point& point) const {
     return false;
 }
 
-commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps) const {
+commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
+                                                const uint8_t remaining_invocations) const {
+    // recursion limit hit
+    if (remaining_invocations <= 0)
+        return commontypes::Color::Black();
+
     const auto material_reflective = comps.object_->material()->Reflective();
     if (material_reflective == 0) {
         return commontypes::Color{0, 0, 0};
     }
 
     commontypes::Ray reflect_ray{comps.over_point_, comps.reflect_vector_};
-    const auto color = ColorAt(reflect_ray);
+
+    // decrement the remaining invocations before invocation to eliminate infinite recursion
+    const auto color = ColorAt(reflect_ray, remaining_invocations - 1);
 
     return commontypes::Color{color * material_reflective};
 }

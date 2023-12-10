@@ -30,17 +30,21 @@ class World {
 
     std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray) const;
 
-    commontypes::Color ShadeHit(geometry::Computations& comps) const;
+    commontypes::Color ShadeHit(geometry::Computations& comps,
+                                uint8_t remaining_invocations = RECURSION_LIMIT) const;
 
-    commontypes::Color ColorAt(commontypes::Ray& r) const;
+    commontypes::Color ColorAt(commontypes::Ray& r,
+                               uint8_t remaining_invocations = RECURSION_LIMIT) const;
 
-    commontypes::Color ReflectedColor(geometry::Computations& comps) const;
+    commontypes::Color ReflectedColor(geometry::Computations& comps,
+                                      u_int8_t remaining_invocations = RECURSION_LIMIT) const;
 
     bool IsShadowed(const commontypes::Point& point) const;
 
    private:
     std::shared_ptr<lighting::PointLight> light_;
     std::vector<std::shared_ptr<geometry::Shape>> objects_;
+    static const uint8_t RECURSION_LIMIT = 5;
 };
 }  // namespace scene
 

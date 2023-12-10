@@ -4,20 +4,18 @@
 #include "scalingmatrix.h"
 #include "translationmatrix.h"
 
+static const double SQRT2OVER2 = sqrt(2) / 2;
+
 // workaround for testing for the presence of the expected Spheres for the default world
 static bool DefaultWorldContains(const scene::World& default_world,
                                  const std::shared_ptr<geometry::Sphere>& sphere_ptr) {
     const auto default_world_objects = default_world.objects();
-    for (const std::shared_ptr<geometry::Shape>& default_world_obj : default_world_objects) {
-        const auto world_sphere = dynamic_cast<geometry::Sphere*>(default_world_obj.get());
-        const geometry::Sphere sphere = *sphere_ptr;
-
-        if (*world_sphere == sphere) {
-            return true;
-        }
-    }
-
-    return false;
+    return std::any_of(default_world_objects.begin(), default_world_objects.end(),
+                       [&sphere_ptr](const auto& default_world_obj) {
+                           const auto world_sphere =
+                               dynamic_cast<geometry::Sphere*>(default_world_obj.get());
+                           return *world_sphere == *sphere_ptr;
+                       });
 }
 
 TEST(WorldTest, TestCreatingWorld) {
@@ -212,9 +210,8 @@ TEST(WorldTest, TestReflectedColorForReflectiveMaterial) {
     auto shape_ptr = std::make_shared<geometry::Plane>(shape);
     w.AddObject(shape_ptr);
 
-    const double sqrt2over2 = sqrt(2) / 2;
     commontypes::Ray r{commontypes::Point{0, 0, -3},
-                       commontypes::Vector{0, -sqrt2over2, sqrt2over2}};
+                       commontypes::Vector{0, -SQRT2OVER2, SQRT2OVER2}};
     geometry::Intersection i{sqrt(2), shape_ptr};
     auto comps = i.PrepareComputations(r);
 
@@ -236,11 +233,66 @@ TEST(WorldTest, TestShadeHitWithReflectedMaterial) {
     auto shape_ptr = std::make_shared<geometry::Plane>(shape);
     w.AddObject(shape_ptr);
 
-    const double sqrt2over2 = sqrt(2) / 2;
     commontypes::Ray r{commontypes::Point{0, 0, -3},
-                       commontypes::Vector{0, -sqrt2over2, sqrt2over2}};
+                       commontypes::Vector{0, -SQRT2OVER2, SQRT2OVER2}};
     geometry::Intersection i{sqrt(2), shape_ptr};
+
     auto comps = i.PrepareComputations(r);
     const commontypes::Color color = w.ShadeHit(comps);
     ASSERT_TRUE(color == commontypes::Color(0.87677, 0.92436, 0.82918));
+}
+
+TEST(WorldTest, TestColorAtWithMutuallyReflectiveSurfaces) {
+    scene::World w{};
+    lighting::PointLight light{commontypes::Point{0, 0, 0}, commontypes::Color{1, 1, 1}};
+    w.SetLight(std::make_shared<lighting::PointLight>(light));
+
+    auto material = lighting::Material{};
+    material.SetReflective(1);
+    auto mat_ptr = std::make_shared<lighting::Material>(material);
+
+    geometry::Plane lower{};
+    lower.SetMaterial(mat_ptr);
+    lower.SetTransform(commontypes::TranslationMatrix{0, -1, 0});
+    w.AddObject(std::make_shared<geometry::Plane>(lower));
+
+    auto upper_mat = lighting::Material{};
+    geometry::Plane upper{};
+    upper.SetMaterial(mat_ptr);
+    upper.SetTransform(commontypes::TranslationMatrix{0, 1, 0});
+    w.AddObject(std::make_shared<geometry::Plane>(upper));
+
+    // no assertions are present, as we are merely ensuring the recursion limit is effective in
+    // preventing infinite recursion
+    commontypes::Ray r{{
+                           0,
+                           0,
+                           0,
+                       },
+                       {0, 1, 0}};
+
+    w.ColorAt(r);
+}
+
+TEST(WorldTest, TestReflectedColorAtMaxRecursionDepth) {
+    auto w = scene::World::DefaultWorld();
+
+    auto shape = geometry::Plane{};
+
+    auto plane_mat = lighting::Material{};
+    plane_mat.SetReflective(0.5);
+
+    shape.SetMaterial(std::make_shared<lighting::Material>(plane_mat));
+    shape.SetTransform(commontypes::TranslationMatrix{0, -1, 0});
+
+    auto shape_ptr = std::make_shared<geometry::Plane>(shape);
+    w.AddObject(shape_ptr);
+
+    commontypes::Ray r{{0, 0, -3}, {0, -SQRT2OVER2, SQRT2OVER2}};
+    const geometry::Intersection i{sqrt(2), shape_ptr};
+    auto comps = i.PrepareComputations(r);
+
+    // no remaining recursive calls means we expect the color black
+    const auto color = w.ReflectedColor(comps, 0);
+    ASSERT_TRUE(color == commontypes::Color::Black());
 }
