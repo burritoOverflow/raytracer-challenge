@@ -204,16 +204,19 @@ void Chapter10PatternPlaneRender() {
     auto world_light = lighting::PointLight{{-10, 10, -10}, {1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
-    auto plane = geometry::Plane{};
-    auto mat_ptr = std::make_shared<lighting::Material>();
+    geometry::Plane plane;
+    lighting::Material plane_mat;
+    plane_mat.SetReflective(0.3);
+
+    auto mat_ptr = std::make_shared<lighting::Material>(plane_mat);
+    plane.SetMaterial(mat_ptr);
 
     pattern::CheckerPattern checker_pattern(commontypes::Color::MakeWhite(),
                                             commontypes::Color::MakeBlack());
 
-    auto pattern_ptr = std::make_shared<pattern::CheckerPattern>(checker_pattern);
-
+    const auto pattern_ptr = std::make_shared<pattern::CheckerPattern>(checker_pattern);
     mat_ptr->SetPattern(pattern_ptr);
-    plane.SetMaterial(mat_ptr);
+
     world.AddObject(std::make_shared<geometry::Plane>(plane));
 
     auto sphere_vec = GetSpheresForCh7Render();
