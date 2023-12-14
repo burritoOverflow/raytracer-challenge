@@ -95,6 +95,51 @@ class Material {
     commontypes::Color color_;
     std::shared_ptr<pattern::Pattern> pattern_ptr_;
 };
+
+class MaterialBuilder {
+   public:
+    MaterialBuilder& WithAmbient(const double ambient) {
+        this->m_.SetAmbient(ambient);
+        return *this;
+    }
+
+    MaterialBuilder& WithDiffuse(const double diffuse) {
+        this->m_.SetDiffuse(diffuse);
+        return *this;
+    }
+
+    MaterialBuilder& WithSpecular(const double specular) {
+        this->m_.SetSpecular(specular);
+        return *this;
+    }
+
+    MaterialBuilder& WithShininess(const double shininess) {
+        this->m_.SetShininess(shininess);
+        return *this;
+    }
+
+    MaterialBuilder& WithReflective(const double reflective) {
+        this->m_.SetReflective(reflective);
+        return *this;
+    }
+
+    MaterialBuilder& WithColor(const commontypes::Color& color) {
+        this->m_.SetColor(color);
+        return *this;
+    }
+
+    MaterialBuilder& WithPatternPtr(const std::shared_ptr<pattern::Pattern>& pattern_ptr) {
+        this->m_.SetPattern(pattern_ptr);
+        return *this;
+    }
+
+    Material& Build() { return m_; }
+
+    operator Material() { return std::move(m_); }
+
+   private:
+    Material m_;
+};
 }  // namespace lighting
 
 bool operator==(const lighting::Material& m1, const lighting::Material& m2);

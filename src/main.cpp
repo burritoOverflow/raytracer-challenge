@@ -55,33 +55,33 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
                                 commontypes::ScalingMatrix{0.33, 0.33, 0.33};
     left_sphere.SetTransform(left_transform);
 
-    auto left_sphere_mat = lighting::Material{};
-    left_sphere_mat.SetColor({0, 0, 1});
-    left_sphere_mat.SetDiffuse(0.7);
-    left_sphere_mat.SetSpecular(0.3);
-    left_sphere_mat.SetReflective(0.7);
+    const lighting::Material left_sphere_mat = lighting::MaterialBuilder()
+                                                   .WithColor({0, 0, 1})
+                                                   .WithDiffuse(0.7)
+                                                   .WithSpecular(0.3)
+                                                   .WithReflective(0.7);
     left_sphere.SetMaterial(std::make_shared<lighting::Material>(left_sphere_mat));
 
     auto middle_sphere = geometry::Sphere{};
     middle_sphere.SetTransform(commontypes::TranslationMatrix{-0.5, 1, 0.5});
 
-    auto middle_sphere_mat = lighting::Material{};
-    middle_sphere_mat.SetColor(commontypes::Color{1, 0, 0});
-    middle_sphere_mat.SetReflective(1);
-    middle_sphere_mat.SetDiffuse(0.7);
-    middle_sphere_mat.SetSpecular(0.3);
+    const lighting::Material middle_sphere_mat = lighting::MaterialBuilder()
+                                                     .WithColor({1, 0, 0})
+                                                     .WithDiffuse(0.7)
+                                                     .WithSpecular(0.3)
+                                                     .WithReflective(1);
     middle_sphere.SetMaterial(std::make_shared<lighting::Material>(middle_sphere_mat));
 
     auto right_sphere = geometry::Sphere{};
     const auto right_sphere_transform =
         commontypes::TranslationMatrix{1.5, 0.5, -0.5} * commontypes::ScalingMatrix{0.5, 0.5, 0.5};
-
-    auto right_sphere_mat = lighting::Material{};
     right_sphere.SetTransform(right_sphere_transform);
-    right_sphere_mat.SetColor({0, 1, 0});
-    right_sphere_mat.SetReflective(0.5);
-    right_sphere_mat.SetDiffuse(0.7);
-    right_sphere_mat.SetSpecular(0.3);
+
+    const lighting::Material right_sphere_mat = lighting::MaterialBuilder()
+                                                    .WithColor({0, 1, 0})
+                                                    .WithDiffuse(0.7)
+                                                    .WithSpecular(0.3)
+                                                    .WithReflective(0.5);
     right_sphere.SetMaterial(std::make_shared<lighting::Material>(right_sphere_mat));
 
     return std::vector<std::shared_ptr<geometry::Shape>>{
@@ -205,8 +205,7 @@ void Chapter10PatternPlaneRender() {
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
     geometry::Plane plane;
-    lighting::Material plane_mat;
-    plane_mat.SetReflective(0.3);
+    lighting::Material plane_mat = lighting::MaterialBuilder().WithReflective(0.3);
 
     auto mat_ptr = std::make_shared<lighting::Material>(plane_mat);
     plane.SetMaterial(mat_ptr);

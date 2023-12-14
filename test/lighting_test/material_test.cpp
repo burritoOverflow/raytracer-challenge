@@ -10,6 +10,56 @@
 #include "stripepattern.h"
 #include "vector.h"
 
+TEST(MaterialTest, TestMaterialBuilderAssignment) {
+    commontypes::Color color{1, 0, 1};
+    const double ambient = 0.6;
+    const double diffuse = 0.1;
+    const double specular = 0.3;
+    const double shininess = 0.4;
+    const double reflective = 0.2;
+
+    lighting::MaterialBuilder mb;
+    const auto material = mb.WithAmbient(ambient)
+                              .WithDiffuse(diffuse)
+                              .WithShininess(shininess)
+                              .WithSpecular(specular)
+                              .WithReflective(reflective)
+                              .WithColor(color)
+                              .Build();
+
+    ASSERT_TRUE(material.Ambient() == ambient);
+    ASSERT_TRUE(material.Diffuse() == diffuse);
+    ASSERT_TRUE(material.Shininess() == shininess);
+    ASSERT_TRUE(material.Specular() == specular);
+    ASSERT_TRUE(material.Reflective() == reflective);
+    ASSERT_TRUE(material.Color() == color);
+}
+
+TEST(MaterialTest, TestMaterialBuilderInvokesDefaultCtor) {
+    commontypes::Color color{1, 0, 1};
+    const double ambient = 0.6;
+    const double reflective = 0.2;
+
+    lighting::Material default_material{};
+    lighting::Material material = lighting::MaterialBuilder()
+                                      .WithAmbient(ambient)
+                                      .WithReflective(reflective)
+                                      .WithColor(color);
+
+    // ensure that the default values are provided by the ctor (implicitly invoked)
+    ASSERT_TRUE(material.Ambient() == ambient);
+    ASSERT_FALSE(material.Ambient() == default_material.Ambient());
+    ASSERT_TRUE(material.Reflective() == reflective);
+    ASSERT_FALSE(material.Reflective() == default_material.Reflective());
+    ASSERT_TRUE(material.Color() == color);
+    ASSERT_FALSE(material.Color() == default_material.Color());
+
+    ASSERT_TRUE(material.Specular() == default_material.Specular());
+    ASSERT_TRUE(material.Shininess() == default_material.Shininess());
+    ASSERT_TRUE(material.Specular() == default_material.Specular());
+    ASSERT_TRUE(material.Diffuse() == default_material.Diffuse());
+}
+
 TEST(MaterialTest, TestDefaultMaterial) {
     lighting::Material m{};
     ASSERT_TRUE(m.Color() == commontypes::Color(1, 1, 1));
