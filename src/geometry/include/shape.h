@@ -14,11 +14,15 @@ class Shape {
     Shape()
         : id_(SHAPE_ID++),
           transform_(commontypes::IdentityMatrix{}),
-          material_(std::make_shared<lighting::Material>()) {}
+          material_ptr_(std::make_shared<lighting::Material>()) {}
+
+    Shape(commontypes::Matrix& transformation_matrix,
+          std::shared_ptr<lighting::Material>& material_ptr)
+        : id_(SHAPE_ID++), transform_(transformation_matrix), material_ptr_(material_ptr) {}
 
     inline uint64_t id() const { return id_; }
     inline commontypes::Matrix transform() const { return transform_; }
-    inline std::shared_ptr<lighting::Material> material() const { return material_; }
+    inline std::shared_ptr<lighting::Material> material() const { return material_ptr_; }
 
     inline void SetTransform(const commontypes::Matrix& transformation_matrix) {
         transform_ = transformation_matrix;
@@ -27,7 +31,7 @@ class Shape {
     inline commontypes::Matrix GetTransform() const { return transform_; }
 
     inline void SetMaterial(const std::shared_ptr<lighting::Material>& material) {
-        material_ = material;
+        material_ptr_ = material;
     }
 
     // when intersecting the shape with a Ray, all shapes need to first convert the Ray into
@@ -42,7 +46,7 @@ class Shape {
     commontypes::Matrix transform_;  // each Shape has a transformation matrix (see page 118); here
                                      // it's the IdentityMatrix
     std::shared_ptr<lighting::Material>
-        material_;  // each Shape has a Material (the default one (see pg. 118 & 83)
+        material_ptr_;  // each Shape has a Material (the default one (see pg. 118 & 83)
 
     // each shape provides its own appropriate implementation for both local intersection and
     // local normal calculation

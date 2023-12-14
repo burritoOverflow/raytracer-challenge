@@ -94,42 +94,44 @@ class Material {
     double reflective_;
     commontypes::Color color_;
     std::shared_ptr<pattern::Pattern> pattern_ptr_;
+
+    friend class MaterialBuilder;
 };
 
 class MaterialBuilder {
    public:
     MaterialBuilder& WithAmbient(const double ambient) {
-        this->m_.SetAmbient(ambient);
+        this->m_.ambient_ = ambient;
         return *this;
     }
 
     MaterialBuilder& WithDiffuse(const double diffuse) {
-        this->m_.SetDiffuse(diffuse);
+        this->m_.diffuse_ = diffuse;
         return *this;
     }
 
     MaterialBuilder& WithSpecular(const double specular) {
-        this->m_.SetSpecular(specular);
+        this->m_.specular_ = specular;
         return *this;
     }
 
     MaterialBuilder& WithShininess(const double shininess) {
-        this->m_.SetShininess(shininess);
+        this->m_.shininess_ = shininess;
         return *this;
     }
 
     MaterialBuilder& WithReflective(const double reflective) {
-        this->m_.SetReflective(reflective);
+        this->m_.reflective_ = reflective;
         return *this;
     }
 
     MaterialBuilder& WithColor(const commontypes::Color& color) {
-        this->m_.SetColor(color);
+        this->m_.color_ = color;
         return *this;
     }
 
     MaterialBuilder& WithPatternPtr(const std::shared_ptr<pattern::Pattern>& pattern_ptr) {
-        this->m_.SetPattern(pattern_ptr);
+        this->m_.pattern_ptr_ = pattern_ptr;
         return *this;
     }
 
@@ -138,7 +140,7 @@ class MaterialBuilder {
     operator Material() { return std::move(m_); }
 
    private:
-    Material m_;
+    Material m_{};
 };
 }  // namespace lighting
 
