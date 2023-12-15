@@ -25,6 +25,14 @@ class Sphere : public Shape {
 
     commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
 
+    inline static Sphere GlassSphere() {
+        Sphere glass_sphere{};
+        glass_sphere.transform_ = commontypes::IdentityMatrix{};
+        glass_sphere.material_ptr_->SetTransparency(1.0);
+        glass_sphere.material_ptr_->SetRefractiveIndex(1.5);
+        return glass_sphere;
+    }
+
    private:
     double radii_;  // expectation is that by default these are all unit spheres (see page 59)
     // must be incremented in each ctor, as above (see uniqueness constraint)

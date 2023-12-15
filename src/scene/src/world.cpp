@@ -72,7 +72,7 @@ commontypes::Color scene::World::ShadeHit(geometry::Computations& comps,
     const bool shadowed = this->IsShadowed(comps.over_point_);
 
     const commontypes::Color surface =
-        lighting::Lighting(comps.object_->material(), commontypes::IdentityMatrix{}, light_,
+        lighting::Lighting(comps.object_->Material(), commontypes::IdentityMatrix{}, light_,
                            comps.over_point_, comps.eye_vector_, comps.normal_vector_, shadowed);
 
     const commontypes::Color reflected_color = ReflectedColor(comps, remaining_invocations);
@@ -114,7 +114,7 @@ commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
     if (remaining_invocations <= 0)
         return commontypes::Color::MakeBlack();
 
-    const auto material_reflective = comps.object_->material()->Reflective();
+    const auto material_reflective = comps.object_->Material()->Reflective();
     if (material_reflective == 0) {
         return commontypes::Color{0, 0, 0};
     }

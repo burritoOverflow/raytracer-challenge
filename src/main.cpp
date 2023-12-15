@@ -173,7 +173,7 @@ void Chapter6RenderRenderExample(
                 commontypes::Vector eye = -r.direction();
 
                 commontypes::Color color = lighting::Lighting(
-                    hit.object_->material(), commontypes::IdentityMatrix{},
+                    hit.object_->Material(), commontypes::IdentityMatrix{},
                     std::make_shared<lighting::PointLight>(light), point, eye, normal);
                 canvas.WritePixel(x, y, color);
             }

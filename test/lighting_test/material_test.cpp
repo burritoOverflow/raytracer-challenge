@@ -17,6 +17,8 @@ TEST(MaterialTest, TestMaterialBuilderAssignment) {
     const double specular = 0.3;
     const double shininess = 0.4;
     const double reflective = 0.2;
+    const double transparency = 0.5;
+    const double refractive_index = 0.8;
 
     lighting::MaterialBuilder mb;
     const auto material = mb.WithAmbient(ambient)
@@ -24,6 +26,8 @@ TEST(MaterialTest, TestMaterialBuilderAssignment) {
                               .WithShininess(shininess)
                               .WithSpecular(specular)
                               .WithReflective(reflective)
+                              .WithTransparency(transparency)
+                              .WithRefractiveIndex(refractive_index)
                               .WithColor(color)
                               .Build();
 
@@ -32,6 +36,8 @@ TEST(MaterialTest, TestMaterialBuilderAssignment) {
     ASSERT_TRUE(material.Shininess() == shininess);
     ASSERT_TRUE(material.Specular() == specular);
     ASSERT_TRUE(material.Reflective() == reflective);
+    ASSERT_TRUE(material.Transparency() == transparency);
+    ASSERT_TRUE(material.RefractiveIndex() == refractive_index);
     ASSERT_TRUE(material.Color() == color);
 }
 
@@ -58,6 +64,8 @@ TEST(MaterialTest, TestMaterialBuilderInvokesDefaultCtor) {
     ASSERT_TRUE(material.Shininess() == default_material.Shininess());
     ASSERT_TRUE(material.Specular() == default_material.Specular());
     ASSERT_TRUE(material.Diffuse() == default_material.Diffuse());
+    ASSERT_TRUE(material.Transparency() == default_material.Transparency());
+    ASSERT_TRUE(material.RefractiveIndex() == default_material.RefractiveIndex());
 }
 
 TEST(MaterialTest, TestDefaultMaterial) {
@@ -68,13 +76,17 @@ TEST(MaterialTest, TestDefaultMaterial) {
     ASSERT_DOUBLE_EQ(m.Specular(), 0.9);
     ASSERT_DOUBLE_EQ(m.Shininess(), 200.0);
     ASSERT_DOUBLE_EQ(m.Reflective(), 0.0);
+    ASSERT_DOUBLE_EQ(m.Transparency(), 0.0);
+    ASSERT_DOUBLE_EQ(m.RefractiveIndex(), 1.0);
 }
 
 TEST(MaterialTest, TestMaterialEquality) {
     lighting::Material m1{};
     lighting::Material m2{};
+
     ASSERT_TRUE(m1 == m2);
     ASSERT_FALSE(m1 != m2);
+
     m1.SetColor(commontypes::Color{1, 2, 3});
     ASSERT_FALSE(m1 == m2);
     ASSERT_TRUE(m1 != m2);

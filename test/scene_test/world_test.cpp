@@ -130,14 +130,14 @@ TEST(WorldTest, TestColorWhenIntersectionBehindRay) {
     scene::World default_world = scene::World::DefaultWorld();
 
     auto outer = default_world.objects().at(0);
-    outer->material()->SetAmbient(1);
+    outer->Material()->SetAmbient(1);
 
     auto inner = default_world.objects().at(1);
-    inner->material()->SetAmbient(1);
+    inner->Material()->SetAmbient(1);
 
     commontypes::Ray r{{0, 0, 0.75}, {0, 0, -1}};
     const commontypes::Color c = default_world.ColorAt(r);
-    ASSERT_TRUE(c == inner->material()->Color());
+    ASSERT_TRUE(c == inner->Material()->Color());
 }
 
 TEST(WorldTest, TestNoShadowWhenNothingIsCollinearWithPointAndLight) {
@@ -190,7 +190,7 @@ TEST(WorldTest, TestReflectedColorForNonreflectiveMaterial) {
     scene::World w = scene::World::DefaultWorld();
     commontypes::Ray r{commontypes::Point{0, 0, 0}, commontypes::Vector{0, 0, 1}};
     auto shape = w.objects().at(1);
-    auto shape_material = shape->material();
+    auto shape_material = shape->Material();
     shape_material->SetAmbient(1);
 
     geometry::Intersection i{1, shape};

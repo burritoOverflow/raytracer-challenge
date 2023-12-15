@@ -43,18 +43,18 @@ TEST(ShapeTest, TestEachShapeHasUniqueId) {
 
 TEST(ShapeTest, TestTheDefaultTransformation) {
     geometry::TestShape s{};
-    ASSERT_TRUE(s.transform() == commontypes::IdentityMatrix());
+    ASSERT_TRUE(s.Transform() == commontypes::IdentityMatrix());
 }
 
 TEST(ShapeTest, TestAssigningATransformation) {
     geometry::TestShape s{};
     s.SetTransform(commontypes::TranslationMatrix{2, 3, 4});
-    ASSERT_TRUE(s.transform() == commontypes::TranslationMatrix(2, 3, 4));
+    ASSERT_TRUE(s.Transform() == commontypes::TranslationMatrix(2, 3, 4));
 }
 
 TEST(ShapeTest, TestTheDefaultMaterial) {
     geometry::TestShape s{};
-    auto m = s.material();
+    auto m = s.Material();
     ASSERT_TRUE(*m == lighting::Material());
 }
 
@@ -63,7 +63,7 @@ TEST(ShapeTest, TestAssigningAMaterial) {
     lighting::Material m = lighting::Material{};
     m.SetAmbient(1);
     s.SetMaterial(std::make_shared<lighting::Material>(m));
-    ASSERT_TRUE(*s.material() == m);
+    ASSERT_TRUE(*s.Material() == m);
 }
 
 TEST(ShapeTest, TestIntersectingScaledShapeWithRay) {

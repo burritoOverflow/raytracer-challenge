@@ -19,6 +19,8 @@ class Material {
           specular_(0.9),
           shininess_(200.0),
           reflective_(0.0),  // reflective is 0 surface is completely non-reflective; 1 is a mirror
+          refractive_index_(1.0),
+          transparency_(0.0),
           color_(commontypes::Color{1, 1, 1}),
           pattern_ptr_(nullptr)  // Pattern is optional for Materials
     {}
@@ -29,6 +31,8 @@ class Material {
           specular_(material.specular_),
           shininess_(material.shininess_),
           reflective_(material.reflective_),
+          transparency_(material.transparency_),
+          refractive_index_(material.refractive_index_),
           color_(material.color_) {}
 
     Material(Material const& material) = default;
@@ -38,12 +42,16 @@ class Material {
              const double specular,
              const double shininess,
              const double reflective,
+             const double transparency,
+             const double refractive_index,
              commontypes::Color color)
         : ambient_(ambient),
           diffuse_(diffuse),
           specular_(specular),
           shininess_(shininess),
           reflective_(reflective),
+          transparency_(transparency),
+          refractive_index_(refractive_index),
           color_(color) {}
 
     inline double Ambient() const { return ambient_; }
@@ -60,6 +68,14 @@ class Material {
 
     inline double Reflective() const { return reflective_; }
     inline void SetReflective(const double reflective) { reflective_ = reflective; }
+
+    inline double Transparency() const { return transparency_; }
+    inline void SetTransparency(const double transparency) { transparency_ = transparency; }
+
+    inline double RefractiveIndex() const { return refractive_index_; }
+    inline void SetRefractiveIndex(const double refractive_index) {
+        refractive_index_ = refractive_index;
+    }
 
     inline commontypes::Color Color() const { return color_; }
     inline void SetColor(const commontypes::Color& color) { color_ = color; }
@@ -80,6 +96,8 @@ class Material {
         diffuse_ = other.diffuse_;
         specular_ = other.specular_;
         shininess_ = other.shininess_;
+        transparency_ = other.transparency_;
+        refractive_index_ = other.refractive_index_;
         color_ = other.color_;
 
         return *this;
@@ -92,6 +110,9 @@ class Material {
     double specular_;
     double shininess_;
     double reflective_;
+    double transparency_;
+    double refractive_index_;  // determines the degree to which light will bend when entering or
+                               // exiting the material (see pg. 149)
     commontypes::Color color_;
     std::shared_ptr<pattern::Pattern> pattern_ptr_;
 
@@ -122,6 +143,16 @@ class MaterialBuilder {
 
     MaterialBuilder& WithReflective(const double reflective) {
         this->m_.reflective_ = reflective;
+        return *this;
+    }
+
+    MaterialBuilder& WithTransparency(const double transparency) {
+        this->m_.transparency_ = transparency;
+        return *this;
+    }
+
+    MaterialBuilder& WithRefractiveIndex(const double refractive_index) {
+        this->m_.refractive_index_ = refractive_index;
         return *this;
     }
 

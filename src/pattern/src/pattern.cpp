@@ -5,7 +5,7 @@ commontypes::Color pattern::Pattern::PatternAtShape(const commontypes::Matrix& s
     // this is the implementation of the initial approach outlined on pg. 132, and
     // revised by the approach on pg. 133
 
-    // world-space-point * inverse of object's transform to convert point to object space
+    // world-space-point * inverse of object's Transform to convert point to object space
     const commontypes::Point object_point =
         commontypes::Point{shape_transform.Inverse() * world_point};
 

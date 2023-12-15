@@ -108,3 +108,9 @@ TEST(SphereTest, TestComputingNormalOnTransformedSphere) {
     commontypes::Vector n = s.NormalAt(commontypes::Point{0, d, -d});
     ASSERT_TRUE(n == commontypes::Vector(0, 0.97014, -0.24254));
 }
+
+TEST(SphereTest, TestGlassSphere) {
+    geometry::Sphere sphere = geometry::Sphere::GlassSphere();
+    ASSERT_DOUBLE_EQ(sphere.Material()->Transparency(), 1.0);
+    ASSERT_DOUBLE_EQ(sphere.Material()->RefractiveIndex(), 1.5);
+}
