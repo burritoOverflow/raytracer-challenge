@@ -41,11 +41,11 @@ geometry::Computations geometry::Intersection::PrepareComputations(
         }
 
         const uint64_t shape_id = intersection.object_->id();
-        auto it = std::find_if(containers.begin(), containers.end(),
-                               [shape_id](const std::shared_ptr<geometry::Shape>& shape_ptr) {
-                                   const uint64_t id = shape_ptr->id();
-                                   return id == shape_id;
-                               });
+        const auto it =
+            std::find_if(containers.begin(), containers.end(),
+                         [shape_id](const std::shared_ptr<geometry::Shape>& shape_ptr) {
+                             return shape_ptr->id() == shape_id;
+                         });
 
         if (it == containers.end()) {
             // intersection is entering the object, add to the list
@@ -61,6 +61,7 @@ geometry::Computations geometry::Intersection::PrepareComputations(
                 // no containing object, as before
                 computations.n2 = 1.0;
             } else {
+                // RefractiveIndex of the last object in the containers list
                 computations.n2 = containers.back()->Material()->RefractiveIndex();
             }
         }
@@ -83,6 +84,10 @@ geometry::Computations geometry::Intersection::PrepareComputations(
     // bump the point a bit in the direction of the normal
     computations.over_point_ =
         commontypes::Point{computations.point_ + computations.normal_vector_ * utility::EPSILON_};
+
+    // as above, see pg. 154
+    computations.under_point_ =
+        commontypes::Point{computations.point_ - computations.normal_vector_ * utility::EPSILON_};
 
     return computations;
 }

@@ -200,3 +200,16 @@ TEST(IntersectionTest, TestFindingN1AndN2AtVariousIntersection) {
     ASSERT_DOUBLE_EQ(comps5.n1, 1.5);
     ASSERT_DOUBLE_EQ(comps5.n2, 1.0);
 }
+
+TEST(IntersectionTest, TestUnderPointIsOffsetBelowSurface) {
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
+    geometry::Sphere shape = geometry::Sphere::GlassSphere();
+    shape.SetTransform(commontypes::TranslationMatrix{0, 0, 1});
+
+    const geometry::Intersection i{5, std::make_shared<geometry::Sphere>(shape)};
+    const auto xs = std::vector<geometry::Intersection>{i};
+
+    const auto comps = i.PrepareComputations(r, xs);
+    ASSERT_GT(comps.under_point_.z(), utility::EPSILON_ / 2);
+    ASSERT_LT(comps.point_.z(), comps.under_point_.z());
+}

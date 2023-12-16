@@ -21,6 +21,7 @@ struct Computations {
     commontypes::Point
         over_point_;  // for avoiding self-shadowing (adjust the point slightly in the direction of
                       // the normal, just before testing for shadows (see pg. 114)
+    commontypes::Point under_point_;  // lies just beneath surface
     commontypes::Vector eye_vector_;
     commontypes::Vector normal_vector_;
     commontypes::Vector reflect_vector_;
