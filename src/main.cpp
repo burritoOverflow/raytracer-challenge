@@ -43,7 +43,9 @@ void WriteCanvasToPPM(const scene::Camera& camera, scene::World& world) {
     std::string image_outdir_name = "images";
 
     CreateImageOutdir(image_outdir_name);
-    std::ofstream out{std::move(image_outdir_name) + "/" + CurrentDateStr() + "image.ppm"};
+    const std::string outfile_name =
+        std::move(image_outdir_name) + "/" + CurrentDateStr() + "_image.ppm";
+    std::ofstream out{outfile_name};
 
     out << canvas.WritePPM();
     out.close();

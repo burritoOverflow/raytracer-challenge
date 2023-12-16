@@ -10,7 +10,7 @@ std::vector<geometry::Intersection> geometry::Plane::LocalIntersect(const common
 
     // NOTE - this calculation is only appropriate for xz planes, as this example is
     const auto t = -ray.origin().y() / ray.direction().y();
-    const auto intersection = geometry::Intersection{t, std::make_shared<geometry::Plane>(*this)};
+    const auto intersection = geometry::Intersection(t, std::make_shared<geometry::Plane>(*this));
     return {intersection};
 }
 

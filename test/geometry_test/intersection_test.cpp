@@ -1,6 +1,7 @@
 #include "intersection.h"
 #include <gtest/gtest.h>
 #include "plane.h"
+#include "scalingmatrix.h"
 #include "sphere.h"
 #include "translationmatrix.h"
 
@@ -147,4 +148,55 @@ TEST(IntersectionTest, TestPrecomputingTheReflectionVector) {
     const geometry::Computations comps = i.PrepareComputations(r);
     // see pg. 143
     ASSERT_TRUE(comps.reflect_vector_ == commontypes::Vector(0, sqrt_2_over_2, sqrt_2_over_2));
+}
+
+TEST(IntersectionTest, TestFindingN1AndN2AtVariousIntersection) {
+    auto a = std::make_shared<geometry::Sphere>(geometry::Sphere::GlassSphere());
+    a->SetTransform(commontypes::ScalingMatrix{2, 2, 2});
+    a->SetMaterial(std::make_shared<lighting::Material>(
+        lighting::MaterialBuilder().WithRefractiveIndex(1.5)));
+
+    auto b = std::make_shared<geometry::Sphere>(geometry::Sphere::GlassSphere());
+    b->SetTransform(commontypes::TranslationMatrix{0, 0, -0.25});
+    b->SetMaterial(std::make_shared<lighting::Material>(
+        lighting::MaterialBuilder().WithRefractiveIndex(2.0)));
+
+    auto c = std::make_shared<geometry::Sphere>(geometry::Sphere::GlassSphere());
+    c->SetTransform(commontypes::TranslationMatrix{0, 0, 0.25});
+    c->SetMaterial(std::make_shared<lighting::Material>(
+        lighting::MaterialBuilder().WithRefractiveIndex(2.5)));
+
+    auto r = commontypes::Ray{commontypes::Point{0, 0, -4}, commontypes::Vector{0, 0, 1}};
+    const auto xs = std::vector<geometry::Intersection>{geometry::Intersection{2, a},
+                                                        geometry::Intersection{2.75, b},
+                                                        geometry::Intersection{3.25, c},
+                                                        geometry::Intersection{4.75, b},
+                                                        geometry::Intersection{5.25, c},
+                                                        geometry::Intersection{6, a}
+
+    };
+
+    const geometry::Computations comps0 = xs.at(0).PrepareComputations(r, xs);
+    ASSERT_DOUBLE_EQ(comps0.n1, 1.0);
+    ASSERT_DOUBLE_EQ(comps0.n2, 1.5);
+
+    const geometry::Computations comps1 = xs.at(1).PrepareComputations(r, xs);
+    ASSERT_DOUBLE_EQ(comps1.n1, 1.5);
+    ASSERT_DOUBLE_EQ(comps1.n2, 2.0);
+
+    const geometry::Computations comps2 = xs.at(2).PrepareComputations(r, xs);
+    ASSERT_DOUBLE_EQ(comps2.n1, 2.0);
+    ASSERT_DOUBLE_EQ(comps2.n2, 2.5);
+
+    const geometry::Computations comps3 = xs.at(3).PrepareComputations(r, xs);
+    ASSERT_DOUBLE_EQ(comps3.n1, 2.5);
+    ASSERT_DOUBLE_EQ(comps3.n2, 2.5);
+
+    const geometry::Computations comps4 = xs.at(4).PrepareComputations(r, xs);
+    ASSERT_DOUBLE_EQ(comps4.n1, 2.5);
+    ASSERT_DOUBLE_EQ(comps4.n2, 1.5);
+
+    const geometry::Computations comps5 = xs.at(5).PrepareComputations(r, xs);
+    ASSERT_DOUBLE_EQ(comps5.n1, 1.5);
+    ASSERT_DOUBLE_EQ(comps5.n2, 1.0);
 }

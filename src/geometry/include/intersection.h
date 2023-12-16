@@ -25,23 +25,37 @@ struct Computations {
     commontypes::Vector normal_vector_;
     commontypes::Vector reflect_vector_;
     bool inside_{false};  // true if hit occurs inside the object
+
+    // n1 and n2 are the refractive indices of materials on either side of the ray-object
+    // intersection
+    // with n1 belonging to the material being exited and n2 belonging to the material being
+    // entered
+    double n1;
+    double n2;
 };
 
-struct Intersection {
-    // the t value where a Ray intersects the Sphere
-    double t_;
+class Intersection {
+   public:
+    Intersection() : t_(0), object_(nullptr) {}
 
-    std::shared_ptr<Shape>
-        object_;  // the id of the Sphere for which this intersection was located
+    Intersection(const double t, const std::shared_ptr<Shape>& object_ptr)
+        : t_(t), object_(object_ptr) {}
 
     static std::optional<Intersection> Hit(const std::vector<Intersection>& xs);
 
-    Computations PrepareComputations(commontypes::Ray& r) const;
+    Computations PrepareComputations(
+        commontypes::Ray& r,
+        const std::vector<Intersection>& intersections = std::vector<Intersection>()) const;
 
     // this is strictly used for comparison when sorting for retrieving the hit (method above)
     inline bool operator<(const Intersection& rhs) const {
         return std::tie(t_, object_) < std::tie(rhs.t_, rhs.object_);
     }
+
+    // the t value where a Ray intersects the Sphere
+    double t_;
+
+    std::shared_ptr<Shape> object_;  //  the Shape for which this intersection was located
 };
 }  // namespace geometry
 

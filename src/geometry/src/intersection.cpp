@@ -20,8 +20,51 @@ std::optional<geometry::Intersection> geometry::Intersection::Hit(
     return std::nullopt;
 }
 
-geometry::Computations geometry::Intersection::PrepareComputations(commontypes::Ray& r) const {
+geometry::Computations geometry::Intersection::PrepareComputations(
+    commontypes::Ray& r,
+    const std::vector<Intersection>& intersections) const {
     geometry::Computations computations{};
+    std::vector<std::shared_ptr<geometry::Shape>> containers{};
+
+    for (const auto& intersection : intersections) {
+        const bool is_intersection_is_the_hit = intersection == *this;
+
+        if (is_intersection_is_the_hit) {
+            if (containers.empty()) {
+                // set n1 to 1 if list is empty
+                computations.n1 = 1.0;
+            } else {
+                // otherwise, if intersection is the hit, set n1 to the
+                // RefractiveIndex of the last object in the containers
+                computations.n1 = containers.back()->Material()->RefractiveIndex();
+            }
+        }
+
+        const uint64_t shape_id = intersection.object_->id();
+        auto it = std::find_if(containers.begin(), containers.end(),
+                               [shape_id](const std::shared_ptr<geometry::Shape>& shape_ptr) {
+                                   const uint64_t id = shape_ptr->id();
+                                   return id == shape_id;
+                               });
+
+        if (it == containers.end()) {
+            // intersection is entering the object, add to the list
+            containers.push_back(intersection.object_);
+        } else {
+            // if intersection is already in the list, then this intersection must be exiting the
+            // object, so we remove it.
+            containers.erase(it);
+        }
+
+        if (is_intersection_is_the_hit) {
+            if (containers.empty()) {
+                // no containing object, as before
+                computations.n2 = 1.0;
+            } else {
+                computations.n2 = containers.back()->Material()->RefractiveIndex();
+            }
+        }
+    }
 
     computations.t_ = t_;
     computations.object_ = object_;

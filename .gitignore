@@ -58,3 +58,4 @@ cmake-build-debug/
 images/
 build_deb/
 pi_images/
+cmake-build-relwithdebinfo/
