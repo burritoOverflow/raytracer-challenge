@@ -325,7 +325,7 @@ TEST(WorldTest, TestRefractedColorAtMaximumRecursiveDepth) {
     ASSERT_TRUE(c == commontypes::Color::MakeBlack());
 }
 
-TEST(WorldTest_TestAddObjectsToWorld_Test, TestRefractedColorUnderTotalInternalReflection) {
+TEST(WorldTest, TestRefractedColorUnderTotalInternalReflection) {
     const double sqrt2_over2 = sqrt(2) / 2;
 
     auto w = scene::World::DefaultWorld();
