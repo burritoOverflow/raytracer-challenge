@@ -299,3 +299,28 @@ TEST(WorldTest, TestReflectedColorAtMaxRecursionDepth) {
     const auto color = w.ReflectedColor(comps, 0);
     ASSERT_TRUE(color == commontypes::Color::MakeBlack());
 }
+
+TEST(WorldTest, TestRefractedColorWithOpaqueSurface) {
+    auto w = scene::World::DefaultWorld();
+    const auto shape = w.objects().front();
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
+    const auto xs = std::vector<geometry::Intersection>{geometry::Intersection{4, shape},
+                                                        geometry::Intersection{6, shape}};
+    auto comps = xs.front().PrepareComputations(r, xs);
+    const commontypes::Color c = w.RefractedColor(comps, 5);
+    ASSERT_TRUE(c == commontypes::Color::MakeBlack());
+}
+
+TEST(WorldTest, TestRefractedColorAtMaximumRecursiveDepth) {
+    auto w = scene::World::DefaultWorld();
+    auto shape = w.objects().front();
+    shape->Material()->SetTransparency(1.0);
+    shape->Material()->SetRefractiveIndex(1.5);
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
+    const auto xs = std::vector<geometry::Intersection>{geometry::Intersection{4, shape},
+                                                        geometry::Intersection{6, shape}};
+
+    auto comps = xs.front().PrepareComputations(r, xs);
+    const commontypes::Color c = w.RefractedColor(comps, 0);
+    ASSERT_TRUE(c == commontypes::Color::MakeBlack());
+}

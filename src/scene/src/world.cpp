@@ -126,3 +126,16 @@ commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
 
     return commontypes::Color{color * material_reflective};
 }
+
+commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
+                                                u_int8_t remaining_invocations) {
+    if (comps.object_->Material()->Transparency() == 0) {
+        return commontypes::Color::MakeBlack();
+    }
+
+    if (remaining_invocations == 0) {
+        return commontypes::Color::MakeBlack();
+    }
+
+    return commontypes::Color::MakeWhite();
+}
