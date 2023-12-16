@@ -129,11 +129,26 @@ commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
 
 commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
                                                 u_int8_t remaining_invocations) {
+    if (remaining_invocations == 0) {
+        return commontypes::Color::MakeBlack();
+    }
+
     if (comps.object_->Material()->Transparency() == 0) {
         return commontypes::Color::MakeBlack();
     }
 
-    if (remaining_invocations == 0) {
+    // see discussion on pg 156-157
+    // ratio of first index of refraction to the second
+    const double n_ratio = comps.n1 / comps.n2;
+
+    // cos(theta_i) is same as Dot product of these two vectors
+    const double cos_i = comps.eye_vector_.Dot(comps.normal_vector_);
+
+    // trigonometric identify
+    const double sin2_t = pow(n_ratio, 2) * (1 - pow(cos_i, 2));
+
+    if (sin2_t > 1) {
+        // total internal reflection. return black
         return commontypes::Color::MakeBlack();
     }
 

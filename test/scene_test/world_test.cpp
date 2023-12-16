@@ -324,3 +324,20 @@ TEST(WorldTest, TestRefractedColorAtMaximumRecursiveDepth) {
     const commontypes::Color c = w.RefractedColor(comps, 0);
     ASSERT_TRUE(c == commontypes::Color::MakeBlack());
 }
+
+TEST(WorldTest_TestAddObjectsToWorld_Test, TestRefractedColorUnderTotalInternalReflection) {
+    const double sqrt2_over2 = sqrt(2) / 2;
+
+    auto w = scene::World::DefaultWorld();
+    auto shape = w.objects().front();
+    shape->Material()->SetTransparency(1.0);
+    shape->Material()->SetRefractiveIndex(1.5);
+
+    commontypes::Ray r{commontypes::Point{0, 0, sqrt2_over2}, commontypes::Vector{0, 1, 0}};
+    const auto xs = std::vector<geometry::Intersection>{
+        geometry::Intersection{-sqrt2_over2, shape}, geometry::Intersection{sqrt2_over2, shape}};
+
+    auto comps = xs.at(1).PrepareComputations(r, xs);
+    const commontypes::Color c = w.RefractedColor(comps, 5);
+    ASSERT_TRUE(c == commontypes::Color::MakeBlack());
+}
