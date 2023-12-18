@@ -7,14 +7,16 @@
 #include "sphere.h"
 #include "translationmatrix.h"
 
+namespace {
 class TestPattern : public pattern::Pattern {
    public:
     TestPattern() : pattern::Pattern() {}
 
-    const commontypes::Color PatternAt(const commontypes::Point& point) const  {
+    const commontypes::Color PatternAt(const commontypes::Point& point) const {
         return {point.x(), point.y(), point.z()};
     }
 };
+}  // namespace
 
 TEST(PatternTest, TestTheDefaultPatternTransformation) {
     const TestPattern pattern{};

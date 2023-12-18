@@ -40,7 +40,7 @@ class World {
                                       u_int8_t remaining_invocations = RECURSION_LIMIT) const;
 
     commontypes::Color RefractedColor(geometry::Computations& comps,
-                                      u_int8_t remaining_invocations = RECURSION_LIMIT);
+                                      u_int8_t remaining_invocations = RECURSION_LIMIT) const;
 
     bool IsShadowed(const commontypes::Point& point) const;
 

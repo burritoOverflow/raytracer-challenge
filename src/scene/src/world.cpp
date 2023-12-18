@@ -76,8 +76,10 @@ commontypes::Color scene::World::ShadeHit(geometry::Computations& comps,
                            comps.over_point_, comps.eye_vector_, comps.normal_vector_, shadowed);
 
     const commontypes::Color reflected_color = ReflectedColor(comps, remaining_invocations);
+    const commontypes::Color refracted_color = RefractedColor(comps, remaining_invocations);
 
-    return commontypes::Color{surface + reflected_color};
+    // sum discussed on pg. 159
+    return commontypes::Color{surface + reflected_color + refracted_color};
 }
 
 commontypes::Color scene::World::ColorAt(commontypes::Ray& r,
@@ -128,7 +130,7 @@ commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
 }
 
 commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
-                                                u_int8_t remaining_invocations) {
+                                                u_int8_t remaining_invocations) const {
     if (remaining_invocations == 0) {
         return commontypes::Color::MakeBlack();
     }
@@ -152,5 +154,18 @@ commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
         return commontypes::Color::MakeBlack();
     }
 
-    return commontypes::Color::MakeWhite();
+    // via trigonometric identity
+    const double cos_t = sqrt(1.0 - sin2_t);
+
+    // compute the direction of the refracted ray
+    const commontypes::Vector direction =
+        comps.normal_vector_ * (n_ratio * cos_i - cos_t) - comps.eye_vector_ * n_ratio;
+
+    auto refract_ray = commontypes::Ray{comps.under_point_, direction};
+
+    // color of the refracted ray, accounting for opacity
+    const auto color = commontypes::Color{this->ColorAt(refract_ray, remaining_invocations - 1) *
+                                          comps.object_->Material()->Transparency()};
+
+    return color;
 }

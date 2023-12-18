@@ -1,10 +1,22 @@
 #include "world.h"
 #include <gtest/gtest.h>
+#include "pattern.h"
 #include "plane.h"
 #include "scalingmatrix.h"
 #include "translationmatrix.h"
 
 static const double SQRT2OVER2 = sqrt(2) / 2;
+
+namespace {
+class TestPattern : public pattern::Pattern {
+   public:
+    TestPattern() : pattern::Pattern() {}
+
+    const commontypes::Color PatternAt(const commontypes::Point& point) const {
+        return {point.x(), point.y(), point.z()};
+    }
+};
+}  // namespace
 
 // workaround for testing for the presence of the expected Spheres for the default world
 static bool DefaultWorldContains(const scene::World& default_world,
@@ -322,9 +334,12 @@ TEST(WorldTest, TestRefractedColorAtMaximumRecursiveDepth) {
 
     auto comps = xs.front().PrepareComputations(r, xs);
     const commontypes::Color c = w.RefractedColor(comps, 0);
+
+    // expects color black when total internal reflection occurs (Ray reflects off surface)
     ASSERT_TRUE(c == commontypes::Color::MakeBlack());
 }
 
+// see pg. 156
 TEST(WorldTest, TestRefractedColorUnderTotalInternalReflection) {
     const double sqrt2_over2 = sqrt(2) / 2;
 
@@ -340,4 +355,74 @@ TEST(WorldTest, TestRefractedColorUnderTotalInternalReflection) {
     auto comps = xs.at(1).PrepareComputations(r, xs);
     const commontypes::Color c = w.RefractedColor(comps, 5);
     ASSERT_TRUE(c == commontypes::Color::MakeBlack());
+}
+
+TEST(WorldTest, TestRefractedColorWithRefractedRay) {
+    auto w = scene::World::DefaultWorld();
+
+    auto a = w.objects().front();
+
+    auto pattern_ptr = std::make_shared<TestPattern>(TestPattern{});
+    const lighting::Material material_a =
+        lighting::MaterialBuilder()
+            .WithAmbient(1.0)  // fully ambient, so shows regardless of lighting
+            .WithPatternPtr(std::move(pattern_ptr))
+            .Build();
+
+    a->SetMaterial(std::make_shared<lighting::Material>(material_a));
+
+    auto b = w.objects().at(1);
+    // glassy material
+    const lighting::Material material_b =
+        lighting::MaterialBuilder().WithTransparency(1.0).WithRefractiveIndex(1.5).Build();
+    b->SetMaterial(std::make_shared<lighting::Material>(material_b));
+
+    // ray inside the innermost Sphere, pointing directly upward
+    commontypes::Ray r{commontypes::Point{0, 0, 0.1}, commontypes::Vector{0, 1, 0}};
+    const std::vector<geometry::Intersection> xs = {
+        {-0.9899, a}, {-0.4899, b}, {0.4899, b}, {0.9899, a}};
+
+    auto comps = xs.at(2).PrepareComputations(r, xs);
+    const auto c = w.RefractedColor(comps, 5);
+
+    const auto expected = commontypes::Color(0, 0.99888, 0.04725);
+    ASSERT_TRUE(c == expected);
+}
+
+// see pg. 158-159
+TEST(WorldTest, TestShadeHitWithTransparentMaterial) {
+    auto w = scene::World::DefaultWorld();
+
+    // glass floor below the two default world's spheres
+    auto floor = geometry::Plane();
+    floor.SetTransform(commontypes::TranslationMatrix(0, -1, 0));
+    const auto floor_material =
+        lighting::MaterialBuilder().WithTransparency(0.5).WithRefractiveIndex(1.5).Build();
+
+    floor.SetMaterial(std::make_shared<lighting::Material>(floor_material));
+    w.AddObject(std::move(std::make_shared<geometry::Plane>(floor)));
+
+    // new sphere below the floor
+    auto ball = geometry::Sphere();
+    const auto ball_material = lighting::MaterialBuilder()
+                                   .WithColor(commontypes::Color{1, 0, 0})
+                                   .WithAmbient(0.5)
+                                   .Build();
+
+    ball.SetMaterial(std::make_shared<lighting::Material>(ball_material));
+    ball.SetTransform(commontypes::TranslationMatrix{0, -3.5, -0.5});
+    w.AddObject(std::move(std::make_shared<geometry::Sphere>(ball)));
+
+    auto r = commontypes::Ray{commontypes::Point{0, 0, -3},
+                              commontypes::Vector{0, -sqrt(2) / 2, sqrt(2) / 2}};
+
+    const std::vector<geometry::Intersection> xs = {
+        {sqrt(2), std::move(std::make_shared<geometry::Plane>(floor))}};
+
+    geometry::Computations comps = xs.front().PrepareComputations(r, xs);
+    const auto color = w.ShadeHit(comps, 5);
+
+    // plane is only semi-transparent, so resulting color should combine refracted color of
+    // the ball and the color of the Plane
+    ASSERT_TRUE(color == commontypes::Color(0.93642, 0.68642, 0.68642));
 }
