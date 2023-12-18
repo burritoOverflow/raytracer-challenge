@@ -146,7 +146,7 @@ commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
     // cos(theta_i) is same as Dot product of these two vectors
     const double cos_i = comps.eye_vector_.Dot(comps.normal_vector_);
 
-    // trigonometric identify
+    // trigonometric identity
     const double sin2_t = pow(n_ratio, 2) * (1 - pow(cos_i, 2));
 
     if (sin2_t > 1) {

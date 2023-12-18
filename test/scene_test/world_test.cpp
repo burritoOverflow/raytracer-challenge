@@ -339,7 +339,14 @@ TEST(WorldTest, TestRefractedColorAtMaximumRecursiveDepth) {
     ASSERT_TRUE(c == commontypes::Color::MakeBlack());
 }
 
-// see pg. 156
+/*
+ see pg. 156
+
+ total internal reflection occurs when when light enters medium at an
+ sufficiently acute angle + the new medium has a lower refractive index than the old material
+
+ when this occurs, the ray will reflect off the interface instead of passing through it
+*/
 TEST(WorldTest, TestRefractedColorUnderTotalInternalReflection) {
     const double sqrt2_over2 = sqrt(2) / 2;
 
@@ -354,13 +361,15 @@ TEST(WorldTest, TestRefractedColorUnderTotalInternalReflection) {
 
     auto comps = xs.at(1).PrepareComputations(r, xs);
     const commontypes::Color c = w.RefractedColor(comps, 5);
-    ASSERT_TRUE(c == commontypes::Color::MakeBlack());
+    const auto expected_color = commontypes::Color::MakeBlack();
+
+    ASSERT_TRUE(c == expected_color);
 }
 
+// tests the remaining cases that do not fall under total internal reflection (handles refraction)
 TEST(WorldTest, TestRefractedColorWithRefractedRay) {
     auto w = scene::World::DefaultWorld();
-
-    auto a = w.objects().front();
+    auto A = w.objects().front();
 
     auto pattern_ptr = std::make_shared<TestPattern>(TestPattern{});
     const lighting::Material material_a =
@@ -369,18 +378,18 @@ TEST(WorldTest, TestRefractedColorWithRefractedRay) {
             .WithPatternPtr(std::move(pattern_ptr))
             .Build();
 
-    a->SetMaterial(std::make_shared<lighting::Material>(material_a));
+    A->SetMaterial(std::make_shared<lighting::Material>(material_a));
 
-    auto b = w.objects().at(1);
+    auto B = w.objects().at(1);
     // glassy material
     const lighting::Material material_b =
         lighting::MaterialBuilder().WithTransparency(1.0).WithRefractiveIndex(1.5).Build();
-    b->SetMaterial(std::make_shared<lighting::Material>(material_b));
+    B->SetMaterial(std::make_shared<lighting::Material>(material_b));
 
     // ray inside the innermost Sphere, pointing directly upward
     commontypes::Ray r{commontypes::Point{0, 0, 0.1}, commontypes::Vector{0, 1, 0}};
     const std::vector<geometry::Intersection> xs = {
-        {-0.9899, a}, {-0.4899, b}, {0.4899, b}, {0.9899, a}};
+        {-0.9899, A}, {-0.4899, B}, {0.4899, B}, {0.9899, A}};
 
     auto comps = xs.at(2).PrepareComputations(r, xs);
     const auto c = w.RefractedColor(comps, 5);
