@@ -12,7 +12,7 @@ class TestPattern : public pattern::Pattern {
    public:
     TestPattern() : pattern::Pattern() {}
 
-    const commontypes::Color PatternAt(const commontypes::Point& point) const {
+    const commontypes::Color PatternAt(const commontypes::Point& point) const override {
         return {point.x(), point.y(), point.z()};
     }
 };

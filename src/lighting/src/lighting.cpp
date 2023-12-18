@@ -16,7 +16,7 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
     // with no pattern present, use the Material's color.
     commontypes::Color color = material.Color();
 
-    // otherwise, usee the material's pattern at the given Shape
+    // otherwise, use the material's pattern at the given Shape
     if (material.HasPattern()) {
         color = material.Pattern()->PatternAtShape(object_transform, point);
     }
