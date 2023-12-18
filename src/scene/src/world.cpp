@@ -131,7 +131,7 @@ commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
 
 commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
                                                 u_int8_t remaining_invocations) const {
-    if (remaining_invocations == 0) {
+    if (remaining_invocations <= 0) {
         return commontypes::Color::MakeBlack();
     }
 

@@ -4,7 +4,6 @@
 #include "color.h"
 #include "identitymatrix.h"
 #include "lighting.h"
-#include "pattern.h"
 #include "point.h"
 #include "pointlight.h"
 #include "stripepattern.h"
