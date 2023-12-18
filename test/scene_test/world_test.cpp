@@ -375,7 +375,9 @@ TEST(WorldTest, TestRefractedColorWithRefractedRay) {
     const lighting::Material material_a =
         lighting::MaterialBuilder()
             .WithAmbient(1.0)  // fully ambient, so shows regardless of lighting
-            .WithPatternPtr(std::move(pattern_ptr));
+            .WithPatternPtr(std::move(pattern_ptr))
+            .Build();  // WARNING: attempting to build using the call op results in the pattern_ptr
+                       // being NULL
 
     A->SetMaterial(std::make_shared<lighting::Material>(material_a));
 
@@ -404,16 +406,18 @@ TEST(WorldTest, TestShadeHitWithTransparentMaterial) {
     // glass floor below the two default world's spheres
     auto floor = geometry::Plane();
     floor.SetTransform(commontypes::TranslationMatrix(0, -1, 0));
-    const lighting::Material floor_material =
-        lighting::MaterialBuilder().WithTransparency(0.5).WithRefractiveIndex(1.5);
+    const auto floor_material =
+        lighting::MaterialBuilder().WithTransparency(0.5).WithRefractiveIndex(1.5).Build();
 
     floor.SetMaterial(std::make_shared<lighting::Material>(floor_material));
     w.AddObject(std::move(std::make_shared<geometry::Plane>(floor)));
 
     // new sphere below the floor
     auto ball = geometry::Sphere();
-    const lighting::Material ball_material =
-        lighting::MaterialBuilder().WithColor(commontypes::Color{1, 0, 0}).WithAmbient(0.5);
+    const auto ball_material = lighting::MaterialBuilder()
+                                   .WithColor(commontypes::Color{1, 0, 0})
+                                   .WithAmbient(0.5)
+                                   .Build();
 
     ball.SetMaterial(std::make_shared<lighting::Material>(ball_material));
     ball.SetTransform(commontypes::TranslationMatrix{0, -3.5, -0.5});
