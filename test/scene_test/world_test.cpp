@@ -375,15 +375,14 @@ TEST(WorldTest, TestRefractedColorWithRefractedRay) {
     const lighting::Material material_a =
         lighting::MaterialBuilder()
             .WithAmbient(1.0)  // fully ambient, so shows regardless of lighting
-            .WithPatternPtr(std::move(pattern_ptr))
-            .Build();
+            .WithPatternPtr(std::move(pattern_ptr));
 
     A->SetMaterial(std::make_shared<lighting::Material>(material_a));
 
     auto B = w.objects().at(1);
     // glassy material
     const lighting::Material material_b =
-        lighting::MaterialBuilder().WithTransparency(1.0).WithRefractiveIndex(1.5).Build();
+        lighting::MaterialBuilder().WithTransparency(1.0).WithRefractiveIndex(1.5);
     B->SetMaterial(std::make_shared<lighting::Material>(material_b));
 
     // ray inside the innermost Sphere, pointing directly upward
@@ -405,18 +404,16 @@ TEST(WorldTest, TestShadeHitWithTransparentMaterial) {
     // glass floor below the two default world's spheres
     auto floor = geometry::Plane();
     floor.SetTransform(commontypes::TranslationMatrix(0, -1, 0));
-    const auto floor_material =
-        lighting::MaterialBuilder().WithTransparency(0.5).WithRefractiveIndex(1.5).Build();
+    const lighting::Material floor_material =
+        lighting::MaterialBuilder().WithTransparency(0.5).WithRefractiveIndex(1.5);
 
     floor.SetMaterial(std::make_shared<lighting::Material>(floor_material));
     w.AddObject(std::move(std::make_shared<geometry::Plane>(floor)));
 
     // new sphere below the floor
     auto ball = geometry::Sphere();
-    const auto ball_material = lighting::MaterialBuilder()
-                                   .WithColor(commontypes::Color{1, 0, 0})
-                                   .WithAmbient(0.5)
-                                   .Build();
+    const lighting::Material ball_material =
+        lighting::MaterialBuilder().WithColor(commontypes::Color{1, 0, 0}).WithAmbient(0.5);
 
     ball.SetMaterial(std::make_shared<lighting::Material>(ball_material));
     ball.SetTransform(commontypes::TranslationMatrix{0, -3.5, -0.5});
