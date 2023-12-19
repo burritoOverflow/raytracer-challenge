@@ -44,6 +44,7 @@ class Intersection {
 
     static std::optional<Intersection> Hit(const std::vector<Intersection>& xs);
 
+    // see details of the addition and purpose of the `intersections` parameter on pg. 153
     Computations PrepareComputations(
         commontypes::Ray& r,
         const std::vector<Intersection>& intersections = std::vector<Intersection>()) const;

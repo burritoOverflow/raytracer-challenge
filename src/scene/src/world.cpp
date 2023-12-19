@@ -96,7 +96,7 @@ commontypes::Color scene::World::ColorAt(commontypes::Ray& r,
     auto maybe_hit = geometry::Intersection::Hit(intersections);
 
     if (maybe_hit.has_value()) {
-        auto comps = maybe_hit->PrepareComputations(r);
+        auto comps = maybe_hit->PrepareComputations(r, intersections);
         return ShadeHit(comps, remaining_invocations);
     }
 
