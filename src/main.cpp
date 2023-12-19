@@ -52,22 +52,46 @@ void WriteCanvasToPPM(const scene::Camera& camera, scene::World& world) {
 }
 
 std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
+    auto left_sphere = geometry::Sphere{};
+    const auto left_transform = commontypes::TranslationMatrix{-1.5, 0.33, -0.75} *
+                                commontypes::ScalingMatrix{0.33, 0.33, 0.33};
+    left_sphere.SetTransform(left_transform);
+
+    lighting::Material left_sphere_mat = lighting::MaterialBuilder()
+                                             .WithColor({0, 0, 1})
+                                             .WithDiffuse(0.7)
+                                             .WithSpecular(0.3)
+                                             .WithReflective(0.9);
+    left_sphere.SetMaterial(std::make_shared<lighting::Material>(std::move(left_sphere_mat)));
+
     auto middle_sphere = geometry::Sphere{};
     middle_sphere.SetTransform(commontypes::TranslationMatrix{-0.5, 1, 0.5});
 
-    const lighting::Material middle_sphere_mat =
-        lighting::MaterialBuilder()
-            .WithColor({0.33, 0.33, 0.33})
-            .WithSpecular(0.3)
-            //                                                     .WithTransparency(0.8)
-            //                                                     .WithRefractiveIndex(1.5)
-            .WithReflective(0.2);
+    lighting::Material middle_sphere_mat = lighting::MaterialBuilder()
+                                               .WithColor({1, 0, 0})
+                                               .WithTransparency(0.9)
+                                               .WithRefractiveIndex(1.6)
+                                               .WithReflective(0.55)
+                                               .WithDiffuse(0.22)
+                                               .WithSpecular(0.33);
+    middle_sphere.SetMaterial(std::make_shared<lighting::Material>(std::move(middle_sphere_mat)));
 
-    middle_sphere.SetMaterial(std::make_shared<lighting::Material>(middle_sphere_mat));
+    auto right_sphere = geometry::Sphere{};
+    const auto right_sphere_transform =
+        commontypes::TranslationMatrix{1.5, 0.5, -0.5} * commontypes::ScalingMatrix{0.5, 0.5, 0.5};
+    right_sphere.SetTransform(right_sphere_transform);
 
-    return {
+    lighting::Material right_sphere_mat = lighting::MaterialBuilder()
+                                              .WithColor({0, 1, 0})
+                                              .WithDiffuse(0.7)
+                                              .WithSpecular(0.3)
+                                              .WithReflective(0.5);
+    right_sphere.SetMaterial(std::make_shared<lighting::Material>(std::move(right_sphere_mat)));
+
+    return std::vector<std::shared_ptr<geometry::Shape>>{
+        std::make_shared<geometry::Sphere>(left_sphere),
         std::make_shared<geometry::Sphere>(middle_sphere),
-    };
+        std::make_shared<geometry::Sphere>(right_sphere)};
 }
 
 void RenderChapter7Scene() {
@@ -260,5 +284,5 @@ void PatternRoomRefractiveSphere() {
 }  // namespace
 
 int main() {
-    PatternRoomRefractiveSphere();
+    Chapter10PatternPlaneRender();
 }
