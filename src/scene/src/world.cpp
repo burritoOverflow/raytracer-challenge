@@ -92,8 +92,8 @@ commontypes::Color scene::World::ShadeHit(geometry::Computations& comps,
 
 commontypes::Color scene::World::ColorAt(commontypes::Ray& r,
                                          const uint8_t remaining_invocations) const {
-    auto intersections = scene::World::Intersect(r);
-    auto maybe_hit = geometry::Intersection::Hit(intersections);
+    const auto intersections = scene::World::Intersect(r);
+    const auto maybe_hit = geometry::Intersection::Hit(intersections);
 
     if (maybe_hit.has_value()) {
         auto comps = maybe_hit->PrepareComputations(r, intersections);
