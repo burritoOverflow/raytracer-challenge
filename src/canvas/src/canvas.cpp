@@ -1,7 +1,7 @@
 #include "canvas.h"
 
 double canvas::Canvas::Clamp(const double d, const double min, const double max) {
-    if (d < 0.0) {
+    if (d < min) {
         return 0.0;
     }
 

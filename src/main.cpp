@@ -68,10 +68,10 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
     middle_sphere.SetTransform(commontypes::TranslationMatrix{-0.5, 1, 0.5});
 
     lighting::Material middle_sphere_mat = lighting::MaterialBuilder()
-                                               .WithColor({1, 0, 0})
+                                               .WithColor({0.55, 0, 0})
                                                .WithTransparency(0.9)
                                                .WithRefractiveIndex(1.6)
-                                               .WithReflective(0.55)
+                                               .WithReflective(0.8)
                                                .WithDiffuse(0.22)
                                                .WithSpecular(0.33);
     middle_sphere.SetMaterial(std::make_shared<lighting::Material>(std::move(middle_sphere_mat)));
@@ -82,10 +82,10 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
     right_sphere.SetTransform(right_sphere_transform);
 
     lighting::Material right_sphere_mat = lighting::MaterialBuilder()
-                                              .WithColor({0, 1, 0})
+                                              .WithColor({0, 0.79, 0})
                                               .WithDiffuse(0.7)
-                                              .WithSpecular(0.3)
-                                              .WithReflective(0.5);
+                                              .WithSpecular(0.55)
+                                              .WithReflective(0.8);
     right_sphere.SetMaterial(std::make_shared<lighting::Material>(std::move(right_sphere_mat)));
 
     return std::vector<std::shared_ptr<geometry::Shape>>{
