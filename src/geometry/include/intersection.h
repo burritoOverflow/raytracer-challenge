@@ -58,6 +58,8 @@ class Intersection {
 
     std::shared_ptr<Shape> object_;  //  the Shape for which this intersection was located
 };
+
+double Schlick(const Computations& comps);
 }  // namespace geometry
 
 bool operator==(const geometry::Intersection& i1, const geometry::Intersection& i2);

@@ -78,6 +78,14 @@ commontypes::Color scene::World::ShadeHit(geometry::Computations& comps,
     const commontypes::Color reflected_color = ReflectedColor(comps, remaining_invocations);
     const commontypes::Color refracted_color = RefractedColor(comps, remaining_invocations);
 
+    // if the surface is both transparent and reflective (pg. 164)
+    if (comps.object_->Material()->Reflective() > 0 &&
+        comps.object_->Material()->Transparency() > 0) {
+        const double reflectance = geometry::Schlick(comps);
+        return commontypes::Color{surface + reflected_color * reflectance +
+                                  refracted_color * (1 - reflectance)};
+    }
+
     // sum discussed on pg. 159
     return commontypes::Color{surface + reflected_color + refracted_color};
 }

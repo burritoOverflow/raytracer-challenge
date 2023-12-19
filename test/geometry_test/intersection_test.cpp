@@ -213,3 +213,45 @@ TEST(IntersectionTest, TestUnderPointIsOffsetBelowSurface) {
     ASSERT_GT(comps.under_point_.z(), utility::EPSILON_ / 2);
     ASSERT_LT(comps.point_.z(), comps.under_point_.z());
 }
+
+TEST(IntersectionTest, TestSchlickApproximationUnderTotalInternalReflection) {
+    geometry::Sphere shape = geometry::Sphere::GlassSphere();
+    auto shape_ptr = std::make_shared<geometry::Sphere>(shape);
+
+    const double sqrt_2_over_2 = sqrt(2) / 2;
+
+    // ray inside a glass sphere, offset from center straight up
+    commontypes::Ray r{commontypes::Point{0, 0, sqrt_2_over_2}, commontypes::Vector{0, 1, 0}};
+    const auto xs = std::vector<geometry::Intersection>{{-sqrt_2_over_2, shape_ptr},
+                                                        {sqrt_2_over_2, shape_ptr}};
+
+    const auto comps = xs.at(1).PrepareComputations(r, xs);
+    const double reflectance = geometry::Schlick(comps);
+    ASSERT_DOUBLE_EQ(reflectance, 1.0);
+}
+
+TEST(IntersectionTest, TestSchlickApproximationWithPerpendicularViewingAngle) {
+    geometry::Sphere shape = geometry::Sphere::GlassSphere();
+    auto shape_ptr = std::make_shared<geometry::Sphere>(shape);
+
+    commontypes::Ray r{commontypes::Point{0, 0, 0}, commontypes::Vector{0, 1, 0}};
+    const auto xs = std::vector<geometry::Intersection>{{-1, shape_ptr}, {1, shape_ptr}};
+
+    const auto comps = xs.at(1).PrepareComputations(r, xs);
+    const double reflectance = geometry::Schlick(comps);
+    ASSERT_DOUBLE_EQ(reflectance, 0.04);
+}
+
+TEST(IntersectionTest, TestSchlickApproximationWithSmallAngleAndN2GreaterThanN1) {
+    geometry::Sphere shape = geometry::Sphere::GlassSphere();
+    auto shape_ptr = std::make_shared<geometry::Sphere>(shape);
+
+    commontypes::Ray r{commontypes::Point{0, 0.99, -2}, commontypes::Vector{0, 0, 1}};
+    const auto xs = std::vector<geometry::Intersection>{{1.8589, shape_ptr}};
+
+    const auto comps = xs.at(0).PrepareComputations(r, xs);
+    const double reflectance = geometry::Schlick(comps);
+
+    // expand this value quite a bit to get eq to pass
+    ASSERT_DOUBLE_EQ(reflectance, 0.48873081012212183);
+}

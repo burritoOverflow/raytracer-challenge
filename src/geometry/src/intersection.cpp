@@ -92,6 +92,26 @@ geometry::Computations geometry::Intersection::PrepareComputations(
     return computations;
 }
 
+double geometry::Schlick(const geometry::Computations& comps) {
+    double cos = comps.eye_vector_.Dot(comps.normal_vector_);
+
+    // total internal reflection can only occur if n1 > n2
+    if (comps.n1 > comps.n2) {
+        const double n = comps.n1 / comps.n2;
+        const double sin2_t = pow(n, 2) * (1 - pow(cos, 2));
+
+        if (sin2_t > 1.0)
+            return 1.0;
+
+        const double cos_t = sqrt(1.0 - sin2_t);
+
+        // with n1 > n2, use cos(theta_t) instead
+        cos = cos_t;
+    }
+    const double r0 = pow(((comps.n1 - comps.n2) / (comps.n1 + comps.n2)), 2);
+    return r0 + (1 - r0) * pow((1 - cos), 5);
+}
+
 bool operator==(const geometry::Intersection& i1, const geometry::Intersection& i2) {
     return i1.object_ == i2.object_ && utility::NearEquals(i1.t_, i2.t_);
 }

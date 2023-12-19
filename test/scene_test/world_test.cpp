@@ -434,3 +434,35 @@ TEST(WorldTest, TestShadeHitWithTransparentMaterial) {
     // the ball and the color of the Plane
     ASSERT_TRUE(color == commontypes::Color(0.93642, 0.68642, 0.68642));
 }
+
+TEST(WorldTest, TestShadeHitWithReflectiveAndTransparentMaterial) {
+    auto w = scene::World::DefaultWorld();
+
+    auto r = commontypes::Ray{commontypes::Point{0, 0, -3},
+                              commontypes::Vector{0, -sqrt(2) / 2, sqrt(2) / 2}};
+
+    auto floor = geometry::Plane();
+    floor.SetTransform(commontypes::TranslationMatrix(0, -1, 0));
+    const lighting::Material floor_material =
+        lighting::MaterialBuilder().WithReflective(0.5).WithTransparency(0.5).WithRefractiveIndex(
+            1.5);
+
+    floor.SetMaterial(std::make_shared<lighting::Material>(floor_material));
+    w.AddObject(std::move(std::make_shared<geometry::Plane>(floor)));
+
+    auto ball = geometry::Sphere();
+    const lighting::Material ball_material =
+        lighting::MaterialBuilder().WithColor(commontypes::Color{1, 0, 0}).WithAmbient(0.5);
+
+    ball.SetMaterial(std::make_shared<lighting::Material>(ball_material));
+    ball.SetTransform(commontypes::TranslationMatrix{0, -3.5, -0.5});
+    w.AddObject(std::move(std::make_shared<geometry::Sphere>(ball)));
+
+    const std::vector<geometry::Intersection> xs = {
+        {sqrt(2), std::move(std::make_shared<geometry::Plane>(floor))}};
+
+    geometry::Computations comps = xs.front().PrepareComputations(r, xs);
+    const auto color = w.ShadeHit(comps, 5);
+
+    ASSERT_TRUE(color == commontypes::Color(0.93391, 0.69643, 0.69243));
+}
