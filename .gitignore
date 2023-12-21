@@ -59,3 +59,5 @@ images/
 build_deb/
 pi_images/
 cmake-build-relwithdebinfo/
+build_release_profiler/
+*.data

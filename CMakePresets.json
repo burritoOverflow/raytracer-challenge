@@ -55,6 +55,19 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "BUILD_SHARED_LIBS": "ON"
       }
+    },
+    {
+      "name": "Release With Profiler",
+      "displayName": "Release Config",
+      "description": "Release build with gperftools profiler",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build_release_profiler/",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "USE_PROFILER": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -73,6 +86,10 @@
     {
       "name": "Default Release Shared",
       "configurePreset": "Default Release Shared"
+    },
+    {
+      "name": "Release With Profiler",
+      "configurePreset": "Release With Profiler"
     }
   ]
 }
