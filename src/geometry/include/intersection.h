@@ -54,7 +54,7 @@ class Intersection {
         return std::tie(t_, object_) < std::tie(rhs.t_, rhs.object_);
     }
 
-    // the t value where a Ray intersects the Sphere
+    // the t value where a Ray intersects the Shape
     double t_;
 
     std::shared_ptr<Shape> object_;  //  the Shape for which this intersection was located

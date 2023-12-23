@@ -1,10 +1,12 @@
-add_library(Geometry)
+add_library(Geometry
+        include/cube.h)
 
 target_sources(Geometry
         PRIVATE
         src/shape.cpp
         src/sphere.cpp
         src/plane.cpp
+        src/cube.cpp
         src/intersection.cpp
 )
 

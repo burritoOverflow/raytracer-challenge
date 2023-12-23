@@ -14,6 +14,7 @@ build_release/
 build_debug/
 build_release_shared/
 build_debug_shared/
+build_release_profiler/
 
 # clion generated default dir
 cmake-build-debug/
