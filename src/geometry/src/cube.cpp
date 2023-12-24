@@ -11,8 +11,8 @@ std::vector<geometry::Intersection> geometry::Cube::LocalIntersect(const commont
 
     // find the largest of all min t values and smallest of all max t values
     // intersection is always these two points
-    const double tmin = std::max({xtmin, ytmin, ztmin});
-    const double tmax = std::min({xtmax, ytmax, ztmax});
+    const double tmin = std::fmax(xtmin, std::fmax(ytmin, ztmin));
+    const double tmax = std::fmin(xtmax, std::fmin(ytmax, ztmax));
 
     // if minimum t is further from the origin than maximum t, Ray misses the sphere
     // min_t further from origin (see pg. 173)
@@ -33,11 +33,11 @@ std::vector<geometry::Intersection> geometry::Cube::LocalIntersect(const commont
 std::tuple<double, double> geometry::Cube::CheckAxis(const double origin, const double direction) {
     // each pair of planes is offset from the origin
     const double tmin_numerator = (-1 - origin);
-    const double tmax_numerator = 1 - origin;
+    const double tmax_numerator = (1 - origin);
 
     double tmin, tmax;
 
-    if (std::abs(direction) >= utility::EPSILON_) {
+    if (std::fabs(direction) >= utility::EPSILON_) {
         tmin = tmin_numerator / direction;
         tmax = tmax_numerator / direction;
     } else {
