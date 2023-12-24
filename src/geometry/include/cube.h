@@ -5,6 +5,7 @@
 #include "shape.h"
 
 namespace geometry {
+// AABB - sides are all aligned with the scene's axis
 class Cube : public Shape {
    public:
     std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;

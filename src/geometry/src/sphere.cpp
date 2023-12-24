@@ -7,7 +7,7 @@ std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(const commo
     const double a = ray.direction().Dot(ray.direction());
     const double b = 2 * ray.direction().Dot(sphere_to_ray);
     const double c = sphere_to_ray.Dot(sphere_to_ray) - 1;
-    const double discriminant = b * b - 4 * a * c;
+    const double discriminant = pow(b, 2) - 4 * a * c;
 
     if (discriminant < 0) {
         return {};
@@ -20,9 +20,9 @@ std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(const commo
     std::shared_ptr<Sphere> object = std::make_shared<Sphere>(*this);
 
     if (t1 >= t2) {
-        return {geometry::Intersection{t2, object}, geometry::Intersection{t1, object}};
+        return {geometry::Intersection{t2, object}, geometry::Intersection{t1, std::move(object)}};
     } else {
-        return {geometry::Intersection{t1, object}, geometry::Intersection{t2, object}};
+        return {geometry::Intersection{t1, object}, geometry::Intersection{t2, std::move(object)}};
     }
 }
 
