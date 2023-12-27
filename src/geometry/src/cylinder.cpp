@@ -29,8 +29,22 @@ std::vector<geometry::Intersection> geometry::Cylinder::LocalIntersect(
         std::swap(t0, t1);
     }
 
+    std::vector<geometry::Intersection> xs{};
     const auto this_ptr = std::make_shared<Cylinder>(*this);
-    return {geometry::Intersection{t0, this_ptr}, geometry::Intersection{t1, this_ptr}};
+
+    // compute the y-coordinate at each point of intersection; valid if between min-max
+    // add to intersections if between these bounds
+    const auto y0 = ray.origin().y() + t0 * ray.direction().y();
+    if (this->minimum_ < y0 && y0 < this->maximum_) {
+        xs.push_back(std::move(geometry::Intersection{t0, this_ptr}));
+    }
+
+    const auto y1 = ray.origin().y() + t1 * ray.direction().y();
+    if (this->minimum_ < y1 && y1 < this->maximum_) {
+        xs.push_back(std::move(geometry::Intersection{t1, this_ptr}));
+    }
+
+    return xs;
 }
 
 commontypes::Vector geometry::Cylinder::LocalNormalAt(const commontypes::Point& local_point) {

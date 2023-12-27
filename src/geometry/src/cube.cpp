@@ -14,7 +14,7 @@ std::vector<geometry::Intersection> geometry::Cube::LocalIntersect(const commont
     const double tmin = std::fmax(xtmin, std::fmax(ytmin, ztmin));
     const double tmax = std::fmin(xtmax, std::fmin(ytmax, ztmax));
 
-    // if minimum t is further from the origin than maximum t, Ray misses the sphere
+    // if minimum_ t is further from the origin than maximum t, Ray misses the sphere
     // min_t further from origin (see pg. 173)
     if (tmin > tmax)
         return {};
