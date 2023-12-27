@@ -7,6 +7,7 @@ target_sources(Geometry
         src/sphere.cpp
         src/plane.cpp
         src/cube.cpp
+        src/cylinder.cpp
         src/intersection.cpp
 )
 

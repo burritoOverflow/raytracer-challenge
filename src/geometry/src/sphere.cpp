@@ -9,16 +9,19 @@ std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(const commo
     const double c = sphere_to_ray.Dot(sphere_to_ray) - 1;
     const double discriminant = pow(b, 2) - 4 * a * c;
 
+    // Ray misses the Sphere; no intersections occur
     if (discriminant < 0) {
         return {};
     }
 
+    // when both t values are the same, we've encountered a case where a Ray
+    // hits a Sphere at a tangent
     const double t1 = (-b - sqrt(discriminant)) / (2 * a);
     const double t2 = (-b + sqrt(discriminant)) / (2 * a);
 
-    // return t values in increasing order
     std::shared_ptr<Sphere> object = std::make_shared<Sphere>(*this);
 
+    // return t values in increasing order
     if (t1 >= t2) {
         return {geometry::Intersection{t2, object}, geometry::Intersection{t1, std::move(object)}};
     } else {

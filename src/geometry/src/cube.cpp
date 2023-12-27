@@ -60,8 +60,8 @@ commontypes::Vector geometry::Cube::LocalNormalAt(const commontypes::Point& loca
     const double abs_z = abs(local_point.z());
 
     // component with the largest absolute value (face is always the one matching the component
-    // whose absolute value is 1); can't trust equality, however it's also true that the
-    // largest (absolute) value component is the Normal
+    // whose absolute value is 1); can't trust floating-point equality, however it's also true that
+    // the largest (absolute) value component is the Normal
     const double max_component = std::max({abs_x, abs_y, abs_z});
 
     if (max_component == abs_x) {

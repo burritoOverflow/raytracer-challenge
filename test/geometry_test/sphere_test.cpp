@@ -9,7 +9,10 @@ TEST(SphereTest, TestRayIntersectsSphereAtTwoPoints) {
     commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere s{};
     const std::vector<geometry::Intersection> xs = s.Intersect(r);
+    // pg. 59
     EXPECT_EQ(xs.size(), 2);
+    // intersects the Sphere at {0,0,-1} and {0,0,1}. 4 and 6 units respectively from the
+    // Sphere's origin
     EXPECT_DOUBLE_EQ(xs.at(0).t_, 4.0);
     EXPECT_DOUBLE_EQ(xs.at(1).t_, 6.0);
 }

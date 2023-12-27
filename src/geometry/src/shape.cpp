@@ -9,7 +9,10 @@ std::vector<geometry::Intersection> geometry::Shape::Intersect(const commontypes
 }
 
 commontypes::Vector geometry::Shape::NormalAt(const commontypes::Point& point) {
+    // first, convert the ray to object space
     const commontypes::Point local_point = commontypes::Point(transform_.Inverse() * point);
+
+    // as above, first convert the point to object space (see discussion on pg. 118)
     const commontypes::Vector local_normal = LocalNormalAt(local_point);
     commontypes::Vector world_normal = this->transform_.Inverse().Transpose() * local_normal;
 
