@@ -16,17 +16,17 @@ std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(const commo
 
     // when both t values are the same, we've encountered a case where a Ray
     // hits a Sphere at a tangent
-    const double t1 = (-b - sqrt(discriminant)) / (2 * a);
-    const double t2 = (-b + sqrt(discriminant)) / (2 * a);
+    double t1 = (-b - sqrt(discriminant)) / (2 * a);
+    double t2 = (-b + sqrt(discriminant)) / (2 * a);
 
     std::shared_ptr<Sphere> object = std::make_shared<Sphere>(*this);
 
     // return t values in increasing order
-    if (t1 >= t2) {
-        return {geometry::Intersection{t2, object}, geometry::Intersection{t1, std::move(object)}};
-    } else {
-        return {geometry::Intersection{t1, object}, geometry::Intersection{t2, std::move(object)}};
+    if (t1 > t2) {
+        std::swap(t1, t2);
     }
+
+    return {geometry::Intersection{t1, object}, geometry::Intersection{t2, std::move(object)}};
 }
 
 commontypes::Vector geometry::Sphere::LocalNormalAt(const commontypes::Point& local_point) {
