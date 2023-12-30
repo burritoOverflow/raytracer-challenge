@@ -16,8 +16,8 @@ class Shape {
           transform_(commontypes::IdentityMatrix{}),
           material_ptr_(std::make_shared<lighting::Material>()) {}
 
-    Shape(commontypes::Matrix& transformation_matrix,
-          std::shared_ptr<lighting::Material>& material_ptr)
+    explicit Shape(commontypes::Matrix& transformation_matrix,
+                   std::shared_ptr<lighting::Material>& material_ptr)
         : id_(SHAPE_ID++), transform_(transformation_matrix), material_ptr_(material_ptr) {}
 
     inline uint64_t id() const { return id_; }

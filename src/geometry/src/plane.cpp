@@ -16,5 +16,5 @@ std::vector<geometry::Intersection> geometry::Plane::LocalIntersect(const common
 
 commontypes::Vector geometry::Plane::LocalNormalAt(const commontypes::Point& local_point) {
     // with no curvature, the normal is constant everywhere
-    return {0, 1, 0};
+    return commontypes::Vector{0, 1, 0};
 }

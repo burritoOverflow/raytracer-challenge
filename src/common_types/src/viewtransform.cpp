@@ -4,8 +4,8 @@ commontypes::ViewTransform::ViewTransform(const commontypes::Point& from,
                                           const commontypes::Point& to,
                                           const commontypes::Vector& up)
     : Matrix(4, 4) {
-    commontypes::Vector forward = (to - from).Normalize();
-    commontypes::Vector left = forward.Cross(up.Normalize());
+    commontypes::Vector forward = commontypes::Vector{(to - from).Normalize()};
+    commontypes::Vector left = forward.Cross(commontypes::Vector{up.Normalize()});
     commontypes::Vector true_up = left.Cross(forward);
 
     matrixtype orientation{};

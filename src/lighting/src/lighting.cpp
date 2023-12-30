@@ -24,7 +24,8 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
     const auto effective_color = color * point_light.intensity();
 
     // direction to the light source
-    const commontypes::Vector light_vector = (point_light.position() - point).Normalize();
+    const commontypes::Vector light_vector =
+        commontypes::Vector{(point_light.position() - point).Normalize()};
 
     // ambient color contribution
     const auto ambient = commontypes::Color{effective_color * material.Ambient()};
@@ -51,7 +52,7 @@ commontypes::Color lighting::Lighting(const std::shared_ptr<Material>& material_
         // reflect_dot_eye is the cosine of the angle between the reflection
         // vector and the eye vector. A negative number means the light reflects
         // away from the eye
-        commontypes::Vector reflect_v = -light_vector.Reflect(normal_vector);
+        commontypes::Vector reflect_v = commontypes::Vector{-light_vector.Reflect(normal_vector)};
         const double reflect_dot_eye = reflect_v.Dot(eye_vector);
 
         if (reflect_dot_eye <= 0.0) {

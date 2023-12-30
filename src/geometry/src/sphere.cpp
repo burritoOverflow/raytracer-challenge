@@ -2,7 +2,7 @@
 
 std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(const commontypes::Ray& ray) {
     // vector from Sphere's center to Ray's origin (pg. 62)
-    const commontypes::Vector sphere_to_ray = ray.origin() - origin_;
+    const commontypes::Vector sphere_to_ray = commontypes::Vector{ray.origin() - origin_};
 
     const double a = ray.direction().Dot(ray.direction());
     const double b = 2 * ray.direction().Dot(sphere_to_ray);

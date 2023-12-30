@@ -97,8 +97,9 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
 void RenderChapter7Scene() {
     scene::World world{};
     scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 3};
-    camera.SetTransform(commontypes::ViewTransform{
-        commontypes::Point{0, 1.5, -5}, commontypes::Point{0, 1, 0}, {0, 1, 0}});
+    camera.SetTransform(commontypes::ViewTransform{commontypes::Point{0, 1.5, -5},
+                                                   commontypes::Point{0, 1, 0},
+                                                   commontypes::Vector{0, 1, 0}});
 
     auto floor_material = lighting::Material{};
     floor_material.SetSpecular(0);
@@ -170,13 +171,15 @@ void Chapter6RenderRenderExample(
         for (int x = 0; x < canvas.width() - 1; ++x) {
             double world_x = -half + pixel_size * x;
             commontypes::Point position{world_x, world_y, wall_z};
-            commontypes::Ray r{ray_origin, (position - ray_origin).Normalize()};
+            commontypes::Ray r{ray_origin,
+                               commontypes::Vector{(position - ray_origin).Normalize()}};
             auto xs = shape.Intersect(r);
+
             if (!xs.empty()) {
                 geometry::Intersection hit = xs.at(0);
                 commontypes::Point point = r.Position(hit.t_);
                 commontypes::Vector normal = hit.object_->NormalAt(point);
-                commontypes::Vector eye = -r.direction();
+                commontypes::Vector eye = commontypes::Vector{-r.direction()};
 
                 commontypes::Color color = lighting::Lighting(
                     hit.object_->Material(), commontypes::IdentityMatrix{},

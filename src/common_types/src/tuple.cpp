@@ -1,19 +1,19 @@
 #include "tuple.h"
 
 commontypes::Tuple operator+(const commontypes::Tuple& t1, const commontypes::Tuple& t2) {
-    return {t1.x() + t2.x(), t1.y() + t2.y(), t1.z() + t2.z(), t1.w() + t2.w()};
+    return commontypes::Tuple{t1.x() + t2.x(), t1.y() + t2.y(), t1.z() + t2.z(), t1.w() + t2.w()};
 }
 
 commontypes::Tuple operator-(const commontypes::Tuple& t1, const commontypes::Tuple& t2) {
-    return {t1.x() - t2.x(), t1.y() - t2.y(), t1.z() - t2.z(), t1.w() - t2.w()};
+    return commontypes::Tuple{t1.x() - t2.x(), t1.y() - t2.y(), t1.z() - t2.z(), t1.w() - t2.w()};
 }
 
 commontypes::Tuple operator*(const commontypes::Tuple& t, const double d) {
-    return {t.x() * d, t.y() * d, t.z() * d, t.w() * d};
+    return commontypes::Tuple{t.x() * d, t.y() * d, t.z() * d, t.w() * d};
 }
 
 commontypes::Tuple operator/(const commontypes::Tuple& t, const double d) {
-    return {t.x() / d, t.y() / d, t.z() / d, t.w() / d};
+    return commontypes::Tuple{t.x() / d, t.y() / d, t.z() / d, t.w() / d};
 }
 
 bool operator==(const commontypes::Tuple& t1, const commontypes::Tuple& t2) {

@@ -9,7 +9,7 @@ class PointLight {
    public:
     PointLight() : position_(commontypes::Point{}), intensity_(commontypes::Color{}) {}
 
-    PointLight(const commontypes::Point& position, const commontypes::Color& intensity)
+    explicit PointLight(const commontypes::Point& position, const commontypes::Color& intensity)
         : position_(position), intensity_(intensity) {}
 
     inline commontypes::Point position() const { return position_; }

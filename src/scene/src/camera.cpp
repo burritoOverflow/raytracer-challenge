@@ -17,9 +17,9 @@ commontypes::Ray scene::Camera::RayForPixel(const size_t px, const size_t py) co
         commontypes::Point(transform_inverse * commontypes::Point{world_x, world_y, -1});
     const commontypes::Point origin =
         commontypes::Point(transform_inverse * commontypes::Point{0, 0, 0});
-    const commontypes::Vector direction = (pixel - origin).Normalize();
+    const commontypes::Vector direction = commontypes::Vector{(pixel - origin).Normalize()};
 
-    return {origin, direction};
+    return commontypes::Ray{origin, direction};
 }
 
 // see discussion on p. 102

@@ -56,16 +56,16 @@ commontypes::Vector geometry::Cylinder::LocalNormalAt(const commontypes::Point& 
         // either of these conditions indicate the normal must be on one of the
         // end caps (see pg. 187-188)
         if (local_point.y() >= this->maximum_ - utility::EPSILON_) {
-            return {0, 1, 0};
+            return commontypes::Vector{0, 1, 0};
         }
 
         if (local_point.y() <= this->maximum_ + utility::EPSILON_) {
-            return {0, -1, 0};
+            return commontypes::Vector{0, -1, 0};
         }
     }
 
     // otherwise Cylinder, remove the y component (pg. 181)
-    return {local_point.x(), 0, local_point.z()};
+    return commontypes::Vector{local_point.x(), 0, local_point.z()};
 }
 
 // check to see if the intersection at `t` is within a radius of 1 from the y-axis

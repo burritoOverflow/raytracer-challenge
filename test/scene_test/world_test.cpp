@@ -104,7 +104,7 @@ TEST(WorldTest, TestIntersectWorldWithRay) {
 
 TEST(WorldTest, TestShadingAnIntersection) {
     scene::World default_world = scene::World::DefaultWorld();
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     auto shape = default_world.objects().at(0);
     geometry::Intersection i{4, shape};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -116,7 +116,7 @@ TEST(WorldTest, TestShadingAnIntersectionFromInside) {
     scene::World default_world = scene::World::DefaultWorld();
     lighting::PointLight point_light{commontypes::Point{0, 0.25, 0}, commontypes::Color{1, 1, 1}};
     default_world.SetLight(std::make_shared<lighting::PointLight>(point_light));
-    commontypes::Ray r{commontypes::Point{0, 0, 0}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, 0}, commontypes::Vector{0, 0, 1}};
     auto shape = default_world.objects().at(1);
     geometry::Intersection i{0.5, shape};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -126,14 +126,14 @@ TEST(WorldTest, TestShadingAnIntersectionFromInside) {
 
 TEST(WorldTest, TestColorWhenRayMisses) {
     scene::World default_world = scene::World::DefaultWorld();
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 1, 0}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 1, 0}};
     const commontypes::Color c = default_world.ColorAt(r);
     ASSERT_TRUE(c == commontypes::Color(0, 0, 0));
 }
 
 TEST(WorldTest, TestColorWhenRayHits) {
     scene::World default_world = scene::World::DefaultWorld();
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     const commontypes::Color c = default_world.ColorAt(r);
     ASSERT_TRUE(c == commontypes::Color(0.38066, 0.47583, 0.2855));
 }
@@ -147,7 +147,7 @@ TEST(WorldTest, TestColorWhenIntersectionBehindRay) {
     auto inner = default_world.objects().at(1);
     inner->Material()->SetAmbient(1);
 
-    commontypes::Ray r{commontypes::Point{0, 0, 0.75}, {0, 0, -1}};
+    commontypes::Ray r{commontypes::Point{0, 0, 0.75}, commontypes::Vector{0, 0, -1}};
     const commontypes::Color c = default_world.ColorAt(r);
     ASSERT_TRUE(c == inner->Material()->Color());
 }
@@ -190,7 +190,7 @@ TEST(WorldTest, TestShadeHitIsGivenAnIntersectionInShadow) {
     s2->SetTransform(commontypes::TranslationMatrix{0, 0, 10});
 
     w.AddObjects(std::vector<std::shared_ptr<geometry::Shape>>{s1, s2});
-    commontypes::Ray r{commontypes::Point{0, 0, 5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, 5}, commontypes::Vector{0, 0, 1}};
     geometry::Intersection i{4, s2};
     auto comps = i.PrepareComputations(r);
     commontypes::Color c = w.ShadeHit(comps);
@@ -303,7 +303,9 @@ TEST(WorldTest, TestReflectedColorAtMaxRecursionDepth) {
     auto shape_ptr = std::make_shared<geometry::Plane>(shape);
     w.AddObject(shape_ptr);
 
-    commontypes::Ray r{commontypes::Point{0, 0, -3}, {0, -SQRT2OVER2, SQRT2OVER2}};
+    commontypes::Ray r{commontypes::Point{0, 0, -3},
+                       commontypes::Vector{0, -SQRT2OVER2, SQRT2OVER2}};
+
     const geometry::Intersection i{sqrt(2), shape_ptr};
     auto comps = i.PrepareComputations(r);
 
@@ -342,7 +344,7 @@ TEST(WorldTest, TestRefractedColorAtMaximumRecursiveDepth) {
 /*
  see pg. 156
 
- total internal reflection occurs when light enters medium at an
+ total internal reflection occurs when light enters the medium at a
  sufficiently acute angle + the new medium has a lower refractive index than the old material
 
  when this occurs, the ray will reflect off the interface instead of passing through it
@@ -390,7 +392,8 @@ TEST(WorldTest, TestRefractedColorWithRefractedRay) {
     // ray inside the innermost Sphere, pointing directly upward
     commontypes::Ray r{commontypes::Point{0, 0, 0.1}, commontypes::Vector{0, 1, 0}};
     const std::vector<geometry::Intersection> xs = {
-        {-0.9899, A}, {-0.4899, B}, {0.4899, B}, {0.9899, A}};
+        geometry::Intersection{-0.9899, A}, geometry::Intersection{-0.4899, B},
+        geometry::Intersection{0.4899, B}, geometry::Intersection{0.9899, A}};
 
     auto comps = xs.at(2).PrepareComputations(r, xs);
     const auto c = w.RefractedColor(comps, 5);
@@ -425,7 +428,7 @@ TEST(WorldTest, TestShadeHitWithTransparentMaterial) {
                               commontypes::Vector{0, -sqrt(2) / 2, sqrt(2) / 2}};
 
     const std::vector<geometry::Intersection> xs = {
-        {sqrt(2), std::move(std::make_shared<geometry::Plane>(floor))}};
+        geometry::Intersection{sqrt(2), std::move(std::make_shared<geometry::Plane>(floor))}};
 
     geometry::Computations comps = xs.front().PrepareComputations(r, xs);
     const auto color = w.ShadeHit(comps, 5);
@@ -459,7 +462,7 @@ TEST(WorldTest, TestShadeHitWithReflectiveAndTransparentMaterial) {
     w.AddObject(std::move(std::make_shared<geometry::Sphere>(ball)));
 
     const std::vector<geometry::Intersection> xs = {
-        {sqrt(2), std::move(std::make_shared<geometry::Plane>(floor))}};
+        geometry::Intersection{sqrt(2), std::move(std::make_shared<geometry::Plane>(floor))}};
 
     geometry::Computations comps = xs.front().PrepareComputations(r, xs);
     const auto color = w.ShadeHit(comps, 5);

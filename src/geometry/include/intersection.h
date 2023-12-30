@@ -39,7 +39,7 @@ class Intersection {
    public:
     Intersection() : t_(0), object_(nullptr) {}
 
-    Intersection(const double t, const std::shared_ptr<Shape>& object_ptr)
+    explicit Intersection(const double t, const std::shared_ptr<Shape>& object_ptr)
         : t_(t), object_(object_ptr) {}
 
     static std::optional<Intersection> Hit(const std::vector<Intersection>& xs);

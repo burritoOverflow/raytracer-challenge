@@ -6,7 +6,7 @@
 namespace commontypes {
 class ShearingMatrix final : public IdentityMatrix {
    public:
-    ShearingMatrix(double x_y, double x_z, double y_x, double y_z, double z_x, double z_y)
+    explicit ShearingMatrix(double x_y, double x_z, double y_x, double y_z, double z_x, double z_y)
         : IdentityMatrix() {
         (*this)(0, 1) = x_y;
         (*this)(0, 2) = x_z;

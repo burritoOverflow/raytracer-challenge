@@ -20,7 +20,7 @@ TEST(RayTests, TestComputingPointFromDistance) {
 }
 
 TEST(RayTests, TestTranslatingRay) {
-    commontypes::Ray r{commontypes::Point{1, 2, 3}, {0, 1, 0}};
+    commontypes::Ray r{commontypes::Point{1, 2, 3}, commontypes::Vector{0, 1, 0}};
     commontypes::TranslationMatrix m{3, 4, 5};
     commontypes::Ray r2 = r.Transform(m);
     ASSERT_TRUE(r2.origin() == commontypes::Point(4, 6, 8));
@@ -28,7 +28,7 @@ TEST(RayTests, TestTranslatingRay) {
 }
 
 TEST(RayTests, TestScalingRay) {
-    commontypes::Ray r{commontypes::Point{1, 2, 3}, {0, 1, 0}};
+    commontypes::Ray r{commontypes::Point{1, 2, 3}, commontypes::Vector{0, 1, 0}};
     commontypes::ScalingMatrix s{2, 3, 4};
     commontypes::Ray r2 = r.Transform(s);
     ASSERT_TRUE(r2.origin() == commontypes::Point(2, 6, 12));

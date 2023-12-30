@@ -8,7 +8,9 @@
 namespace commontypes {
 class Ray {
    public:
-    Ray(const Point& origin, const Vector& direction) : origin_(origin), direction_(direction) {}
+    explicit Ray(const Point& origin, const Vector& direction)
+        : origin_(origin), direction_(direction) {}
+
     Point origin() const { return origin_; }
     Vector direction() const { return direction_; }
 

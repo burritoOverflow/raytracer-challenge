@@ -14,7 +14,8 @@ commontypes::Vector geometry::Shape::NormalAt(const commontypes::Point& point) {
 
     // as above, first convert the point to object space (see discussion on pg. 118)
     const commontypes::Vector local_normal = LocalNormalAt(local_point);
-    commontypes::Vector world_normal = this->transform_.Inverse().Transpose() * local_normal;
+    commontypes::Vector world_normal =
+        commontypes::Vector{this->transform_.Inverse().Transpose() * local_normal};
 
     world_normal.e_[3] = 0.0;
     return commontypes::Vector{world_normal.Normalize()};

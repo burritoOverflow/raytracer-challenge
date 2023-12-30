@@ -94,7 +94,7 @@ TEST(IntersectionTest, TestHitIsAlwaysTheLowestNonnegativeIntersection) {
 }
 
 TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere shape;
     geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -106,7 +106,7 @@ TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
 }
 
 TEST(IntersectionTest, TestHitWhenIntersectionOccursOnOutside) {
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere shape{};
     geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -114,7 +114,7 @@ TEST(IntersectionTest, TestHitWhenIntersectionOccursOnOutside) {
 }
 
 TEST(IntersectionTest, TestHitWhenIntersectionOccursOnInside) {
-    commontypes::Ray r{commontypes::Point{0, 0, 0}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, 0}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere shape{};
     geometry::Intersection i{1, std::make_shared<geometry::Sphere>(shape)};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -126,7 +126,7 @@ TEST(IntersectionTest, TestHitWhenIntersectionOccursOnInside) {
 }
 
 TEST(IntersectionTest, TestHitShouldOffsetThePoint) {
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere s{};
     s.SetTransform(commontypes::TranslationMatrix{0, 0, 1});
 
@@ -222,8 +222,9 @@ TEST(IntersectionTest, TestSchlickApproximationUnderTotalInternalReflection) {
 
     // ray inside a glass sphere, offset from center straight up
     commontypes::Ray r{commontypes::Point{0, 0, sqrt_2_over_2}, commontypes::Vector{0, 1, 0}};
-    const auto xs = std::vector<geometry::Intersection>{{-sqrt_2_over_2, shape_ptr},
-                                                        {sqrt_2_over_2, shape_ptr}};
+    const auto xs =
+        std::vector<geometry::Intersection>{geometry::Intersection{-sqrt_2_over_2, shape_ptr},
+                                            geometry::Intersection{sqrt_2_over_2, shape_ptr}};
 
     const auto comps = xs.at(1).PrepareComputations(r, xs);
     const double reflectance = geometry::Schlick(comps);
@@ -235,7 +236,8 @@ TEST(IntersectionTest, TestSchlickApproximationWithPerpendicularViewingAngle) {
     auto shape_ptr = std::make_shared<geometry::Sphere>(shape);
 
     commontypes::Ray r{commontypes::Point{0, 0, 0}, commontypes::Vector{0, 1, 0}};
-    const auto xs = std::vector<geometry::Intersection>{{-1, shape_ptr}, {1, shape_ptr}};
+    const auto xs = std::vector<geometry::Intersection>{geometry::Intersection{-1, shape_ptr},
+                                                        geometry::Intersection{1, shape_ptr}};
 
     const auto comps = xs.at(1).PrepareComputations(r, xs);
     const double reflectance = geometry::Schlick(comps);
@@ -247,7 +249,7 @@ TEST(IntersectionTest, TestSchlickApproximationWithSmallAngleAndN2GreaterThanN1)
     auto shape_ptr = std::make_shared<geometry::Sphere>(shape);
 
     commontypes::Ray r{commontypes::Point{0, 0.99, -2}, commontypes::Vector{0, 0, 1}};
-    const auto xs = std::vector<geometry::Intersection>{{1.8589, shape_ptr}};
+    const auto xs = std::vector<geometry::Intersection>{geometry::Intersection{1.8589, shape_ptr}};
 
     const auto comps = xs.at(0).PrepareComputations(r, xs);
     const double reflectance = geometry::Schlick(comps);

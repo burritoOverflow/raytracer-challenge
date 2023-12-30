@@ -13,7 +13,7 @@ class Cylinder : public Shape {
           maximum_(std::numeric_limits<double>::infinity()),
           capped_(false) {}
 
-    Cylinder(const double minimum, const double maximum, const bool capped)
+    explicit Cylinder(const double minimum, const double maximum, const bool capped)
         : minimum_(minimum), maximum_(maximum), capped_(capped) {}
 
     std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;

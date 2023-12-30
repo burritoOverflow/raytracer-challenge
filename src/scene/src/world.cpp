@@ -105,7 +105,7 @@ commontypes::Color scene::World::ColorAt(commontypes::Ray& r,
 }
 
 bool scene::World::IsShadowed(const commontypes::Point& point) const {
-    const commontypes::Vector v = this->light_->position() - point;
+    const commontypes::Vector v = commontypes::Vector{this->light_->position() - point};
     const double distance = v.Magnitude();
     const commontypes::Vector direction = commontypes::Vector{v.Normalize()};
     const commontypes::Ray r{point, direction};
@@ -166,14 +166,12 @@ commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
     const double cos_t = sqrt(1.0 - sin2_t);
 
     // compute the direction of the refracted ray
-    const commontypes::Vector direction =
-        comps.normal_vector_ * (n_ratio * cos_i - cos_t) - comps.eye_vector_ * n_ratio;
+    const commontypes::Vector direction = commontypes::Vector{
+        comps.normal_vector_ * (n_ratio * cos_i - cos_t) - comps.eye_vector_ * n_ratio};
 
     auto refract_ray = commontypes::Ray{comps.under_point_, direction};
 
     // color of the refracted ray, accounting for opacity
-    const auto color = commontypes::Color{this->ColorAt(refract_ray, remaining_invocations - 1) *
-                                          comps.object_->Material()->Transparency()};
-
-    return color;
+    return commontypes::Color{this->ColorAt(refract_ray, remaining_invocations - 1) *
+                              comps.object_->Material()->Transparency()};
 }

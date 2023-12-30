@@ -53,7 +53,7 @@ TEST(SphereTest, TestSphereIsBehindRay) {
 }
 
 TEST(SphereTest, TestIntersectingScaledSphereWithRay) {
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere s;
     s.SetTransform(commontypes::ScalingMatrix{2, 2, 2});
     std::vector<geometry::Intersection> xs = s.Intersect(r);
@@ -63,7 +63,7 @@ TEST(SphereTest, TestIntersectingScaledSphereWithRay) {
 }
 
 TEST(SphereTest, TestIntersectingTranslatedSphereWithRay) {
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::Sphere s;
     s.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
     std::vector<geometry::Intersection> xs = s.Intersect(r);

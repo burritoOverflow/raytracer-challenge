@@ -8,9 +8,9 @@ namespace commontypes {
 // at the t03, t13, t23 elements, respectively
 class TranslationMatrix final : public IdentityMatrix {
    public:
-    TranslationMatrix(const double x_translation,
-                      const double y_translation,
-                      const double z_translation) {
+    explicit TranslationMatrix(const double x_translation,
+                               const double y_translation,
+                               const double z_translation) {
         const size_t identity_col_idx = 3;
         (*this)(0, identity_col_idx) = x_translation;
         (*this)(1, identity_col_idx) = y_translation;

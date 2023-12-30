@@ -70,16 +70,17 @@ geometry::Computations geometry::Intersection::PrepareComputations(
     computations.t_ = t_;
     computations.object_ = object_;
     computations.point_ = r.Position(computations.t_);
-    computations.eye_vector_ = -r.direction();
+    computations.eye_vector_ = commontypes::Vector{-r.direction()};
 
     computations.normal_vector_ = (*computations.object_).NormalAt(computations.point_);
     if (computations.normal_vector_.Dot(computations.eye_vector_) < 0) {
         computations.inside_ = true;
-        computations.normal_vector_ = -computations.normal_vector_;
+        computations.normal_vector_ = commontypes::Vector{-computations.normal_vector_};
     }
 
     // reflect the ray's direction around the object's normal vector
-    computations.reflect_vector_ = r.direction().Reflect(computations.normal_vector_);
+    computations.reflect_vector_ =
+        commontypes::Vector{r.direction().Reflect(computations.normal_vector_)};
 
     // bump the point a bit in the direction of the normal
     computations.over_point_ =

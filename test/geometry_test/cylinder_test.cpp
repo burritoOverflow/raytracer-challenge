@@ -14,7 +14,7 @@ TEST(CylinderTest, TestRayMissesCylinder) {
         {commontypes::Point{0, 0, -5}, commontypes::Vector{1, 1, 1}}};
 
     for (const auto expected : expected_values) {
-        const auto direction = expected.direction.Normalize();
+        const commontypes::Vector direction = commontypes::Vector{expected.direction.Normalize()};
         const commontypes::Ray r{expected.origin, direction};
         const auto xs = cyl.LocalIntersect(r);
         ASSERT_EQ(xs.size(), 0);
@@ -39,7 +39,7 @@ TEST(CylinderTest, TestRayIntersectsACylinder) {
     };
 
     for (const auto expected : expected_values) {
-        const auto direction = expected.direction.Normalize();
+        const commontypes::Vector direction = commontypes::Vector{expected.direction.Normalize()};
         const commontypes::Ray r{expected.origin, direction};
         const auto xs = cyl.LocalIntersect(r);
 
@@ -106,7 +106,8 @@ TEST(CylinderTest, TestIntersectingaConstrainedCylinder) {
     };
 
     for (const auto expected : expected_values) {
-        commontypes::Ray r{expected.origin, expected.direction.Normalize()};
+        const commontypes::Vector direction = commontypes::Vector{expected.direction.Normalize()};
+        commontypes::Ray r{expected.origin, direction};
         const auto xs = cyl.LocalIntersect(r);
         ASSERT_EQ(xs.size(), expected.count);
     }
@@ -145,7 +146,8 @@ TEST(CylinderTest, TestIntersectingTheCapsOfClosedCylinder) {
     };
 
     for (const auto& expected : expected_values) {
-        commontypes::Ray r{expected.origin, expected.direction.Normalize()};
+        const commontypes::Vector direction = commontypes::Vector{expected.direction.Normalize()};
+        commontypes::Ray r{expected.origin, direction};
         const auto xs = cyl.LocalIntersect(r);
         ASSERT_EQ(xs.size(), expected.count);
     }

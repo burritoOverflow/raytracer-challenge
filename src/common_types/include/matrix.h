@@ -14,7 +14,8 @@ class Matrix {
     Matrix() = delete;
 
     // default initialize to 0.0
-    Matrix(const size_t n_rows, const size_t n_columns) : n_rows_(n_rows), n_columns_(n_columns) {
+    explicit Matrix(const size_t n_rows, const size_t n_columns)
+        : n_rows_(n_rows), n_columns_(n_columns) {
         const std::vector<double> col_vec(n_columns_);
         matrix_.resize(n_rows_, col_vec);
 

@@ -14,7 +14,7 @@ class Tuple {
         }
     }
 
-    Tuple(const double x, const double y, const double z, const double w) {
+    explicit Tuple(const double x, const double y, const double z, const double w) {
         e_[0] = x;
         e_[1] = y;
         e_[2] = z;
@@ -38,7 +38,7 @@ class Tuple {
 
     inline Tuple Normalize() const {
         const double magnitude = this->Magnitude();
-        return {e_[0] / magnitude, e_[1] / magnitude, e_[2] / magnitude, e_[3] / magnitude};
+        return Tuple{e_[0] / magnitude, e_[1] / magnitude, e_[2] / magnitude, e_[3] / magnitude};
     }
 
     inline double Dot(const Tuple& t) const {

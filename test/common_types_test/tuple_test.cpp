@@ -63,7 +63,7 @@ TEST(TupleTests, TestDivideTupleByScalar) {
 TEST(TupleTests, TestReflectingVectorApproachingAt45Degrees) {
     commontypes::Vector v{1, -1, 0};
     commontypes::Vector n{0, 1, 0};
-    commontypes::Vector r = v.Reflect(n);
+    commontypes::Vector r = commontypes::Vector{v.Reflect(n)};
     ASSERT_TRUE(r == commontypes::Vector(1, 1, 0));
 }
 
@@ -71,6 +71,6 @@ TEST(TupleTests, TestReflectingVectorOffSlantedSurface) {
     commontypes::Vector v{0, -1, 0};
     const double d = sqrt(2) / 2;
     commontypes::Vector n{d, d, 0};
-    commontypes::Vector r = v.Reflect(n);
+    commontypes::Vector r = commontypes::Vector{v.Reflect(n)};
     ASSERT_TRUE(r == commontypes::Vector(1, 0, 0));
 }
