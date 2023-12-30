@@ -13,7 +13,7 @@ class TestPattern : public pattern::Pattern {
     TestPattern() : pattern::Pattern() {}
 
     commontypes::Color PatternAt(const commontypes::Point& point) const override {
-        return {point.x(), point.y(), point.z()};
+        return commontypes::Color{point.x(), point.y(), point.z()};
     }
 };
 }  // namespace
@@ -114,7 +114,7 @@ TEST(WorldTest, TestShadingAnIntersection) {
 
 TEST(WorldTest, TestShadingAnIntersectionFromInside) {
     scene::World default_world = scene::World::DefaultWorld();
-    lighting::PointLight point_light{{0, 0.25, 0}, {1, 1, 1}};
+    lighting::PointLight point_light{{0, 0.25, 0}, commontypes::Color{1, 1, 1}};
     default_world.SetLight(std::make_shared<lighting::PointLight>(point_light));
     commontypes::Ray r{{0, 0, 0}, {0, 0, 1}};
     auto shape = default_world.objects().at(1);
@@ -182,7 +182,7 @@ TEST(WorldTest, TestThereIsNoShadowWhenObjectIsBehindThePoint) {
 
 TEST(WorldTest, TestShadeHitIsGivenAnIntersectionInShadow) {
     scene::World w{};
-    lighting::PointLight point_light{{0, 0, -10}, {1, 1, 1}};
+    lighting::PointLight point_light{{0, 0, -10}, commontypes::Color{1, 1, 1}};
     w.SetLight(std::make_shared<lighting::PointLight>(point_light));
 
     auto s1 = std::make_shared<geometry::Sphere>(geometry::Sphere{});

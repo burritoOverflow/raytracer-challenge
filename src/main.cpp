@@ -58,7 +58,7 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
     left_sphere.SetTransform(left_transform);
 
     lighting::Material left_sphere_mat = lighting::MaterialBuilder()
-                                             .WithColor({0, 0, 1})
+                                             .WithColor(commontypes::Color{0, 0, 1})
                                              .WithDiffuse(0.7)
                                              .WithSpecular(0.3)
                                              .WithReflective(0.9);
@@ -68,7 +68,7 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
     middle_sphere.SetTransform(commontypes::TranslationMatrix{-0.5, 1, 0.5});
 
     lighting::Material middle_sphere_mat = lighting::MaterialBuilder()
-                                               .WithColor({0.55, 0, 0})
+                                               .WithColor(commontypes::Color{0.55, 0, 0})
                                                .WithTransparency(0.9)
                                                .WithRefractiveIndex(1.6)
                                                .WithReflective(0.8)
@@ -82,7 +82,7 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
     right_sphere.SetTransform(right_sphere_transform);
 
     lighting::Material right_sphere_mat = lighting::MaterialBuilder()
-                                              .WithColor({0, 0.79, 0})
+                                              .WithColor(commontypes::Color{0, 0.79, 0})
                                               .WithDiffuse(0.7)
                                               .WithSpecular(0.55)
                                               .WithReflective(0.8);
@@ -122,7 +122,7 @@ void RenderChapter7Scene() {
     right_wall.SetTransform(r_transform);
     right_wall.SetMaterial(floor_mat_ptr);
 
-    auto world_light = lighting::PointLight{{-10, 10, -10}, {1, 1, 1}};
+    auto world_light = lighting::PointLight{{-10, 10, -10}, commontypes::Color{1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
     world.AddObjects(std::vector<std::shared_ptr<geometry::Shape>>({
@@ -205,7 +205,7 @@ void Chapter10PatternPlaneRender() {
     const commontypes::ViewTransform camera_transform{from, to, up};
     camera.SetTransform(camera_transform);
 
-    auto world_light = lighting::PointLight{{-10, 10, -10}, {1, 1, 1}};
+    auto world_light = lighting::PointLight{{-10, 10, -10}, commontypes::Color{1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
     geometry::Plane plane;
@@ -232,7 +232,7 @@ void Chapter10PatternPlaneRender() {
 // behind the transparent Sphere
 void PatternRoomRefractiveSphere() {
     scene::World world{};
-    auto light = lighting::PointLight{{-1, 20, 0}, {1, 1, 1}};
+    auto light = lighting::PointLight{{-1, 20, 0}, commontypes::Color{1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(light));
 
     auto plane = geometry::Plane();
@@ -255,7 +255,7 @@ void PatternRoomRefractiveSphere() {
     lighting::Material sphere_mat = lighting::MaterialBuilder()
                                         .WithTransparency(0.8)
                                         .WithRefractiveIndex(1.5)
-                                        .WithColor({0.3, 0.3, 0.3})
+                                        .WithColor(commontypes::Color{0.3, 0.3, 0.3})
                                         .WithReflective(0.2);
 
     sphere.SetMaterial(std::make_shared<lighting::Material>(std::move(sphere_mat)));
@@ -266,7 +266,9 @@ void PatternRoomRefractiveSphere() {
 
     auto red_sphere = geometry::Sphere{};
     red_sphere.SetTransform(commontypes::TranslationMatrix{-1.5, 1, 1});
-    lighting::Material red_sphere_mat = lighting::MaterialBuilder().WithColor({1, 0, 0});
+    lighting::Material red_sphere_mat =
+        lighting::MaterialBuilder().WithColor(commontypes::Color{1, 0, 0});
+
     red_sphere.SetMaterial(std::make_shared<lighting::Material>(std::move(red_sphere_mat)));
 
     world.AddObject(std::make_shared<geometry::Sphere>(std::move(red_sphere)));

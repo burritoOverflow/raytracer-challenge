@@ -7,12 +7,12 @@ namespace commontypes {
 class Color final : public Tuple {
    public:
     Color() : Tuple() {}
-    Color(const double r, const double g, const double b) : Tuple(r, g, b, 0.0) {}
+    explicit Color(const double r, const double g, const double b) : Tuple(r, g, b, 0.0) {}
     explicit Color(const Tuple& t) : Tuple(t.x(), t.y(), t.z(), 0.0) {}
 
     // redundant as "black" is the same as the default ctor, but nice for reading
-    static Color MakeBlack() { return {0, 0, 0}; }
-    static Color MakeWhite() { return {1, 1, 1}; }
+    static Color MakeBlack() { return Color{0, 0, 0}; }
+    static Color MakeWhite() { return Color{1, 1, 1}; }
 
     inline double Red() const { return e_[0]; }
     inline double Green() const { return e_[1]; }
