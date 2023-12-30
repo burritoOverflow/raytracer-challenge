@@ -8,7 +8,7 @@ namespace commontypes {
 class Point final : public Tuple {
    public:
     Point() : Tuple() {}
-    Point(const double x, const double y, const double z) : Tuple(x, y, z, 1.0) {}
+    explicit Point(const double x, const double y, const double z) : Tuple(x, y, z, 1.0) {}
     explicit Point(const Tuple& t) {
         if (!t.IsPoint())
             throw std::invalid_argument("Provided Tuple is not a point");

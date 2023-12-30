@@ -94,7 +94,7 @@ TEST(IntersectionTest, TestHitIsAlwaysTheLowestNonnegativeIntersection) {
 }
 
 TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
-    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
     geometry::Sphere shape;
     geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -106,7 +106,7 @@ TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
 }
 
 TEST(IntersectionTest, TestHitWhenIntersectionOccursOnOutside) {
-    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
     geometry::Sphere shape{};
     geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -114,7 +114,7 @@ TEST(IntersectionTest, TestHitWhenIntersectionOccursOnOutside) {
 }
 
 TEST(IntersectionTest, TestHitWhenIntersectionOccursOnInside) {
-    commontypes::Ray r{{0, 0, 0}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, 0}, {0, 0, 1}};
     geometry::Sphere shape{};
     geometry::Intersection i{1, std::make_shared<geometry::Sphere>(shape)};
     geometry::Computations comps = i.PrepareComputations(r);
@@ -126,7 +126,7 @@ TEST(IntersectionTest, TestHitWhenIntersectionOccursOnInside) {
 }
 
 TEST(IntersectionTest, TestHitShouldOffsetThePoint) {
-    commontypes::Ray r{{0, 0, -5}, {0, 0, 1}};
+    commontypes::Ray r{commontypes::Point{0, 0, -5}, {0, 0, 1}};
     geometry::Sphere s{};
     s.SetTransform(commontypes::TranslationMatrix{0, 0, 1});
 

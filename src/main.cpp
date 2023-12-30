@@ -97,7 +97,8 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
 void RenderChapter7Scene() {
     scene::World world{};
     scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 3};
-    camera.SetTransform(commontypes::ViewTransform{{0, 1.5, -5}, {0, 1, 0}, {0, 1, 0}});
+    camera.SetTransform(commontypes::ViewTransform{
+        commontypes::Point{0, 1.5, -5}, commontypes::Point{0, 1, 0}, {0, 1, 0}});
 
     auto floor_material = lighting::Material{};
     floor_material.SetSpecular(0);
@@ -122,7 +123,8 @@ void RenderChapter7Scene() {
     right_wall.SetTransform(r_transform);
     right_wall.SetMaterial(floor_mat_ptr);
 
-    auto world_light = lighting::PointLight{{-10, 10, -10}, commontypes::Color{1, 1, 1}};
+    auto world_light =
+        lighting::PointLight{commontypes::Point{-10, 10, -10}, commontypes::Color{1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
     world.AddObjects(std::vector<std::shared_ptr<geometry::Shape>>({
@@ -205,7 +207,8 @@ void Chapter10PatternPlaneRender() {
     const commontypes::ViewTransform camera_transform{from, to, up};
     camera.SetTransform(camera_transform);
 
-    auto world_light = lighting::PointLight{{-10, 10, -10}, commontypes::Color{1, 1, 1}};
+    auto world_light =
+        lighting::PointLight{commontypes::Point{-10, 10, -10}, commontypes::Color{1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(world_light));
 
     geometry::Plane plane;
@@ -232,7 +235,7 @@ void Chapter10PatternPlaneRender() {
 // behind the transparent Sphere
 void PatternRoomRefractiveSphere() {
     scene::World world{};
-    auto light = lighting::PointLight{{-1, 20, 0}, commontypes::Color{1, 1, 1}};
+    auto light = lighting::PointLight{commontypes::Point{-1, 20, 0}, commontypes::Color{1, 1, 1}};
     world.SetLight(std::make_shared<lighting::PointLight>(light));
 
     auto plane = geometry::Plane();
