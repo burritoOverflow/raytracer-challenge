@@ -10,21 +10,33 @@ class Cylinder : public Shape {
     Cylinder()
         : Shape(),
           minimum_(-std::numeric_limits<double>::infinity()),
-          maximum_(std::numeric_limits<double>::infinity()) {}
+          maximum_(std::numeric_limits<double>::infinity()),
+          capped_(false) {}
+
+    Cylinder(const double minimum, const double maximum, const bool capped)
+        : minimum_(minimum), maximum_(maximum), capped_(capped) {}
 
     std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;
 
     commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
 
     inline const double Minimum() const { return minimum_; }
-    void SetMinimum(double minimum) { minimum_ = minimum; }
+    void SetMinimum(const double minimum) { minimum_ = minimum; }
 
     inline const double Maximum() const { return maximum_; }
-    void SetMaximum(double maximum) { maximum_ = maximum; }
+    void SetMaximum(const double maximum) { maximum_ = maximum; }
+
+    bool IsCapped() const { return capped_; }
+    void SetIsCapped(const bool capped) { capped_ = capped; }
+
+    bool CheckCap(const commontypes::Ray& ray, const double t) const;
+
+    void IntersectCaps(const commontypes::Ray& ray, std::vector<geometry::Intersection>& xs);
 
    private:
     double minimum_;
     double maximum_;
+    bool capped_;  // is cylinder closed?
 };
 }  // namespace geometry
 
