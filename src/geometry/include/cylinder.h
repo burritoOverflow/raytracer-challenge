@@ -29,7 +29,7 @@ class Cylinder : public Shape {
     bool IsCapped() const { return capped_; }
     void SetIsCapped(const bool capped) { capped_ = capped; }
 
-    bool CheckCap(const commontypes::Ray& ray, const double t) const;
+    static bool CheckCap(const commontypes::Ray& ray, const double t);
 
     void IntersectCaps(const commontypes::Ray& ray, std::vector<geometry::Intersection>& xs);
 

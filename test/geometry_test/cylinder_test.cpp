@@ -127,11 +127,13 @@ TEST(CylinderTest, TestIntersectingTheCapsOfClosedCylinder) {
     geometry::Cylinder cyl{1, 2, true};
 
     // see: pg. 185
-    // examples 2 and 4 are above and below the Cylinder (respectively) and cast Ray diagonally
-    // through it, intersecting at one end cap and before exiting the far end of the cylinder
-    // 3 and 5 - corner cases: intersect an end cap, but exit at the point where the other end cap
-    // intersects the side of the Cylinder (in these two, the first intersection is at the first
-    // end cap and the second is where the second end cap meets the Cylinder wall.
+    // first example casts a Ray from above the Cylinder and points down through the Cylinder's
+    // middle along the y-axis. Examples 2 and 4 are above and below the Cylinder (respectively)
+    // and cast Ray diagonally through it, intersecting at one end cap and before exiting the far
+    // end of the cylinder 3 and 5 - corner cases: intersect an end cap, but exit at the point
+    // where the other end cap intersects the side of the Cylinder (in these two, the first
+    // intersection is at the first end cap and the second is where the second end cap meets the
+    // Cylinder wall.
     const std::vector<Expected> expected_values = {
         {commontypes::Point{0, 3, 0}, commontypes::Vector{0, -1, 0}, 2},
         {commontypes::Point{0, 3, -2}, commontypes::Vector{0, -1, 2}, 2},

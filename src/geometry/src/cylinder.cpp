@@ -58,6 +58,7 @@ commontypes::Vector geometry::Cylinder::LocalNormalAt(const commontypes::Point& 
         if (local_point.y() >= this->maximum_ - utility::EPSILON_) {
             return {0, 1, 0};
         }
+
         if (local_point.y() <= this->maximum_ + utility::EPSILON_) {
             return {0, -1, 0};
         }
@@ -68,7 +69,7 @@ commontypes::Vector geometry::Cylinder::LocalNormalAt(const commontypes::Point& 
 }
 
 // check to see if the intersection at `t` is within a radius of 1 from the y-axis
-bool geometry::Cylinder::CheckCap(const commontypes::Ray& ray, const double t) const {
+bool geometry::Cylinder::CheckCap(const commontypes::Ray& ray, const double t) {
     const double x = ray.origin().x() + t * ray.direction().x();
     const double z = ray.origin().z() + t * ray.direction().z();
     return (pow(x, 2) + pow(z, 2)) <= 1;
@@ -84,13 +85,13 @@ void geometry::Cylinder::IntersectCaps(const commontypes::Ray& ray,
     // check for intersection with lower end cap by intersecting the Ray with the Plane
     // at y = cylinder.min
     const double t_min = (this->minimum_ - ray.origin().y()) / ray.direction().y();
-    if (this->CheckCap(ray, t_min)) {
+    if (geometry::Cylinder::CheckCap(ray, t_min)) {
         xs.emplace_back(t_min, std::make_shared<geometry::Cylinder>(*this));
     }
 
     // as above, but for upper end cap by intersecting the Ray w/ Plane at y = cylinder.maximum
     const double t_max = (this->maximum_ - ray.origin().y()) / ray.direction().y();
-    if (this->CheckCap(ray, t_max)) {
+    if (geometry::Cylinder::CheckCap(ray, t_max)) {
         xs.emplace_back(t_max, std::make_shared<geometry::Cylinder>(*this));
     }
 }
