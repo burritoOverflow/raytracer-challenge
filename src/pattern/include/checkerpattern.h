@@ -16,7 +16,7 @@ class CheckerPattern : public Pattern {
     CheckerPattern(const commontypes::Color& color_a, const commontypes::Color& color_b)
         : Pattern(), color_a_(color_a), color_b_(color_b) {}
 
-    const commontypes::Color PatternAt(const commontypes::Point& point) const override;
+    commontypes::Color PatternAt(const commontypes::Point& point) const override;
 
     commontypes::Color ColorA() const { return color_a_; }
 

@@ -27,7 +27,7 @@ class Pattern {
 
    protected:
     // see discussion on this approach on pg. 133; each derived class implements `PatternAt`
-    virtual const commontypes::Color PatternAt(const commontypes::Point& point) const = 0;
+    virtual commontypes::Color PatternAt(const commontypes::Point& point) const = 0;
 
    private:
     commontypes::Matrix pattern_transform_;
