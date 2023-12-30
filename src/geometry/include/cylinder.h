@@ -34,6 +34,8 @@ class Cylinder : public Shape {
     void IntersectCaps(const commontypes::Ray& ray, std::vector<geometry::Intersection>& xs);
 
    private:
+    // min and max are units on the y-axis and defined in object space
+    // these values are exclusive; i.e does not include these limits (see pg. 182)
     double minimum_;
     double maximum_;
     bool capped_;  // is cylinder closed?

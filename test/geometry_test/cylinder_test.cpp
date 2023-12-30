@@ -148,3 +148,26 @@ TEST(CylinderTest, TestIntersectingTheCapsOfClosedCylinder) {
         ASSERT_EQ(xs.size(), expected.count);
     }
 }
+
+TEST(CylinderTest, TestTheNormalVectorOnCylindersEndCaps) {
+    struct Expected {
+        const commontypes::Point point;
+        const commontypes::Vector normal;
+    };
+
+    const std::vector<Expected> expected_values{
+        {commontypes::Point{0, 1, 0}, commontypes::Vector{0, -1, 0}},
+        {commontypes::Point{0.5, 1, 0}, commontypes::Vector{0, -1, 0}},
+        {commontypes::Point{0, 1, 0.5}, commontypes::Vector{0, -1, 0}},
+        {commontypes::Point{0, 2, 0}, commontypes::Vector{0, 1, 0}},
+        {commontypes::Point{0.5, 2, 0}, commontypes::Vector{0, 1, 0}},
+        {commontypes::Point{0, 2, 0.5}, commontypes::Vector{0, 1, 0}},
+    };
+
+    geometry::Cylinder cyl{1, 2, true};
+
+    for (const auto& expected : expected_values) {
+        const auto n = cyl.LocalNormalAt(expected.point);
+        ASSERT_TRUE(n == expected.normal);
+    }
+}

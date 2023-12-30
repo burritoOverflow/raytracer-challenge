@@ -48,7 +48,22 @@ std::vector<geometry::Intersection> geometry::Cylinder::LocalIntersect(
 }
 
 commontypes::Vector geometry::Cylinder::LocalNormalAt(const commontypes::Point& local_point) {
-    // remove the y component (pg. 181)
+    // the square of the distance from the y-axis
+    const double dist = pow(local_point.x(), 2) + pow(local_point.z(), 2);
+
+    // end caps are Planes, so the normal is the same at every point
+    if (dist < 1) {
+        // either of these conditions indicate the normal must be on one of the
+        // end caps (see pg. 187-188)
+        if (local_point.y() >= this->maximum_ - utility::EPSILON_) {
+            return {0, 1, 0};
+        }
+        if (local_point.y() <= this->maximum_ + utility::EPSILON_) {
+            return {0, -1, 0};
+        }
+    }
+
+    // otherwise Cylinder, remove the y component (pg. 181)
     return {local_point.x(), 0, local_point.z()};
 }
 
@@ -70,12 +85,12 @@ void geometry::Cylinder::IntersectCaps(const commontypes::Ray& ray,
     // at y = cylinder.min
     const double t_min = (this->minimum_ - ray.origin().y()) / ray.direction().y();
     if (this->CheckCap(ray, t_min)) {
-        xs.push_back(geometry::Intersection{t_min, std::make_shared<geometry::Cylinder>(*this)});
+        xs.emplace_back(t_min, std::make_shared<geometry::Cylinder>(*this));
     }
 
     // as above, but for upper end cap by intersecting the Ray w/ Plane at y = cylinder.maximum
     const double t_max = (this->maximum_ - ray.origin().y()) / ray.direction().y();
     if (this->CheckCap(ray, t_max)) {
-        xs.push_back(geometry::Intersection{t_max, std::make_shared<geometry::Cylinder>(*this)});
+        xs.emplace_back(t_max, std::make_shared<geometry::Cylinder>(*this));
     }
 }
