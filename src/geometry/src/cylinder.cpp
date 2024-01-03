@@ -77,7 +77,7 @@ bool geometry::Cylinder::CheckCap(const commontypes::Ray& ray, const double t) {
 
 // pg. 186
 void geometry::Cylinder::IntersectCaps(const commontypes::Ray& ray,
-                                       std::vector<geometry::Intersection>& xs) {
+                                       std::vector<geometry::Intersection>& xs) const {
     if (!this->IsCapped() || utility::NearEquals(ray.direction().y(), 0.0)) {
         return;
     }

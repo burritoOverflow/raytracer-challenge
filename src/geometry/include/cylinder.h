@@ -29,11 +29,11 @@ class Cylinder : public Shape {
 
     commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
 
-    static bool CheckCap(const commontypes::Ray& ray, const double t);
-
-    void IntersectCaps(const commontypes::Ray& ray, std::vector<geometry::Intersection>& xs);
-
    private:
+    static bool CheckCap(const commontypes::Ray& ray, double t);
+
+    void IntersectCaps(const commontypes::Ray& ray, std::vector<geometry::Intersection>& xs) const;
+
     // min and max are units on the y-axis and defined in object space
     // these values are exclusive; i.e does not include these limits (see pg. 182)
     double minimum_;

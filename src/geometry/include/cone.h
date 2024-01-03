@@ -21,12 +21,21 @@ class Cone : public Shape {
 
     commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
 
-    // radius is the y-coordinate of the Plane being tested (see: pg. 190)
-    static bool CheckCap(const commontypes::Ray& ray, const double t, const double radius);
-
-    void IntersectCaps(const commontypes::Ray& ray, std::vector<geometry::Intersection>& xs);
-
    private:
+    // used to constrain args for CheckCap, as only the min or max values are valid arguments
+    enum PlaneYCoord { kUseMaximum, kUseMinimum };
+
+    void IntersectCaps(const commontypes::Ray& ray, std::vector<geometry::Intersection>& xs) const;
+
+    // radius is the y-coordinate of the Plane being tested, either the Cone's min or max.
+    // this value is treated as the radius within the Point must lie
+    // (see: pg. 190)
+    bool CheckCap(const commontypes::Ray& ray, double t, PlaneYCoord plane_y_coord) const;
+
+    inline bool IsYBetweenMinMax(const double y_val) const {
+        return minimum_ < y_val && maximum_ > y_val;
+    }
+
     // see the Cylinder implementation for details
     double minimum_;
     double maximum_;

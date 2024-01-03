@@ -14,9 +14,9 @@ std::vector<geometry::Intersection> geometry::Cone::LocalIntersect(const commont
         pow(ray.origin().x(), 2) - pow(ray.origin().y(), 2) + pow(ray.origin().z(), 2);
 
     // Ray parallel to one of the Cone's halves.
-    // Ray may intersect the other half of the Cone (Ray only misses when a & b are both 0)
+    // Ray may intersect the other half of the Cone (Ray only misses when a & b both == 0)
     if (utility::NearEquals(a, 0.0)) {
-        // both miss is a and b are both 0.
+        // both miss
         if (utility::NearEquals(b, 0.0)) {
             return {};
         }
@@ -47,12 +47,12 @@ std::vector<geometry::Intersection> geometry::Cone::LocalIntersect(const commont
     std::vector<geometry::Intersection> xs{};
 
     const auto y0 = ray.origin().y() + t0 * ray.direction().y();
-    if (this->minimum_ < y0 && y0 < this->maximum_) {
+    if (IsYBetweenMinMax(y0)) {
         xs.push_back(std::move(geometry::Intersection{t0, this_ptr}));
     }
 
     const auto y1 = ray.origin().y() + t1 * ray.direction().y();
-    if (this->minimum_ < y1 && y1 < this->maximum_) {
+    if (IsYBetweenMinMax(y1)) {
         xs.push_back(std::move(geometry::Intersection{t1, this_ptr}));
     }
 
@@ -62,11 +62,13 @@ std::vector<geometry::Intersection> geometry::Cone::LocalIntersect(const commont
 
 commontypes::Vector geometry::Cone::LocalNormalAt(const commontypes::Point& local_point) {
     // see pg. 190
+    // y  = sqrt(point,x^2 + point.z^2)
     double y = sqrt(pow(local_point.x(), 2) + pow(local_point.z(), 2));
     if (local_point.y() > 0) {
         y = -y;
     }
 
+    // as in Cylinder
     if (y < 1) {
         if (local_point.y() >= this->maximum_ - utility::EPSILON_) {
             return commontypes::Vector{0, 1, 0};
@@ -80,14 +82,24 @@ commontypes::Vector geometry::Cone::LocalNormalAt(const commontypes::Point& loca
     return commontypes::Vector{local_point.x(), y, local_point.z()};
 }
 
-bool geometry::Cone::CheckCap(const commontypes::Ray& ray, const double t, const double radius) {
+bool geometry::Cone::CheckCap(const commontypes::Ray& ray,
+                              const double t,
+                              PlaneYCoord plane_y_coord) const {
+    double radius{};
+    if (plane_y_coord == kUseMaximum) {
+        radius = fabs(this->maximum_);
+    } else if (plane_y_coord == kUseMinimum) {
+        radius = fabs(this->minimum_);
+    }
+
     const double x = ray.origin().x() + t * ray.direction().x();
     const double z = ray.origin().z() + t * ray.direction().z();
+
     return (pow(x, 2) + pow(z, 2)) <= radius + utility::EPSILON_;
 }
 
 void geometry::Cone::IntersectCaps(const commontypes::Ray& ray,
-                                   std::vector<geometry::Intersection>& xs) {
+                                   std::vector<geometry::Intersection>& xs) const {
     if (!this->IsCapped() || utility::NearEquals(ray.direction().y(), 0.0)) {
         return;
     }
@@ -95,12 +107,12 @@ void geometry::Cone::IntersectCaps(const commontypes::Ray& ray,
     // Cone's radius at a given y is the absolute value of that y.
     // this differs from Cylinders, as Cylinders have the same radius everywhere
     const double t_min = (this->minimum_ - ray.origin().y()) / ray.direction().y();
-    if (geometry::Cone::CheckCap(ray, t_min, fabs(minimum_))) {
+    if (geometry::Cone::CheckCap(ray, t_min, kUseMinimum)) {
         xs.emplace_back(t_min, std::make_shared<geometry::Cone>(*this));
     }
 
     const double t_max = (this->maximum_ - ray.origin().y()) / ray.direction().y();
-    if (geometry::Cone::CheckCap(ray, t_max, fabs(maximum_))) {
+    if (geometry::Cone::CheckCap(ray, t_max, kUseMaximum)) {
         xs.emplace_back(t_max, std::make_shared<geometry::Cone>(*this));
     }
 }
