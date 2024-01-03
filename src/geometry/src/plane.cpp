@@ -1,7 +1,8 @@
 #include "plane.h"
 #include "utility.h"
 
-std::vector<geometry::Intersection> geometry::Plane::LocalIntersect(const commontypes::Ray& ray) {
+std::vector<geometry::Intersection> geometry::Plane::LocalIntersect(
+    const commontypes::Ray& ray) const {
     // plane is in xz, it has no slope in y at all.
     // if the ray's direction vector has no slope in y, it is parallel to the plane
     if (std::abs(ray.direction().y()) < utility::EPSILON_) {
@@ -14,7 +15,7 @@ std::vector<geometry::Intersection> geometry::Plane::LocalIntersect(const common
     return {intersection};
 }
 
-commontypes::Vector geometry::Plane::LocalNormalAt(const commontypes::Point& local_point) {
+commontypes::Vector geometry::Plane::LocalNormalAt(const commontypes::Point& local_point) const {
     // with no curvature, the normal is constant everywhere
     return commontypes::Vector{0, 1, 0};
 }

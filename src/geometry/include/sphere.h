@@ -21,9 +21,9 @@ class Sphere : public Shape {
     inline double radii() const { return radii_; }
 
     // containing the t val for an intersection and the id for the Sphere
-    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;
+    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) const override;
 
-    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
+    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const override;
 
     inline static Sphere GlassSphere() {
         Sphere glass_sphere{};

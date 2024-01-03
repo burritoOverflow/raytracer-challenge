@@ -1,6 +1,7 @@
 #include "sphere.h"
 
-std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(const commontypes::Ray& ray) {
+std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(
+    const commontypes::Ray& ray) const {
     // vector from Sphere's center to Ray's origin (pg. 62)
     const commontypes::Vector sphere_to_ray = commontypes::Vector{ray.origin() - origin_};
 
@@ -29,7 +30,7 @@ std::vector<geometry::Intersection> geometry::Sphere::LocalIntersect(const commo
     return {geometry::Intersection{t1, object}, geometry::Intersection{t2, std::move(object)}};
 }
 
-commontypes::Vector geometry::Sphere::LocalNormalAt(const commontypes::Point& local_point) {
+commontypes::Vector geometry::Sphere::LocalNormalAt(const commontypes::Point& local_point) const {
     return commontypes::Vector{local_point - commontypes::Point{}};
 }
 

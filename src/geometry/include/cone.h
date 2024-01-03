@@ -17,9 +17,9 @@ class Cone : public Shape {
     bool IsCapped() const { return capped_; }
     void SetIsCapped(const bool capped) { capped_ = capped; }
 
-    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;
+    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) const override;
 
-    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
+    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const override;
 
    private:
     // used to constrain args for CheckCap, as only the min or max values are valid arguments

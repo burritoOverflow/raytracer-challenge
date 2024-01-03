@@ -12,18 +12,19 @@ class TestShape : public Shape {
    public:
     TestShape() : Shape(), saved_ray_{commontypes::Point{}, commontypes::Vector{}} {};
 
-    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override {
-        saved_ray_ = ray;
+    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) const override {
+        saved_ray_ = ray;  // for the purposes of the tests--from pg. 119-120
         return {};
     }
 
-    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override {
+    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const override {
         // per pg. 121
         return commontypes::Vector{local_point.x(), local_point.y(), local_point.z()};
     }
 
-    // see pg. 120
-    commontypes::Ray saved_ray_;
+    // see pg. 119-120
+    mutable commontypes::Ray
+        saved_ray_;  // we actually do want to mutate this to verify the behavior of `Shape`
 };
 }  // namespace geometry
 

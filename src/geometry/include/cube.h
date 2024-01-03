@@ -8,12 +8,12 @@ namespace geometry {
 // AABB - sides are all aligned with the scene's axis
 class Cube : public Shape {
    public:
-    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;
+    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) const override;
 
-    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
+    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const override;
 
    private:
-    std::tuple<double, double> CheckAxis(double origin, double direction);
+    std::tuple<double, double> CheckAxis(double origin, double direction) const;
 };
 }  // namespace geometry
 

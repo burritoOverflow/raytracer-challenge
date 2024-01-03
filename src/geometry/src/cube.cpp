@@ -3,7 +3,8 @@
 #include <memory>
 #include "utility.h"
 
-std::vector<geometry::Intersection> geometry::Cube::LocalIntersect(const commontypes::Ray& ray) {
+std::vector<geometry::Intersection> geometry::Cube::LocalIntersect(
+    const commontypes::Ray& ray) const {
     // min and max for each axis of the Cube
     const auto [xtmin, xtmax] = this->CheckAxis(ray.origin().x(), ray.direction().x());
     const auto [ytmin, ytmax] = this->CheckAxis(ray.origin().y(), ray.direction().y());
@@ -30,7 +31,7 @@ std::vector<geometry::Intersection> geometry::Cube::LocalIntersect(const commont
 // find the actual points of intersection (see pg. 171)
 // invoked for each plane in the Cube, this method generalizes
 // the Plane LocalIntersect method generalized for Planes offset from the origin
-std::tuple<double, double> geometry::Cube::CheckAxis(const double origin, const double direction) {
+std::tuple<double, double> geometry::Cube::CheckAxis(double origin, double direction) const {
     // each pair of planes is offset from the origin
     const double tmin_numerator = (-1 - origin);
     const double tmax_numerator = (1 - origin);
@@ -54,7 +55,7 @@ std::tuple<double, double> geometry::Cube::CheckAxis(const double origin, const 
 
 // each face of the Cube is a Plane with its own normal; normal will be same at every point on the
 // face
-commontypes::Vector geometry::Cube::LocalNormalAt(const commontypes::Point& local_point) {
+commontypes::Vector geometry::Cube::LocalNormalAt(const commontypes::Point& local_point) const {
     const double abs_x = abs(local_point.x());
     const double abs_y = abs(local_point.y());
     const double abs_z = abs(local_point.z());

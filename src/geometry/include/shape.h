@@ -50,9 +50,9 @@ class Shape {
 
     // each shape provides its own appropriate implementation for both local intersection and
     // local normal calculation
-    virtual std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) = 0;
+    virtual std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) const = 0;
 
-    virtual commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) = 0;
+    virtual commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const = 0;
 
    private:
     static uint64_t SHAPE_ID;  // each shape must have a unique identifier

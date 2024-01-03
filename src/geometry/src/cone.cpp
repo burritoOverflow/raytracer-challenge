@@ -1,5 +1,6 @@
 #include "cone.h"
-std::vector<geometry::Intersection> geometry::Cone::LocalIntersect(const commontypes::Ray& ray) {
+std::vector<geometry::Intersection> geometry::Cone::LocalIntersect(
+    const commontypes::Ray& ray) const {
     // TODO: refactor this logic out as it's duplicated
 
     // see pg. 189
@@ -60,7 +61,7 @@ std::vector<geometry::Intersection> geometry::Cone::LocalIntersect(const commont
     return xs;
 }
 
-commontypes::Vector geometry::Cone::LocalNormalAt(const commontypes::Point& local_point) {
+commontypes::Vector geometry::Cone::LocalNormalAt(const commontypes::Point& local_point) const {
     // see pg. 190
     // y  = sqrt(point,x^2 + point.z^2)
     double y = sqrt(pow(local_point.x(), 2) + pow(local_point.z(), 2));

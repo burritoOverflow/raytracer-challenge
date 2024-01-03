@@ -1,7 +1,7 @@
 #include "cylinder.h"
 
 std::vector<geometry::Intersection> geometry::Cylinder::LocalIntersect(
-    const commontypes::Ray& ray) {
+    const commontypes::Ray& ray) const {
     // compute the discriminant
     const double a = pow(ray.direction().x(), 2) + pow(ray.direction().z(), 2);
 
@@ -47,7 +47,8 @@ std::vector<geometry::Intersection> geometry::Cylinder::LocalIntersect(
     return xs;
 }
 
-commontypes::Vector geometry::Cylinder::LocalNormalAt(const commontypes::Point& local_point) {
+commontypes::Vector geometry::Cylinder::LocalNormalAt(
+    const commontypes::Point& local_point) const {
     // the square of the distance from the y-axis
     const double dist = pow(local_point.x(), 2) + pow(local_point.z(), 2);
 
