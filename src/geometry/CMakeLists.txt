@@ -8,6 +8,7 @@ target_sources(Geometry
         src/plane.cpp
         src/cube.cpp
         src/cylinder.cpp
+        src/cone.cpp
         src/intersection.cpp
 )
 

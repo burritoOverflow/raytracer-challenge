@@ -59,7 +59,7 @@ commontypes::Vector geometry::Cylinder::LocalNormalAt(const commontypes::Point& 
             return commontypes::Vector{0, 1, 0};
         }
 
-        if (local_point.y() <= this->maximum_ + utility::EPSILON_) {
+        if (local_point.y() <= this->minimum_ + utility::EPSILON_) {
             return commontypes::Vector{0, -1, 0};
         }
     }

@@ -16,10 +16,6 @@ class Cylinder : public Shape {
     explicit Cylinder(const double minimum, const double maximum, const bool capped)
         : minimum_(minimum), maximum_(maximum), capped_(capped) {}
 
-    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;
-
-    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
-
     inline const double Minimum() const { return minimum_; }
     void SetMinimum(const double minimum) { minimum_ = minimum; }
 
@@ -28,6 +24,10 @@ class Cylinder : public Shape {
 
     bool IsCapped() const { return capped_; }
     void SetIsCapped(const bool capped) { capped_ = capped; }
+
+    std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) override;
+
+    commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) override;
 
     static bool CheckCap(const commontypes::Ray& ray, const double t);
 
