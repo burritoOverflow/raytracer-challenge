@@ -23,7 +23,7 @@ class Pattern {
     // return the color for the given Pattern, on the provided Shape's Transform, at the provided
     // Point in world space; it should respect the Transform on both pattern and object
     commontypes::Color PatternAtShape(const commontypes::Matrix& shape_transform,
-                                      const commontypes::Point& world_point);
+                                      const commontypes::Point& world_point) const;
 
    protected:
     // see discussion on this approach on pg. 133; each derived class implements `PatternAt`

@@ -33,7 +33,19 @@ class Material {
           reflective_(material.reflective_),
           transparency_(material.transparency_),
           refractive_index_(material.refractive_index_),
-          color_(material.color_) {}
+          color_(material.color_),
+          pattern_ptr_(std::move(material.pattern_ptr_)) {
+        material.ambient_ = 0;
+        material.diffuse_ = 0;
+        material.specular_ = 0;
+        material.shininess_ = 0;
+        material.reflective_ = 0;
+        material.transparency_ = 0;
+        material.refractive_index_ = 0;
+        material.color_ = {};
+        // considering the shared_ptr member has been explicitly moved above, this member is now a
+        // nullptr; there's nothing to change
+    }
 
     Material(Material const& material) = default;
 
@@ -81,7 +93,7 @@ class Material {
     inline void SetColor(const commontypes::Color& color) { color_ = color; }
 
     inline bool HasPattern() const { return pattern_ptr_ != nullptr; }
-    inline std::shared_ptr<pattern::Pattern> Pattern() { return pattern_ptr_; }
+    inline std::shared_ptr<pattern::Pattern> Pattern() const { return pattern_ptr_; }
     inline void SetPattern(const std::shared_ptr<pattern::Pattern>& pattern_ptr) {
         pattern_ptr_ = pattern_ptr;
     }
@@ -168,10 +180,6 @@ class MaterialBuilder {
 
     Material& Build() { return m_; }
 
-    // TODO:
-    //  WARNING: attempting to build using the call operator while setting the pattern_ptr results
-    // in the pattern_ptr being NULL; call `Build` instead. considering this, this should be
-    // removed to avoid the issue, but it's worth investigating
     operator Material() { return std::move(m_); }
 
    private:

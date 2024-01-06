@@ -9,6 +9,46 @@
 #include "stripepattern.h"
 #include "vector.h"
 
+TEST(MaterialTest, TestMaterialMoveCtor) {
+    const auto color_a = commontypes::Color{0, 1, 0};
+    const auto color_b = commontypes::Color{0, 0, 0};
+
+    auto pattern_ptr =
+        std::make_shared<pattern::StripePattern>(pattern::StripePattern{color_a, color_b});
+
+    const double expected_ambience = 0.5;
+    const double expected_specular = 0.33;
+    const double zero_val = 0.0;
+    const auto im = commontypes::IdentityMatrix();
+
+    lighting::Material material = lighting::MaterialBuilder()
+                                      .WithAmbient(expected_ambience)
+                                      .WithSpecular(expected_specular)
+                                      .WithPatternPtr(std::move(pattern_ptr));
+
+    // verify moved to
+    const lighting::Material material2 = std::move(material);
+    ASSERT_DOUBLE_EQ(material2.Ambient(), expected_ambience);
+    ASSERT_DOUBLE_EQ(material2.Specular(), expected_specular);
+
+    const auto material_pattern_ptr =
+        dynamic_cast<pattern::StripePattern*>(material2.Pattern().get());
+    ASSERT_TRUE(material_pattern_ptr->ColorA() == color_a);
+    ASSERT_TRUE(material_pattern_ptr->ColorB() == color_b);
+    ASSERT_TRUE(material_pattern_ptr->GetPatternTransform() == im);
+
+    // verify moved from (we're aware of the warning; intentional)
+    ASSERT_DOUBLE_EQ(material.Ambient(), zero_val);
+    ASSERT_DOUBLE_EQ(material.Diffuse(), zero_val);
+    ASSERT_DOUBLE_EQ(material.Specular(), zero_val);
+    ASSERT_DOUBLE_EQ(material.Shininess(), zero_val);
+    ASSERT_DOUBLE_EQ(material.Reflective(), zero_val);
+    ASSERT_DOUBLE_EQ(material.RefractiveIndex(), zero_val);
+    ASSERT_TRUE(material.Color() == commontypes::Color());
+    ASSERT_FALSE(material.HasPattern());
+    ASSERT_EQ(material.Pattern(), nullptr);
+}
+
 TEST(MaterialTest, TestMaterialBuilderAssignment) {
     commontypes::Color color{1, 0, 1};
     const double ambient = 0.6;
@@ -65,6 +105,53 @@ TEST(MaterialTest, TestMaterialBuilderInvokesDefaultCtor) {
     ASSERT_TRUE(material.Diffuse() == default_material.Diffuse());
     ASSERT_TRUE(material.Transparency() == default_material.Transparency());
     ASSERT_TRUE(material.RefractiveIndex() == default_material.RefractiveIndex());
+}
+
+TEST(MaterialTest, TestMaterialBuilderCallOperator) {
+    const double exp_ambient = 1.0;
+    const double exp_specular = 0.5;
+
+    const auto color_a = commontypes::Color{0, 1, 0};
+    const auto color_b = commontypes::Color{0, 0, 0};
+
+    const auto pattern_ptr =
+        std::make_shared<pattern::StripePattern>(pattern::StripePattern{color_a, color_b});
+
+    const lighting::Material material = lighting::MaterialBuilder()
+                                            .WithAmbient(exp_ambient)
+                                            .WithSpecular(exp_specular)
+                                            .WithPatternPtr(pattern_ptr);
+
+    EXPECT_DOUBLE_EQ(material.Ambient(), exp_ambient);
+    EXPECT_DOUBLE_EQ(material.Specular(), exp_specular);
+    EXPECT_EQ(material.Pattern(), pattern_ptr);
+}
+
+// as above; description summarizes changes
+TEST(MaterialTest, TestMaterialBuilderCallOperatorWithMovedSharedPtrMember) {
+    const double exp_ambient = 1.0;
+    const double exp_specular = 0.5;
+    const auto color_a = commontypes::Color{0, 1, 0};
+    const auto color_b = commontypes::Color{0, 0, 0};
+
+    auto pattern_ptr =
+        std::make_shared<pattern::StripePattern>(pattern::StripePattern{color_a, color_b});
+
+    const lighting::Material material = lighting::MaterialBuilder()
+                                            .WithAmbient(exp_ambient)
+                                            .WithSpecular(exp_specular)
+                                            .WithPatternPtr(std::move(pattern_ptr));
+
+    ASSERT_TRUE(material.HasPattern());
+    ASSERT_EQ(pattern_ptr, nullptr);
+
+    const auto material_pattern_ptr =
+        dynamic_cast<pattern::StripePattern*>(material.Pattern().get());
+
+    EXPECT_DOUBLE_EQ(material.Ambient(), exp_ambient);
+    EXPECT_DOUBLE_EQ(material.Specular(), exp_specular);
+    ASSERT_TRUE(material_pattern_ptr->ColorA() == color_a);
+    ASSERT_TRUE(material_pattern_ptr->ColorB() == color_b);
 }
 
 TEST(MaterialTest, TestDefaultMaterial) {
@@ -183,18 +270,18 @@ TEST(MaterialTest, TestLightingWithPatternApplied) {
     const auto pattern_ptr = std::make_shared<pattern::StripePattern>(
         pattern::StripePattern{commontypes::Color{1, 1, 1}, commontypes::Color{0, 0, 0}});
 
-    const lighting::Material m = lighting::MaterialBuilder()
-                                     .WithAmbient(1)
-                                     .WithDiffuse(0)
-                                     .WithSpecular(0)
-                                     .WithPatternPtr(pattern_ptr)
-                                     .Build();
+    lighting::Material m = lighting::MaterialBuilder()
+                               .WithAmbient(1)
+                               .WithDiffuse(0)
+                               .WithSpecular(0)
+                               .WithPatternPtr(pattern_ptr)
+                               .Build();
 
     const commontypes::Vector eye_v{0, 0, -1};
     const commontypes::Vector normal_v{0, 0, -1};
-    const lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
+    lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
 
-    const auto material_ptr = std::make_shared<lighting::Material>(m);
+    const auto material_ptr = std::make_shared<lighting::Material>(std::move(m));
     const auto lighting_ptr = std::make_shared<lighting::PointLight>(light);
     const auto identity_matrix = commontypes::IdentityMatrix{};
 

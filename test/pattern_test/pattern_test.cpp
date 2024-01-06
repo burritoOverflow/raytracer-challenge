@@ -32,7 +32,7 @@ TEST(PatternTest, TestAssigningTransformation) {
 TEST(PatternTest, TestPatternWithObjectTransformation) {
     geometry::Sphere shape{};
     shape.SetTransform(commontypes::ScalingMatrix{2, 2, 2});
-    TestPattern pattern{};
+    const TestPattern pattern{};
     const commontypes::Color c =
         pattern.PatternAtShape(shape.GetTransform(), commontypes::Point{2, 3, 4});
     ASSERT_TRUE(c == commontypes::Color(1, 1.5, 2));

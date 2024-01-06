@@ -1,7 +1,7 @@
 #include "pattern.h"
 
 commontypes::Color pattern::Pattern::PatternAtShape(const commontypes::Matrix& shape_transform,
-                                                    const commontypes::Point& world_point) {
+                                                    const commontypes::Point& world_point) const {
     // this is the implementation of the initial approach outlined on pg. 132, and
     // revised by the approach on pg. 133
 
