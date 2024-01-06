@@ -16,7 +16,7 @@ class PointLight {
     inline commontypes::Color intensity() const { return intensity_; }
 
    private:
-    commontypes::Point position_;
+    commontypes::Point position_;  // light exists at a single point in space
     commontypes::Color intensity_;
 };
 }  // namespace lighting

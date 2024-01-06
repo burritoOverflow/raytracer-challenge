@@ -7,6 +7,7 @@ target_sources(Common
         src/matrix.cpp
         src/viewtransform.cpp
         src/color.cpp
-        )
+        src/utility.cpp
+)
 
 target_include_directories(Common PUBLIC include)

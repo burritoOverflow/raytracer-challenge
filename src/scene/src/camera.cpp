@@ -10,10 +10,9 @@ commontypes::Ray scene::Camera::RayForPixel(const size_t px, const size_t py) co
     // recall that camera looks toward -z, so +x is "left"
     const double world_x = this->half_width_ - x_offset;
     const double world_y = this->half_height_ - y_offset;
+    const commontypes::Matrix transform_inverse = this->transform_.Inverse();
 
-    commontypes::Matrix transform_inverse = this->transform_.Inverse();
-
-    commontypes::Point pixel =
+    const commontypes::Point pixel =
         commontypes::Point(transform_inverse * commontypes::Point{world_x, world_y, -1});
     const commontypes::Point origin =
         commontypes::Point(transform_inverse * commontypes::Point{0, 0, 0});

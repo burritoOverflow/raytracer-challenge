@@ -131,6 +131,7 @@ TEST(MaterialTest, TestMaterialBuilderCallOperator) {
 TEST(MaterialTest, TestMaterialBuilderCallOperatorWithMovedSharedPtrMember) {
     const double exp_ambient = 1.0;
     const double exp_specular = 0.5;
+
     const auto color_a = commontypes::Color{0, 1, 0};
     const auto color_b = commontypes::Color{0, 0, 0};
 
