@@ -150,6 +150,7 @@ TEST(IntersectionTest, TestPrecomputingTheReflectionVector) {
     ASSERT_TRUE(comps.reflect_vector_ == commontypes::Vector(0, sqrt_2_over_2, sqrt_2_over_2));
 }
 
+// pg. 152
 TEST(IntersectionTest, TestFindingN1AndN2AtVariousIntersection) {
     auto a = std::make_shared<geometry::Sphere>(geometry::Sphere::GlassSphere());
     a->SetTransform(commontypes::ScalingMatrix{2, 2, 2});
@@ -176,29 +177,21 @@ TEST(IntersectionTest, TestFindingN1AndN2AtVariousIntersection) {
 
     };
 
-    const geometry::Computations comps0 = xs.at(0).PrepareComputations(r, xs);
-    ASSERT_DOUBLE_EQ(comps0.n1, 1.0);
-    ASSERT_DOUBLE_EQ(comps0.n2, 1.5);
+    struct ExpectedValues {
+        const double n1;
+        const double n2;
+    };
 
-    const geometry::Computations comps1 = xs.at(1).PrepareComputations(r, xs);
-    ASSERT_DOUBLE_EQ(comps1.n1, 1.5);
-    ASSERT_DOUBLE_EQ(comps1.n2, 2.0);
+    const std::vector<ExpectedValues> expected_vals{{1.0, 1.5}, {1.5, 2.0}, {2.0, 2.5},
+                                                    {2.5, 2.5}, {2.5, 1.5}, {1.5, 1.0}};
 
-    const geometry::Computations comps2 = xs.at(2).PrepareComputations(r, xs);
-    ASSERT_DOUBLE_EQ(comps2.n1, 2.0);
-    ASSERT_DOUBLE_EQ(comps2.n2, 2.5);
+    for (size_t i = 0; i < expected_vals.size(); ++i) {
+        const auto comps = xs.at(i).PrepareComputations(r, xs);
+        const auto expected = expected_vals.at(i);
 
-    const geometry::Computations comps3 = xs.at(3).PrepareComputations(r, xs);
-    ASSERT_DOUBLE_EQ(comps3.n1, 2.5);
-    ASSERT_DOUBLE_EQ(comps3.n2, 2.5);
-
-    const geometry::Computations comps4 = xs.at(4).PrepareComputations(r, xs);
-    ASSERT_DOUBLE_EQ(comps4.n1, 2.5);
-    ASSERT_DOUBLE_EQ(comps4.n2, 1.5);
-
-    const geometry::Computations comps5 = xs.at(5).PrepareComputations(r, xs);
-    ASSERT_DOUBLE_EQ(comps5.n1, 1.5);
-    ASSERT_DOUBLE_EQ(comps5.n2, 1.0);
+        ASSERT_DOUBLE_EQ(comps.n1, expected.n1);
+        ASSERT_DOUBLE_EQ(comps.n2, expected.n2);
+    }
 }
 
 TEST(IntersectionTest, TestUnderPointIsOffsetBelowSurface) {
