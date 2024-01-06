@@ -174,24 +174,30 @@ TEST(MaterialTest, TestLightingWithSurfaceInShadow) {
 }
 
 TEST(MaterialTest, TestLightingWithPatternApplied) {
-    lighting::Material m{};
-    m.SetPattern(std::make_shared<pattern::StripePattern>(
-        pattern::StripePattern{commontypes::Color{1, 1, 1}, commontypes::Color{0, 0, 0}}));
-    m.SetAmbient(1);
-    m.SetDiffuse(0);
-    m.SetSpecular(0);
+    const auto pattern_ptr = std::make_shared<pattern::StripePattern>(
+        pattern::StripePattern{commontypes::Color{1, 1, 1}, commontypes::Color{0, 0, 0}});
+
+    const lighting::Material m = lighting::MaterialBuilder()
+                                     .WithAmbient(1)
+                                     .WithDiffuse(0)
+                                     .WithSpecular(0)
+                                     .WithPatternPtr(pattern_ptr)
+                                     .Build();
+
     const commontypes::Vector eye_v{0, 0, -1};
     const commontypes::Vector normal_v{0, 0, -1};
     const lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
 
+    const auto material_ptr = std::make_shared<lighting::Material>(m);
+    const auto lighting_ptr = std::make_shared<lighting::PointLight>(light);
+    const auto identity_matrix = commontypes::IdentityMatrix{};
+
     const commontypes::Color c1 =
-        lighting::Lighting(std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
-                           std::make_shared<lighting::PointLight>(light),
+        lighting::Lighting(material_ptr, identity_matrix, lighting_ptr,
                            commontypes::Point{0.9, 0, 0}, eye_v, normal_v);
 
     const commontypes::Color c2 =
-        lighting::Lighting(std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
-                           std::make_shared<lighting::PointLight>(light),
+        lighting::Lighting(material_ptr, identity_matrix, lighting_ptr,
                            commontypes::Point{1.1, 0, 0}, eye_v, normal_v);
 
     ASSERT_TRUE(c1 == commontypes::Color(1, 1, 1));

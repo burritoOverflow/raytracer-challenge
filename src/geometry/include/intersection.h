@@ -13,18 +13,22 @@
 namespace geometry {
 class Shape;
 
-// encapsulates some computations related to the intersection
+// encapsulates some computations related to the Intersection
+// precomputes the Point in WorldSpace where the Intersection occurs
 struct Computations {
     std::shared_ptr<Shape> object_;
-    double t_;
-    commontypes::Point point_;
+
+    double t_;                  // as below--where Ray intersects the Shape
+    commontypes::Point point_;  // Point of intersection (WorldSpace)
     commontypes::Point
         over_point_;  // for avoiding self-shadowing (adjust the point slightly in the direction of
                       // the normal, just before testing for shadows (see pg. 114)
+
     commontypes::Point under_point_;  // lies just beneath surface
-    commontypes::Vector eye_vector_;
+    commontypes::Vector eye_vector_;  // pointing back toward eye/camera (pg. 93)
     commontypes::Vector normal_vector_;
     commontypes::Vector reflect_vector_;
+
     bool inside_{false};  // true if hit occurs inside the object
 
     // n1 and n2 are the refractive indices of materials on either side of the ray-object

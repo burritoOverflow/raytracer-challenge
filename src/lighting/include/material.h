@@ -168,7 +168,8 @@ class MaterialBuilder {
 
     Material& Build() { return m_; }
 
-    // WARNING: attempting to build using the call operator while setting the pattern_ptr results
+    // TODO:
+    //  WARNING: attempting to build using the call operator while setting the pattern_ptr results
     // in the pattern_ptr being NULL; call `Build` instead. considering this, this should be
     // removed to avoid the issue, but it's worth investigating
     operator Material() { return std::move(m_); }
