@@ -68,19 +68,19 @@ TEST(ShapeTest, TestAssigningAMaterial) {
 }
 
 TEST(ShapeTest, TestIntersectingScaledShapeWithRay) {
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
+    const commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::TestShape s{};
     s.SetTransform(commontypes::ScalingMatrix{2, 2, 2});
-    std::vector<geometry::Intersection> xs = s.Intersect(r);
+    const std::vector<geometry::Intersection> xs = s.Intersect(r);
     ASSERT_TRUE(s.saved_ray_.origin() == commontypes::Point(0, 0, -2.5));
     ASSERT_TRUE(s.saved_ray_.direction() == commontypes::Vector(0, 0, 0.5));
 }
 
 TEST(ShapeTest, TestIntersectingTranslatedShapeWithRay) {
-    commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
+    const commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
     geometry::TestShape s{};
     s.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
-    std::vector<geometry::Intersection> xs = s.Intersect(r);
+    const std::vector<geometry::Intersection> xs = s.Intersect(r);
     ASSERT_TRUE(s.saved_ray_.origin() == commontypes::Point(-5, 0, -5));
     ASSERT_TRUE(s.saved_ray_.direction() == commontypes::Vector(0, 0, 1));
 }
@@ -90,7 +90,7 @@ TEST(ShapeTest, TestIntersectingTranslatedShapeWithRay) {
 TEST(ShapeTest, TestComputingNormalOnTranslatedShape) {
     geometry::TestShape s{};
     s.SetTransform(commontypes::TranslationMatrix{0, 1, 0});
-    commontypes::Vector n = s.NormalAt(commontypes::Point{0, 1.70711, -0.70711});
+    const commontypes::Vector n = s.NormalAt(commontypes::Point{0, 1.70711, -0.70711});
     ASSERT_TRUE(n == commontypes::Vector(0, 0.70711, -0.70711));
 }
 

@@ -109,6 +109,7 @@ double geometry::Schlick(const geometry::Computations& comps) {
         // with n1 > n2, use cos(theta_t) instead
         cos = cos_t;
     }
+
     const double r0 = pow(((comps.n1 - comps.n2) / (comps.n1 + comps.n2)), 2);
     return r0 + (1 - r0) * pow((1 - cos), 5);
 }

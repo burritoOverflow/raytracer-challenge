@@ -36,11 +36,11 @@ class Shape {
 
     // when intersecting the shape with a Ray, all shapes need to first convert the Ray into
     // object space, transforming it by the inverse of the shape's transformation Matrix
-    std::vector<Intersection> Intersect(const commontypes::Ray& ray);
+    std::vector<Intersection> Intersect(const commontypes::Ray& ray) const;
 
     // responsible for transforming the point, invokes the shape-implemented `LocalNormalAt`
     // fn, transforms and returns the resulting normal
-    commontypes::Vector NormalAt(const commontypes::Point& point);
+    commontypes::Vector NormalAt(const commontypes::Point& point) const;
 
    protected:
     commontypes::Matrix transform_;  // each Shape has a transformation matrix (see page 118); here

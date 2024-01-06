@@ -8,17 +8,19 @@
 TEST(IntersectionTest, TestIntersectionEncapsulatesTandObject) {
     geometry::Sphere s{};
     std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
-    double t{3.5};
-    geometry::Intersection i{t, s_ptr};
+    const double t{3.5};
+    const geometry::Intersection i{t, s_ptr};
+
     ASSERT_EQ(i.t_, t);
     ASSERT_EQ(i.object_, s_ptr);
 }
 
 TEST(IntersectionTest, TestAggregatingIntersections) {
-    geometry::Sphere s{};
-    std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
-    geometry::Intersection i1{1, s_ptr};
-    geometry::Intersection i2{2, s_ptr};
+    const geometry::Sphere s{};
+    const std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
+
+    const geometry::Intersection i1{1, s_ptr};
+    const geometry::Intersection i2{2, s_ptr};
     std::vector<geometry::Intersection> xs = {i1, i2};
 
     ASSERT_EQ(xs.size(), 2);
@@ -28,8 +30,8 @@ TEST(IntersectionTest, TestAggregatingIntersections) {
 
 TEST(IntersectionTest, TestIntersectSetsTheObjectOnTheIntersection) {
     commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
-    geometry::Sphere s{};
-    std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
+    const geometry::Sphere s{};
+    const std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
     const std::vector<geometry::Intersection> xs = s.Intersect(r);
 
     ASSERT_EQ(xs.size(), 2);
@@ -38,12 +40,12 @@ TEST(IntersectionTest, TestIntersectSetsTheObjectOnTheIntersection) {
 }
 
 TEST(IntersectionTest, TestHitWhenAllIntersectionsHavePositiveTValues) {
-    geometry::Sphere s{};
+    const geometry::Sphere s{};
     std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
 
-    geometry::Intersection i1{1, s_ptr};
-    geometry::Intersection i2{2, s_ptr};
-    std::vector<geometry::Intersection> xs = {i2, i1};
+    const geometry::Intersection i1{1, s_ptr};
+    const geometry::Intersection i2{2, s_ptr};
+    const std::vector<geometry::Intersection> xs = {i2, i1};
 
     std::optional<geometry::Intersection> oi = geometry::Intersection::Hit(xs);
     ASSERT_TRUE(oi.has_value());
@@ -52,26 +54,27 @@ TEST(IntersectionTest, TestHitWhenAllIntersectionsHavePositiveTValues) {
 }
 
 TEST(IntersectionTest, TestHitWhenSomeIntersectionsHaveNegativeTValues) {
-    geometry::Sphere s{};
-    std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
+    const geometry::Sphere s{};
+    const std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
 
-    geometry::Intersection i1{-1, s_ptr};
-    geometry::Intersection i2{1, s_ptr};
-    std::vector<geometry::Intersection> xs = {i2, i1};
+    const geometry::Intersection i1{-1, s_ptr};
+    const geometry::Intersection i2{1, s_ptr};
+    const std::vector<geometry::Intersection> xs = {i2, i1};
 
-    std::optional<geometry::Intersection> oi = geometry::Intersection::Hit(xs);
+    const std::optional<geometry::Intersection> oi = geometry::Intersection::Hit(xs);
     ASSERT_TRUE(oi.has_value());
+
     geometry::Intersection i = oi.value();
     ASSERT_TRUE(i == i2);
 }
 
 TEST(IntersectionTest, TestHitWhenAllIntersectionsHaveNegativeTValues) {
-    geometry::Sphere s{};
-    std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
+    const geometry::Sphere s{};
+    const std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
 
-    geometry::Intersection i1{-2, s_ptr};
-    geometry::Intersection i2{-1, s_ptr};
-    std::vector<geometry::Intersection> xs = {i2, i1};
+    const geometry::Intersection i1{-2, s_ptr};
+    const geometry::Intersection i2{-1, s_ptr};
+    const std::vector<geometry::Intersection> xs = {i2, i1};
 
     // no hits should be present when t values are all negative
     std::optional<geometry::Intersection> oi = geometry::Intersection::Hit(xs);
@@ -79,25 +82,27 @@ TEST(IntersectionTest, TestHitWhenAllIntersectionsHaveNegativeTValues) {
 }
 
 TEST(IntersectionTest, TestHitIsAlwaysTheLowestNonnegativeIntersection) {
-    geometry::Sphere s{};
-    std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
+    const geometry::Sphere s{};
+    const std::shared_ptr<geometry::Shape> s_ptr = std::make_shared<geometry::Sphere>(s);
 
-    geometry::Intersection i1{5, s_ptr};
-    geometry::Intersection i2{7, s_ptr};
-    geometry::Intersection i3{-3, s_ptr};
-    geometry::Intersection i4{2, s_ptr};
-    std::vector<geometry::Intersection> xs{i1, i2, i3, i4};
+    const geometry::Intersection i1{5, s_ptr};
+    const geometry::Intersection i2{7, s_ptr};
+    const geometry::Intersection i3{-3, s_ptr};
+    const geometry::Intersection i4{2, s_ptr};
+    const std::vector<geometry::Intersection> xs{i1, i2, i3, i4};
 
-    std::optional<geometry::Intersection> oi = geometry::Intersection::Hit(xs);
+    const std::optional<geometry::Intersection> oi = geometry::Intersection::Hit(xs);
+
     ASSERT_TRUE(oi.has_value());
     ASSERT_TRUE(oi.value() == i4);
 }
 
 TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
     commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
-    geometry::Sphere shape;
-    geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
-    geometry::Computations comps = i.PrepareComputations(r);
+    const geometry::Sphere shape;
+    const geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
+    const geometry::Computations comps = i.PrepareComputations(r);
+
     ASSERT_TRUE(comps.t_ == i.t_);
     ASSERT_TRUE(*comps.object_ == *i.object_);
     ASSERT_TRUE(comps.point_ == commontypes::Point(0, 0, -1));
@@ -107,17 +112,17 @@ TEST(IntersectionTest, TestPrecomputingStateOfIntersection) {
 
 TEST(IntersectionTest, TestHitWhenIntersectionOccursOnOutside) {
     commontypes::Ray r{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
-    geometry::Sphere shape{};
-    geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
-    geometry::Computations comps = i.PrepareComputations(r);
+    const geometry::Sphere shape{};
+    const geometry::Intersection i{4, std::make_shared<geometry::Sphere>(shape)};
+    const geometry::Computations comps = i.PrepareComputations(r);
     ASSERT_FALSE(comps.inside_);
 }
 
 TEST(IntersectionTest, TestHitWhenIntersectionOccursOnInside) {
     commontypes::Ray r{commontypes::Point{0, 0, 0}, commontypes::Vector{0, 0, 1}};
-    geometry::Sphere shape{};
-    geometry::Intersection i{1, std::make_shared<geometry::Sphere>(shape)};
-    geometry::Computations comps = i.PrepareComputations(r);
+    const geometry::Sphere shape{};
+    const geometry::Intersection i{1, std::make_shared<geometry::Sphere>(shape)};
+    const geometry::Computations comps = i.PrepareComputations(r);
 
     ASSERT_TRUE(comps.point_ == commontypes::Point(0, 0, 1));
     ASSERT_TRUE(comps.eye_vector_ == commontypes::Vector(0, 0, -1));
@@ -144,8 +149,9 @@ TEST(IntersectionTest, TestPrecomputingTheReflectionVector) {
     commontypes::Ray r{commontypes::Point{0, 1, -1},
                        commontypes::Vector{0, -sqrt_2_over_2, sqrt_2_over_2}};
 
-    const geometry::Intersection i{sqrt(2), std::make_shared<geometry::Plane>(shape)};
+    const geometry::Intersection i{sqrt(2), std::make_shared<geometry::Plane>(std::move(shape))};
     const geometry::Computations comps = i.PrepareComputations(r);
+
     // see pg. 143
     ASSERT_TRUE(comps.reflect_vector_ == commontypes::Vector(0, sqrt_2_over_2, sqrt_2_over_2));
 }

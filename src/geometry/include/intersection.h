@@ -53,7 +53,8 @@ class Intersection {
         commontypes::Ray& r,
         const std::vector<Intersection>& intersections = std::vector<Intersection>()) const;
 
-    // this is strictly used for comparison when sorting for retrieving the hit (method above)
+    // this is strictly used for comparison when sorting for retrieving the hit (using the method
+    // above)
     inline bool operator<(const Intersection& rhs) const {
         return std::tie(t_, object_) < std::tie(rhs.t_, rhs.object_);
     }

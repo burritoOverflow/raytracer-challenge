@@ -19,8 +19,8 @@ TEST(MaterialTest, TestMaterialBuilderAssignment) {
     const double transparency = 0.5;
     const double refractive_index = 0.8;
 
-    lighting::MaterialBuilder mb;
-    const auto material = mb.WithAmbient(ambient)
+    const auto material = lighting::MaterialBuilder{}
+                              .WithAmbient(ambient)
                               .WithDiffuse(diffuse)
                               .WithShininess(shininess)
                               .WithSpecular(specular)
@@ -41,15 +41,15 @@ TEST(MaterialTest, TestMaterialBuilderAssignment) {
 }
 
 TEST(MaterialTest, TestMaterialBuilderInvokesDefaultCtor) {
-    commontypes::Color color{1, 0, 1};
+    const commontypes::Color color{1, 0, 1};
     const double ambient = 0.6;
     const double reflective = 0.2;
 
-    lighting::Material default_material{};
-    lighting::Material material = lighting::MaterialBuilder()
-                                      .WithAmbient(ambient)
-                                      .WithReflective(reflective)
-                                      .WithColor(color);
+    const lighting::Material default_material{};
+    const lighting::Material material = lighting::MaterialBuilder()
+                                            .WithAmbient(ambient)
+                                            .WithReflective(reflective)
+                                            .WithColor(color);
 
     // ensure that the default values are provided by the ctor (implicitly invoked)
     ASSERT_TRUE(material.Ambient() == ambient);
@@ -68,7 +68,7 @@ TEST(MaterialTest, TestMaterialBuilderInvokesDefaultCtor) {
 }
 
 TEST(MaterialTest, TestDefaultMaterial) {
-    lighting::Material m{};
+    const lighting::Material m{};
     ASSERT_TRUE(m.Color() == commontypes::Color(1, 1, 1));
     ASSERT_DOUBLE_EQ(m.Ambient(), 0.1);
     ASSERT_DOUBLE_EQ(m.Diffuse(), 0.9);
@@ -81,7 +81,7 @@ TEST(MaterialTest, TestDefaultMaterial) {
 
 TEST(MaterialTest, TestMaterialEquality) {
     lighting::Material m1{};
-    lighting::Material m2{};
+    const lighting::Material m2{};
 
     ASSERT_TRUE(m1 == m2);
     ASSERT_FALSE(m1 != m2);
@@ -93,83 +93,89 @@ TEST(MaterialTest, TestMaterialEquality) {
 
 // ambient, diffuse, and specular all at full strength (see pg 86)
 TEST(MaterialTest, TestLightingWithEyeBetweenLightAndSurface) {
-    lighting::Material m{};
-    commontypes::Point position{0, 0, 0};
-    commontypes::Vector eye_v{0, 0, -1};
-    commontypes::Vector normal_v{0, 0, -1};
-    lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
+    const lighting::Material m{};
+    const commontypes::Point position{0, 0, 0};
+    const commontypes::Vector eye_v{0, 0, -1};
+    const commontypes::Vector normal_v{0, 0, -1};
+    const lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
     auto result = lighting::Lighting(
         std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
         std::make_shared<lighting::PointLight>(light), position, eye_v, normal_v);
+
     ASSERT_TRUE(result == commontypes::Color(1.9, 1.9, 1.9));
 }
 
 // 45 degrees "off" normal (above) see diagram on pg. 86
 // specular value falls to effectively 0, accounting for the difference from expected values above
 TEST(MaterialTest, TestLightingWithEyeBetweenLightAndSurfaceEyeOffset45Degrees) {
-    lighting::Material m{};
-    commontypes::Point position{0, 0, 0};
-    commontypes::Vector eye_v{0, sqrt(2) / 2, -sqrt(2) / 2};
-    commontypes::Vector normal_v{0, 0, -1};
-    lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
+    const lighting::Material m{};
+    const commontypes::Point position{0, 0, 0};
+    const commontypes::Vector eye_v{0, sqrt(2) / 2, -sqrt(2) / 2};
+    const commontypes::Vector normal_v{0, 0, -1};
+    const lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
     auto result = lighting::Lighting(
         std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
         std::make_shared<lighting::PointLight>(light), position, eye_v, normal_v);
+
     ASSERT_TRUE(result == commontypes::Color(1.0, 1.0, 1.0));
 }
 
-// eye is directly offset the surfacee, light source is offset 45 degrees (above)
+// eye is directly offset the surface light source is offset 45 degrees (above)
 // angle has changed for the light amd the normal vectors, decreasing the diffuse component,
 // specular falls to 0 (pg 87)
 TEST(MaterialTest, TestLightingWithEyeOppositeSurfaceLightOffset45Degrees) {
-    lighting::Material m{};
-    commontypes::Point position{0, 0, 0};
-    commontypes::Vector eye_v{0, 0, -1};
-    commontypes::Vector normal_v{0, 0, -1};
-    lighting::PointLight light{commontypes::Point{0, 10, -10}, commontypes::Color{1, 1, 1}};
+    const lighting::Material m{};
+    const commontypes::Point position{0, 0, 0};
+    const commontypes::Vector eye_v{0, 0, -1};
+    const commontypes::Vector normal_v{0, 0, -1};
+    const lighting::PointLight light{commontypes::Point{0, 10, -10}, commontypes::Color{1, 1, 1}};
     auto result = lighting::Lighting(
         std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
         std::make_shared<lighting::PointLight>(light), position, eye_v, normal_v);
+
     ASSERT_TRUE(result == commontypes::Color(0.7364, 0.7364, 0.7364));
 }
 
 // ambient + diffuse same as previous test, but specular in full-strength (eye moved directly in
 // path of reflection vector)
 TEST(MaterialTest, TestLightingWithEyeInThePathOfTheReflectionVector) {
-    lighting::Material m{};
-    commontypes::Point position{0, 0, 0};
-    commontypes::Vector eye_v{0, -sqrt(2) / 2, -sqrt(2) / 2};
-    commontypes::Vector normal_v{0, 0, -1};
-    lighting::PointLight light{commontypes::Point{0, 10, -10}, commontypes::Color{1, 1, 1}};
+    const lighting::Material m{};
+    const commontypes::Point position{0, 0, 0};
+    const commontypes::Vector eye_v{0, -sqrt(2) / 2, -sqrt(2) / 2};
+    const commontypes::Vector normal_v{0, 0, -1};
+    const lighting::PointLight light{commontypes::Point{0, 10, -10}, commontypes::Color{1, 1, 1}};
     auto result = lighting::Lighting(
         std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
         std::make_shared<lighting::PointLight>(light), position, eye_v, normal_v);
+
     ASSERT_TRUE(result == commontypes::Color(1.6364, 1.6364, 1.6364));
 }
 
 // light moved behind the surface, leaving only the ambient component
 TEST(MaterialTest, TestLightingWithLightBehindTheSurface) {
-    lighting::Material m{};
-    commontypes::Point position{0, 0, 0};
-    commontypes::Vector eye_v{0, 0, -1};
-    commontypes::Vector normal_v{0, 0, -1};
-    lighting::PointLight light{commontypes::Point{0, 0, 10}, commontypes::Color{1, 1, 1}};
+    const lighting::Material m{};
+    const commontypes::Point position{0, 0, 0};
+    const commontypes::Vector eye_v{0, 0, -1};
+    const commontypes::Vector normal_v{0, 0, -1};
+    const lighting::PointLight light{commontypes::Point{0, 0, 10}, commontypes::Color{1, 1, 1}};
     auto result = lighting::Lighting(
         std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
         std::make_shared<lighting::PointLight>(light), position, eye_v, normal_v);
+
     ASSERT_TRUE(result == commontypes::Color(0.1, 0.1, 0.1));
 }
 
 TEST(MaterialTest, TestLightingWithSurfaceInShadow) {
-    lighting::Material m{};
-    commontypes::Point position{0, 0, 0};
-    commontypes::Vector eye_v{0, 0, -1};
-    commontypes::Vector normal_v{0, 0, -1};
-    lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
+    const lighting::Material m{};
+    const commontypes::Point position{0, 0, 0};
+    const commontypes::Vector eye_v{0, 0, -1};
+    const commontypes::Vector normal_v{0, 0, -1};
+    const lighting::PointLight light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
     const bool in_shadow{true};
     auto result = lighting::Lighting(
         std::make_shared<lighting::Material>(m), commontypes::IdentityMatrix{},
         std::make_shared<lighting::PointLight>(light), position, eye_v, normal_v, in_shadow);
+
     ASSERT_TRUE(result == commontypes::Color(0.1, 0.1, 0.1));
 }
 

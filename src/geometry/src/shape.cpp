@@ -2,13 +2,13 @@
 
 uint64_t geometry::Shape::SHAPE_ID = 0;
 
-std::vector<geometry::Intersection> geometry::Shape::Intersect(const commontypes::Ray& ray) {
+std::vector<geometry::Intersection> geometry::Shape::Intersect(const commontypes::Ray& ray) const {
     // transforms the Ray and calls the Shape's `LocalIntersect` w/ the transformed Ray
     const commontypes::Ray transformed_ray = ray.Transform(transform_.Inverse());
     return LocalIntersect(transformed_ray);
 }
 
-commontypes::Vector geometry::Shape::NormalAt(const commontypes::Point& point) {
+commontypes::Vector geometry::Shape::NormalAt(const commontypes::Point& point) const {
     // first, convert the ray to object space
     const commontypes::Point local_point = commontypes::Point(transform_.Inverse() * point);
 

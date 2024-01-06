@@ -5,7 +5,7 @@
 #include "lighting.h"
 #include "scalingmatrix.h"
 
-using shapeptr = std::shared_ptr<geometry::Shape>;
+using ShapePtr = std::shared_ptr<geometry::Shape>;
 
 // see description of the "Default World" on pg. 92
 scene::World scene::World::DefaultWorld() {
@@ -30,17 +30,17 @@ scene::World scene::World::DefaultWorld() {
     return world;
 }
 
-void scene::World::AddObject(shapeptr object_ptr) {
+void scene::World::AddObject(ShapePtr object_ptr) {
     objects_.insert(objects_.end(), std::move(object_ptr));
 }
 
-void scene::World::AddObjects(std::initializer_list<shapeptr> object_ptrs) {
+void scene::World::AddObjects(std::initializer_list<ShapePtr> object_ptrs) {
     for (const auto& object_ptr : object_ptrs) {
         objects_.emplace_back(object_ptr);
     }
 }
 
-void scene::World::AddObjects(std::vector<shapeptr>&& sphere_vec) {
+void scene::World::AddObjects(std::vector<ShapePtr>&& sphere_vec) {
     objects_.insert(objects_.end(), sphere_vec.begin(), sphere_vec.end());
 }
 
@@ -48,7 +48,7 @@ void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
     light_ = std::move(light);
 }
 
-bool scene::World::WorldContains(const shapeptr& object) const {
+bool scene::World::WorldContains(const ShapePtr& object) const {
     return std::any_of(begin(objects_), end(objects_), [object](auto o) { return *o == *object; });
 }
 

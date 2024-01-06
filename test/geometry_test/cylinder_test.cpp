@@ -7,7 +7,7 @@ TEST(CylinderTest, TestRayMissesCylinder) {
         const commontypes::Vector direction;
     };
 
-    geometry::Cylinder cyl{};
+    const geometry::Cylinder cyl{};
     const std::vector<Expected> expected_values{
         {commontypes::Point{1, 0, 0}, commontypes::Vector{0, 1, 0}},
         {commontypes::Point{0, 0, 0}, commontypes::Vector{0, 1, 0}},
@@ -29,7 +29,7 @@ TEST(CylinderTest, TestRayIntersectsACylinder) {
         const double t1;
     };
 
-    geometry::Cylinder cyl{};
+    const geometry::Cylinder cyl{};
     const std::vector<Expected> expected_values{
         {commontypes::Point{1, 0, -5}, commontypes::Vector{0, 0, 1}, 5.0, 5.0},
         {commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}, 4.0, 6.0},
@@ -63,7 +63,7 @@ TEST(CylinderTest, TestNormalVectorOnCylinder) {
         {commontypes::Point{-1, 1, 0}, commontypes::Vector{-1, 0, 0}},
     };
 
-    geometry::Cylinder cyl{};
+    const geometry::Cylinder cyl{};
 
     for (const auto& expected : expected_values) {
         const auto n = cyl.LocalNormalAt(expected.point);
@@ -72,11 +72,15 @@ TEST(CylinderTest, TestNormalVectorOnCylinder) {
 }
 
 TEST(CylinderTest, TestDefaultMinimumAndMaximumOfCylinder) {
-    geometry::Cylinder cyl{};
+    const geometry::Cylinder cyl{};
     const auto inf = std::numeric_limits<double>::infinity();
-
     ASSERT_DOUBLE_EQ(cyl.Minimum(), -inf);
     ASSERT_DOUBLE_EQ(cyl.Maximum(), inf);
+}
+
+TEST(CylinderTest, DefaultClosedValueForCylinder) {
+    const geometry::Cylinder cyl{};
+    ASSERT_EQ(cyl.IsCapped(), false);
 }
 
 TEST(CylinderTest, TestIntersectingaConstrainedCylinder) {
@@ -107,15 +111,10 @@ TEST(CylinderTest, TestIntersectingaConstrainedCylinder) {
 
     for (const auto expected : expected_values) {
         const commontypes::Vector direction = commontypes::Vector{expected.direction.Normalize()};
-        commontypes::Ray r{expected.origin, direction};
+        const commontypes::Ray r{expected.origin, direction};
         const auto xs = cyl.LocalIntersect(r);
         ASSERT_EQ(xs.size(), expected.count);
     }
-}
-
-TEST(CylinderTest, DefaultClosedValueForCylinder) {
-    geometry::Cylinder cyl{};
-    ASSERT_EQ(cyl.IsCapped(), false);
 }
 
 TEST(CylinderTest, TestIntersectingTheCapsOfClosedCylinder) {
@@ -125,7 +124,7 @@ TEST(CylinderTest, TestIntersectingTheCapsOfClosedCylinder) {
         const size_t count;
     };
 
-    geometry::Cylinder cyl{1, 2, true};
+    const geometry::Cylinder cyl{1, 2, true};
 
     // see: pg. 185
     // first example casts a Ray from above the Cylinder and points down through the Cylinder's
@@ -147,7 +146,7 @@ TEST(CylinderTest, TestIntersectingTheCapsOfClosedCylinder) {
 
     for (const auto& expected : expected_values) {
         const commontypes::Vector direction = commontypes::Vector{expected.direction.Normalize()};
-        commontypes::Ray r{expected.origin, direction};
+        const commontypes::Ray r{expected.origin, direction};
         const auto xs = cyl.LocalIntersect(r);
         ASSERT_EQ(xs.size(), expected.count);
     }
@@ -168,7 +167,7 @@ TEST(CylinderTest, TestTheNormalVectorOnCylindersEndCaps) {
         {commontypes::Point{0, 2, 0.5}, commontypes::Vector{0, 1, 0}},
     };
 
-    geometry::Cylinder cyl{1, 2, true};
+    const geometry::Cylinder cyl{1, 2, true};
 
     for (const auto& expected : expected_values) {
         const auto n = cyl.LocalNormalAt(expected.point);
