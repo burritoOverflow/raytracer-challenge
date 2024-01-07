@@ -18,6 +18,12 @@ mark_as_advanced(
 
 add_executable(${This} "")
 
+# TestSuite binary in the `test/bin` subdirectory
+set_target_properties(${This}
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
+)
+
 target_sources(${This} PRIVATE unit_tests.cpp)
 
 add_subdirectory(common_types_test)
