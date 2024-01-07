@@ -16,16 +16,6 @@ include(GoogleTest)
 enable_testing()
 
 add_subdirectory(src)
+add_subdirectory(examples)
 add_subdirectory(test)
 
-# strip release binary
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_RELEASE -s)
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(${PROJECT_NAME} PRIVATE -march=native)
-endif ()
-
-set_target_properties(${PROJECT_NAME}
-        PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-)

@@ -1,0 +1,29 @@
+set(RAYTRACER_EXECUTABLES "${PROJECT_NAME}-Chapter06RenderExample" "${PROJECT_NAME}-PatternRoomRefractiveCylinder" "${PROJECT_NAME}-Chapter7SceneRender" "${PROJECT_NAME}-Chapter10PlaneRender" "${PROJECT_NAME}-PatternRoomRefractiveSphere")
+set(RAYTRACER_SOURCES chapter06renderexample.cpp patternroomrefractivecylinder.cpp chapter7scene.cpp chapter10planerender.cpp patternroomrefractivesphere.cpp)
+
+foreach (src target IN ZIP_LISTS RAYTRACER_SOURCES RAYTRACER_EXECUTABLES)
+    message("Found Target: ${target} for source: ${src}")
+
+    add_executable(${target} ""
+            include/util.h)
+
+    target_include_directories(${target} PRIVATE include)
+
+    target_sources(${target} PRIVATE ${src})
+
+    target_link_libraries(${target} PRIVATE Common Canvas Geometry Lighting Scene Pattern)
+
+    # strip release binaries
+    set_target_properties(${target} PROPERTIES LINK_FLAGS_RELEASE -s)
+
+    # output each binary in `bin` subdirectory
+    set_target_properties(${target}
+            PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    )
+
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_compile_options(${target} PRIVATE -march=native)
+    endif ()
+endforeach ()
+
