@@ -16,12 +16,6 @@ foreach (src target IN ZIP_LISTS RAYTRACER_SOURCES RAYTRACER_EXECUTABLES)
     # strip release binaries
     set_target_properties(${target} PROPERTIES LINK_FLAGS_RELEASE -s)
 
-    # output each binary in `bin` subdirectory
-    set_target_properties(${target}
-            PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-    )
-
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_compile_options(${target} PRIVATE -march=native)
     endif ()
