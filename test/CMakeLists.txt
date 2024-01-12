@@ -22,7 +22,7 @@ add_executable(${This} "")
 set_target_properties(${This}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
-)
+        )
 
 target_sources(${This} PRIVATE unit_tests.cpp)
 
@@ -32,6 +32,8 @@ add_subdirectory(geometry_test)
 add_subdirectory(lighting_test)
 add_subdirectory(scene_test)
 add_subdirectory(pattern_test)
+
+target_include_directories(${This} PRIVATE include)
 
 target_link_libraries(${This} PUBLIC gtest_main Common Canvas Geometry Lighting Scene Pattern)
 

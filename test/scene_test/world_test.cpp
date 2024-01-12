@@ -3,20 +3,10 @@
 #include "pattern.h"
 #include "plane.h"
 #include "scalingmatrix.h"
+#include "test_classes.h"
 #include "translationmatrix.h"
 
 static const double SQRT2OVER2 = sqrt(2) / 2;
-
-namespace {
-class TestPattern : public pattern::Pattern {
-   public:
-    TestPattern() : pattern::Pattern() {}
-
-    commontypes::Color PatternAt(const commontypes::Point& point) const override {
-        return commontypes::Color{point.x(), point.y(), point.z()};
-    }
-};
-}  // namespace
 
 // workaround for testing for the presence of the expected Spheres for the default world
 static bool DefaultWorldContains(const scene::World& default_world,
@@ -373,13 +363,11 @@ TEST(WorldTest, TestRefractedColorWithRefractedRay) {
     auto w = scene::World::DefaultWorld();
     auto A = w.objects().front();
 
-    auto pattern_ptr = std::make_shared<TestPattern>(TestPattern{});
+    auto pattern_ptr = std::make_shared<pattern::TestPattern>(pattern::TestPattern{});
     const lighting::Material material_a =
         lighting::MaterialBuilder()
             .WithAmbient(1.0)  // fully ambient, so shows regardless of lighting
-            .WithPatternPtr(std::move(pattern_ptr))
-            .Build();  // WARNING: attempting to build using the call op results in the pattern_ptr
-                       // being NULL
+            .WithPatternPtr(std::move(pattern_ptr));
 
     A->SetMaterial(std::make_shared<lighting::Material>(material_a));
 

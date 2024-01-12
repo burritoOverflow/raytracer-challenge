@@ -4,8 +4,9 @@
 #include "point.h"
 
 TEST(GradientPatternTest, TestGradientLinearlyInterpolatesBetweenColors) {
-    pattern::GradientPattern pattern{commontypes::Color::MakeWhite(),
+    const pattern::GradientPattern pattern{commontypes::Color::MakeWhite(),
                                      commontypes::Color::MakeBlack()};
+
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point{0, 0, 0}) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point{0.25, 0, 0}) ==
                 commontypes::Color(0.75, 0.75, 0.75));
