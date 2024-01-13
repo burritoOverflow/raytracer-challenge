@@ -14,7 +14,8 @@ class Shape {
     Shape()
         : id_(SHAPE_ID++),
           transform_(commontypes::IdentityMatrix{}),
-          material_ptr_(std::make_shared<lighting::Material>()) {}
+          material_ptr_(std::make_shared<lighting::Material>()),
+          parent_(nullptr) {}
 
     explicit Shape(commontypes::Matrix& transformation_matrix,
                    std::shared_ptr<lighting::Material>& material_ptr)
@@ -34,13 +35,25 @@ class Shape {
         material_ptr_ = material;
     }
 
+    inline const bool HasParent() const { return parent_ != nullptr; }
+
+    inline const std::shared_ptr<Shape>& GetParent() const { return parent_; }
+
+    inline void SetParent(std::shared_ptr<Shape>& parent) { parent_ = parent; }
+
     // when intersecting the shape with a Ray, all shapes need to first convert the Ray into
     // object space, transforming it by the inverse of the shape's transformation Matrix
     std::vector<Intersection> Intersect(const commontypes::Ray& ray) const;
 
     // responsible for transforming the point, invokes the shape-implemented `LocalNormalAt`
     // fn, transforms and returns the resulting normal
-    commontypes::Vector NormalAt(const commontypes::Point& point) const;
+    commontypes::Vector NormalAt(const commontypes::Point& world_point) const;
+
+    // convert a Point from World space to Object space
+    commontypes::Point WorldToObject(const commontypes::Point& point) const;
+
+    // convert Normal in Object space to World space
+    commontypes::Vector NormalToWorld(const commontypes::Vector& normal) const;
 
    protected:
     commontypes::Matrix transform_;  // each Shape has a transformation matrix (see page 118); here
@@ -55,8 +68,9 @@ class Shape {
     virtual commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const = 0;
 
    private:
-    static uint64_t SHAPE_ID;  // each shape must have a unique identifier
-    uint64_t id_;              // this shape's identifier
+    static uint64_t SHAPE_ID;        // each shape must have a unique identifier
+    uint64_t id_;                    // this shape's identifier
+    std::shared_ptr<Shape> parent_;  // refers to the Group that contains this Shape (optional)
 };
 }  // namespace geometry
 

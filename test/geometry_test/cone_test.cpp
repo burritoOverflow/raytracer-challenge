@@ -1,6 +1,12 @@
 #include "cone.h"
 #include <gtest/gtest.h>
 
+TEST(ConeTest, TestCreatingNewCone) {
+    geometry::Cone c{};
+    ASSERT_EQ(c.IsCapped(), false);
+    ASSERT_TRUE(c.GetTransform() == commontypes::IdentityMatrix());
+}
+
 TEST(ConeTest, TestIntersectingConeWithRay) {
     struct Expected {
         const commontypes::Point origin;

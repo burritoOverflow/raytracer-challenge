@@ -10,6 +10,7 @@ target_sources(Geometry
         src/cylinder.cpp
         src/cone.cpp
         src/intersection.cpp
+        src/group.cpp
 )
 
 target_include_directories(Geometry PUBLIC include)

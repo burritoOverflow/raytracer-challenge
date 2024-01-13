@@ -7,7 +7,8 @@ namespace geometry {
 class Cone : public Shape {
    public:
     Cone()
-        : minimum_(-std::numeric_limits<double>::infinity()),
+        : Shape(),
+          minimum_(-std::numeric_limits<double>::infinity()),
           maximum_(std::numeric_limits<double>::infinity()),
           capped_(false) {}
 
