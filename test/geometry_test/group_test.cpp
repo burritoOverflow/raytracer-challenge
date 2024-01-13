@@ -12,16 +12,28 @@ TEST(GroupTest, TestCreatingNewGroup) {
 }
 
 TEST(GroupTest, TestShapeHasParentAttribute) {
-    const geometry::TestShape s{};
-    ASSERT_EQ(s.HasParent(), false);
-    ASSERT_EQ(s.GetParent(), nullptr);
+    // default property evaluation
+    std::shared_ptr<geometry::Shape> s{new geometry::TestShape};
+    ASSERT_EQ(s->HasParent(), false);
+    ASSERT_EQ(s->GetParent(), nullptr);
+
+    // verify both parts of the parent-child relationship
+    geometry::Group g{};
+    ASSERT_TRUE(g.GetChildren().empty());
+    g.AddChildToGroup(s);
+
+    ASSERT_EQ(s->HasParent(), true);
+    ASSERT_EQ(s->GetParent()->id(), g.id());
+
+    const auto children = g.GetChildren();
+    ASSERT_FALSE(children.empty());
+    ASSERT_EQ(children.size(), 1);
+    ASSERT_TRUE(children.at(0) == s);
 }
 
 TEST(GroupTest, TestAddingChildToAGroup) {
     geometry::Group g{};
-    geometry::TestShape s{};
-    std::shared_ptr<geometry::Shape> shape_ptr =
-        std::make_shared<geometry::TestShape>(std::move(s));
+    std::shared_ptr<geometry::Shape> shape_ptr = std::make_shared<geometry::TestShape>();
     g.AddChildToGroup(shape_ptr);
 
     ASSERT_NE(g.GetChildren().size(), 0);
@@ -51,20 +63,16 @@ TEST(GroupTest, TestIntersectingRayWithEmptyGroup) {
 TEST(GroupTest, TestIntersectingRayWithNonEmptyGroup) {
     geometry::Group g{};
 
-    geometry::Sphere s1{};
-    std::shared_ptr<geometry::Shape> s1_ptr = std::make_shared<geometry::Sphere>(std::move(s1));
+    std::shared_ptr<geometry::Shape> s1_ptr = std::make_shared<geometry::Sphere>();
 
-    geometry::Sphere s2{};
-    s2.SetTransform(commontypes::TranslationMatrix{0, 0, -3});
-    std::shared_ptr<geometry::Shape> s2_ptr = std::make_shared<geometry::Sphere>(std::move(s2));
+    std::shared_ptr<geometry::Shape> s2_ptr = std::make_shared<geometry::Sphere>();
+    s2_ptr->SetTransform(commontypes::TranslationMatrix{0, 0, -3});
 
-    geometry::Sphere s3{};
-    s3.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
-    std::shared_ptr<geometry::Shape> s3_ptr = std::make_shared<geometry::Sphere>(std::move(s3));
+    std::shared_ptr<geometry::Shape> s3_ptr = std::make_shared<geometry::Sphere>();
+    s3_ptr->SetTransform(commontypes::TranslationMatrix{5, 0, 0});
 
-    g.AddChildToGroup(s1_ptr);
-    g.AddChildToGroup(s2_ptr);
-    g.AddChildToGroup(s3_ptr);
+    std::initializer_list<std::shared_ptr<geometry::Shape>> children_ptrs{s1_ptr, s2_ptr, s3_ptr};
+    g.AddChildrenToGroup(children_ptrs);
 
     const commontypes::Ray r =
         commontypes::Ray{commontypes::Point{0, 0, -5}, commontypes::Vector{0, 0, 1}};
@@ -82,11 +90,11 @@ TEST(GroupTest, TestIntersectingRayWithNonEmptyGroup) {
 TEST(GroupTest, TestIntersectingATransformedGroup) {
     geometry::Group g{};
     g.SetTransform(commontypes::ScalingMatrix{2, 2, 2});
-    geometry::Sphere s{};
-    s.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
-    std::shared_ptr<geometry::Shape> shape_ptr = std::make_shared<geometry::Sphere>(std::move(s));
 
+    std::shared_ptr<geometry::Shape> shape_ptr = std::make_shared<geometry::Sphere>();
+    shape_ptr->SetTransform(commontypes::TranslationMatrix{5, 0, 0});
     g.AddChildToGroup(shape_ptr);
+
     const commontypes::Ray r =
         commontypes::Ray{commontypes::Point{10, 0, -10}, commontypes::Vector{0, 0, 1}};
     const auto xs = g.Intersect(r);

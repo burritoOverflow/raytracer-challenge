@@ -10,13 +10,15 @@ class Group : public Shape {
    public:
     Group() : Shape() {}
 
+    const std::vector<std::shared_ptr<Shape>> GetChildren() const { return this->children_; }
+
     void AddChildToGroup(std::shared_ptr<Shape>& shape_ptr);
+
+    void AddChildrenToGroup(std::initializer_list<std::shared_ptr<Shape>>& children);
 
     std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) const override;
 
     commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const override;
-
-    const std::vector<std::shared_ptr<Shape>> GetChildren() const { return this->children_; }
 
    private:
     std::vector<std::shared_ptr<Shape>> children_;

@@ -39,6 +39,7 @@ class Shape {
 
     inline const std::shared_ptr<Shape>& GetParent() const { return parent_; }
 
+    // should NOT be invoked directly, as this depends on the Group adding this Shape as a child
     inline void SetParent(std::shared_ptr<Shape>& parent) { parent_ = parent; }
 
     // when intersecting the shape with a Ray, all shapes need to first convert the Ray into

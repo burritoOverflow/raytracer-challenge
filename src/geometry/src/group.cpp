@@ -7,8 +7,8 @@ static bool AscendingGeometryIntersectionComparator(const geometry::Intersection
 }
 
 void geometry::Group::AddChildToGroup(std::shared_ptr<geometry::Shape>& shape_ptr) {
-    // TODO: not sure about the bidirectional shared_ptr between parent <-> child here; this should
-    // be carefully considered
+    // TODO: not sure about the approach used -- bidirectional shared_ptr between parent <-> child
+    // here; this should be carefully considered
     std::shared_ptr<geometry::Shape> this_ptr = std::make_shared<geometry::Group>(*this);
     shape_ptr->SetParent(this_ptr);
     this->children_.emplace_back(shape_ptr);
@@ -33,4 +33,9 @@ std::vector<geometry::Intersection> geometry::Group::LocalIntersect(
 commontypes::Vector geometry::Group::LocalNormalAt(const commontypes::Point& local_point) const {
     // placeholder; this should not be called.
     throw IncorrectCallException();
+}
+void geometry::Group::AddChildrenToGroup(std::initializer_list<std::shared_ptr<Shape>>& children) {
+    for (auto child_ptr : children) {
+        this->AddChildToGroup(child_ptr);
+    }
 }

@@ -90,15 +90,12 @@ TEST(ShapeTest, TestConvertingPointFromWorldToObjectSpace) {
     geometry::Group g1{};
     g1.SetTransform(commontypes::RotationMatrixY{M_PI_2});
 
-    geometry::Group g2{};
-    g2.SetTransform(commontypes::ScalingMatrix{2, 2, 2});
-
-    std::shared_ptr<geometry::Shape> group2_ptr = std::make_shared<geometry::Group>(g2);
+    std::shared_ptr<geometry::Shape> group2_ptr = std::make_shared<geometry::Group>();
+    group2_ptr->SetTransform(commontypes::ScalingMatrix{2, 2, 2});
     g1.AddChildToGroup(group2_ptr);
 
-    geometry::Sphere s{};
-    s.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
-    std::shared_ptr<geometry::Shape> sphere_ptr = std::make_shared<geometry::Sphere>(s);
+    std::shared_ptr<geometry::Shape> sphere_ptr = std::make_shared<geometry::Sphere>();
+    sphere_ptr->SetTransform(commontypes::TranslationMatrix{5, 0, 0});
 
     // TODO this is a mess and the design should be reconsidered to avoid all of this.
     dynamic_cast<geometry::Group*>(group2_ptr.get())->AddChildToGroup(sphere_ptr);
@@ -113,18 +110,14 @@ TEST(ShapeTest, TestConvertingNormalFromObjectToWorldSpace) {
     geometry::Group g1{};
     g1.SetTransform(commontypes::RotationMatrixY{M_PI_2});
 
-    geometry::Group g2{};
-    g2.SetTransform(commontypes::ScalingMatrix{1, 2, 3});
-
-    std::shared_ptr<geometry::Shape> group2_ptr = std::make_shared<geometry::Group>(g2);
+    std::shared_ptr<geometry::Shape> group2_ptr = std::make_shared<geometry::Group>();
+    group2_ptr->SetTransform(commontypes::ScalingMatrix{1, 2, 3});
     g1.AddChildToGroup(group2_ptr);
 
-    geometry::Sphere s{};
-    s.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
+    std::shared_ptr<geometry::Shape> sphere_ptr = std::make_shared<geometry::Sphere>();
+    sphere_ptr->SetTransform(commontypes::TranslationMatrix{5, 0, 0});
 
-    std::shared_ptr<geometry::Shape> sphere_ptr = std::make_shared<geometry::Sphere>(s);
     dynamic_cast<geometry::Group*>(group2_ptr.get())->AddChildToGroup(sphere_ptr);
-
     const double sqrt_3_over_3 = sqrt(3) / 3;
 
     const auto n =
@@ -138,18 +131,16 @@ TEST(ShapeTest, TestFindingTheNormalOnChildObject) {
     geometry::Group g1{};
     g1.SetTransform(commontypes::RotationMatrixY{M_PI_2});
 
-    geometry::Group g2{};
-    g2.SetTransform(commontypes::ScalingMatrix{1, 2, 3});
-
-    std::shared_ptr<geometry::Shape> group2_ptr = std::make_shared<geometry::Group>(g2);
+    std::shared_ptr<geometry::Shape> group2_ptr = std::make_shared<geometry::Group>();
+    group2_ptr->SetTransform(commontypes::ScalingMatrix{1, 2, 3});
     g1.AddChildToGroup(group2_ptr);
 
-    geometry::Sphere s{};
-    s.SetTransform(commontypes::TranslationMatrix{5, 0, 0});
+    std::shared_ptr<geometry::Shape> sphere_ptr = std::make_shared<geometry::Sphere>();
+    sphere_ptr->SetTransform(commontypes::TranslationMatrix{5, 0, 0});
 
-    std::shared_ptr<geometry::Shape> sphere_ptr = std::make_shared<geometry::Sphere>(s);
     dynamic_cast<geometry::Group*>(group2_ptr.get())->AddChildToGroup(sphere_ptr);
 
+    // check that the normal calculated on this Group's child is as expected
     const auto n = dynamic_cast<geometry::Sphere*>(sphere_ptr.get())
                        ->NormalAt(commontypes::Point{1.7321, 1.1547, -5.5774});
 
