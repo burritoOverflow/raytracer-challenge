@@ -80,11 +80,11 @@ TEST(GroupTest, TestIntersectingRayWithNonEmptyGroup) {
     const auto xs = g.LocalIntersect(r);
 
     // pointer equality won't work as the `LocalIntersect` methods create shared pointers and add
-    // to the local Intersection
-    ASSERT_EQ(xs.at(0).object_->id(), s2_ptr->id());
-    ASSERT_EQ(xs.at(1).object_->id(), s2_ptr->id());
-    ASSERT_EQ(xs.at(2).object_->id(), s1_ptr->id());
-    ASSERT_EQ(xs.at(3).object_->id(), s1_ptr->id());
+    // to the local Intersection, so we'll test equality of Shape ids
+    const uint64_t expected_ids[] = {s2_ptr->id(), s2_ptr->id(), s1_ptr->id(), s1_ptr->id()};
+    for (size_t idx = 0; idx < 4; ++idx) {
+        ASSERT_EQ(xs.at(idx).object_->id(), expected_ids[idx]);
+    }
 }
 
 TEST(GroupTest, TestIntersectingATransformedGroup) {

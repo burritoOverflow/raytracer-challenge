@@ -28,18 +28,20 @@ class World {
 
     bool WorldContains(const std::shared_ptr<geometry::Shape>& object) const;
 
+    // collect all Intersections on the Shapes contained in this World; return these in sorted
+    // order
     std::vector<geometry::Intersection> Intersect(const commontypes::Ray& ray) const;
 
-    commontypes::Color ShadeHit(geometry::Computations& comps,
+    commontypes::Color ShadeHit(const geometry::Computations& comps,
                                 uint8_t remaining_invocations = RECURSION_LIMIT) const;
 
     commontypes::Color ColorAt(commontypes::Ray& r,
                                uint8_t remaining_invocations = RECURSION_LIMIT) const;
 
-    commontypes::Color ReflectedColor(geometry::Computations& comps,
+    commontypes::Color ReflectedColor(const geometry::Computations& comps,
                                       u_int8_t remaining_invocations = RECURSION_LIMIT) const;
 
-    commontypes::Color RefractedColor(geometry::Computations& comps,
+    commontypes::Color RefractedColor(const geometry::Computations& comps,
                                       u_int8_t remaining_invocations = RECURSION_LIMIT) const;
 
     bool IsShadowed(const commontypes::Point& point) const;
