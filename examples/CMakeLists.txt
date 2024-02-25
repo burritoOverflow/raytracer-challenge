@@ -1,5 +1,5 @@
-set(RAYTRACER_EXECUTABLES "${PROJECT_NAME}-Chapter06RenderExample" "${PROJECT_NAME}-PatternRoomRefractiveCylinder" "${PROJECT_NAME}-Chapter7SceneRender" "${PROJECT_NAME}-Chapter10PlaneRender" "${PROJECT_NAME}-PatternRoomRefractiveSphere")
-set(RAYTRACER_SOURCES chapter06renderexample.cpp patternroomrefractivecylinder.cpp chapter7scene.cpp chapter10planerender.cpp patternroomrefractivesphere.cpp)
+set(RAYTRACER_EXECUTABLES "${PROJECT_NAME}-Chapter06RenderExample" "${PROJECT_NAME}-PatternRoomRefractiveCylinder" "${PROJECT_NAME}-Chapter7SceneRender" "${PROJECT_NAME}-Chapter10PlaneRender" "${PROJECT_NAME}-PatternRoomRefractiveSphere" "${PROJECT_NAME}-Chapter14GroupHexagonExample")
+set(RAYTRACER_SOURCES chapter06renderexample.cpp patternroomrefractivecylinder.cpp chapter7scene.cpp chapter10planerender.cpp patternroomrefractivesphere.cpp chapter14hexagonworld.cpp)
 
 foreach (src target IN ZIP_LISTS RAYTRACER_SOURCES RAYTRACER_EXECUTABLES)
     message("Found Target: ${target} for source: ${src}")
