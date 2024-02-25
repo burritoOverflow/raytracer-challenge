@@ -52,6 +52,23 @@ TEST(GroupTest, TestAddingChildToAGroup) {
     ASSERT_EQ(shape_ptr->GetParent()->id(), g.id());
 }
 
+TEST(GroupTest, TestChildrenHaveSameParent) {
+    geometry::Group g{};
+    std::shared_ptr<geometry::Shape> shape_ptr1 = std::make_shared<geometry::TestShape>();
+    g.AddChildToGroup(shape_ptr1);
+
+    std::shared_ptr<geometry::Shape> shape_ptr2 = std::make_shared<geometry::TestShape>();
+    g.AddChildToGroup(shape_ptr2);
+
+    // verify multiple children added to a Group have the same Parent
+    ASSERT_EQ(g.GetChildren().size(), 2);
+    ASSERT_EQ(g.GetChildren().at(0)->GetParent(), g.GetChildren().at(1)->GetParent());
+
+    // verify that this parent is the Group
+    ASSERT_EQ(g.GetChildren().at(0)->GetParent(), &g);
+    ASSERT_EQ(g.GetChildren().at(1)->GetParent(), &g);
+}
+
 TEST(GroupTest, TestIntersectingRayWithEmptyGroup) {
     const geometry::Group g{};
     const commontypes::Ray r =
