@@ -11,24 +11,24 @@ TEST(StripePatternTest, TestCreatingStripePattern) {
 }
 
 TEST(StripePatternTest, TestStripePatternConstantInY) {
-    pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
-                                   commontypes::Color::MakeBlack()};
+    const pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
+                                         commontypes::Color::MakeBlack()};
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 1, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 2, 0)) == commontypes::Color::MakeWhite());
 }
 
 TEST(StripePatternTest, TestStripePatternConstantInZ) {
-    pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
-                                   commontypes::Color::MakeBlack()};
+    const pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
+                                         commontypes::Color::MakeBlack()};
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 1)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 2)) == commontypes::Color::MakeWhite());
 }
 
 TEST(StripePatternTest, TestStripePatternAlternatesInX) {
-    pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
-                                   commontypes::Color::MakeBlack()};
+    const pattern::StripePattern pattern{commontypes::Color::MakeWhite(),
+                                         commontypes::Color::MakeBlack()};
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0.5, 0, 0)) ==
                 commontypes::Color::MakeWhite());

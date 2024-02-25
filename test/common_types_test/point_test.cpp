@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include "vector.h"
 
-// Scenario​ : Subtracting two points
+// Scenario : Subtracting two points
 TEST(PointTests, TestSubtractTwoPoints) {
     commontypes::Point p1{3, 2, 1};
     commontypes::Point p2{5, 6, 7};

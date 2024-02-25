@@ -8,6 +8,8 @@ namespace geometry {
 // AABB - sides are all aligned with the scene's axis
 class Cube : public Shape {
    public:
+    Cube() : Shape() {}
+
     std::vector<Intersection> LocalIntersect(const commontypes::Ray& ray) const override;
 
     commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const override;

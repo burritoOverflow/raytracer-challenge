@@ -4,8 +4,8 @@
 #include "pattern.h"
 
 TEST(CheckerPatternTest, TestCheckersShouldRepeatInX) {
-    pattern::CheckerPattern pattern{commontypes::Color::MakeWhite(),
-                                    commontypes::Color::MakeBlack()};
+    const pattern::CheckerPattern pattern{commontypes::Color::MakeWhite(),
+                                          commontypes::Color::MakeBlack()};
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0.99, 0, 0)) ==
                 commontypes::Color::MakeWhite());
@@ -14,8 +14,8 @@ TEST(CheckerPatternTest, TestCheckersShouldRepeatInX) {
 }
 
 TEST(CheckerPatternTest, TestCheckersShouldRepeatInY) {
-    pattern::CheckerPattern pattern{commontypes::Color::MakeWhite(),
-                                    commontypes::Color::MakeBlack()};
+    const pattern::CheckerPattern pattern{commontypes::Color::MakeWhite(),
+                                          commontypes::Color::MakeBlack()};
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0.99, 0)) ==
                 commontypes::Color::MakeWhite());
@@ -24,8 +24,8 @@ TEST(CheckerPatternTest, TestCheckersShouldRepeatInY) {
 }
 
 TEST(CheckerPatternTest, TestCheckersShouldRepeatInZ) {
-    pattern::CheckerPattern pattern{commontypes::Color::MakeWhite(),
-                                    commontypes::Color::MakeBlack()};
+    const pattern::CheckerPattern pattern{commontypes::Color::MakeWhite(),
+                                          commontypes::Color::MakeBlack()};
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0.99)) ==
                 commontypes::Color::MakeWhite());

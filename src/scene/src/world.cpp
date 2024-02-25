@@ -10,22 +10,23 @@ using ShapePtr = std::shared_ptr<geometry::Shape>;
 // see description of the "Default World" on pg. 92
 scene::World scene::World::DefaultWorld() {
     scene::World world{};
-    lighting::PointLight light{commontypes::Point{-10, 10, -10}, commontypes::Color{1, 1, 1}};
-    world.SetLight(std::make_shared<lighting::PointLight>(light));
+    std::shared_ptr<lighting::PointLight> light = std::make_shared<lighting::PointLight>(
+        commontypes::Point{-10, 10, -10}, commontypes::Color{1, 1, 1});
 
-    lighting::Material material{};
-    material.SetColor(commontypes::Color{0.8, 1.0, 0.6});
-    material.SetDiffuse(0.7);
-    material.SetSpecular(0.2);
+    world.SetLight(light);
 
-    geometry::Sphere s1{};
-    s1.SetMaterial(std::make_shared<lighting::Material>(std::move(material)));
+    std::shared_ptr<lighting::Material> material = std::make_shared<lighting::Material>();
+    material->SetColor(commontypes::Color{0.8, 1.0, 0.6});
+    material->SetDiffuse(0.7);
+    material->SetSpecular(0.2);
 
-    geometry::Sphere s2{};
-    s2.SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
+    std::shared_ptr<geometry::Sphere> s1 = std::make_shared<geometry::Sphere>();
+    s1->SetMaterial(material);
 
-    world.AddObjects(
-        {std::make_shared<geometry::Sphere>(s1), std::make_shared<geometry::Sphere>(s2)});
+    std::shared_ptr<geometry::Sphere> s2 = std::make_shared<geometry::Sphere>();
+    s2->SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
+
+    world.AddObjects({s1, s2});
 
     return world;
 }
@@ -49,7 +50,8 @@ void scene::World::SetLight(std::shared_ptr<lighting::PointLight> light) {
 }
 
 bool scene::World::WorldContains(const ShapePtr& object) const {
-    return std::any_of(begin(objects_), end(objects_), [object](auto o) { return *o == *object; });
+    return std::any_of(begin(objects_), end(objects_),
+                       [&object](const auto& o) { return *o == *object; });
 }
 
 std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::Ray& ray) const {
@@ -60,14 +62,15 @@ std::vector<geometry::Intersection> scene::World::Intersect(const commontypes::R
         intersections.insert(intersections.end(), xs.begin(), xs.end());
     }
 
-    // return flattened intersections of all objects in ascending order (see rationale on page 93)
+    // return flattened intersections of all objects in ascending order (see rationale on
+    // page 93)
     std::sort(intersections.begin(), intersections.end(),
               [](const auto& lhs, const auto& rhs) { return lhs.t_ < rhs.t_; });
 
     return intersections;
 }
 
-commontypes::Color scene::World::ShadeHit(geometry::Computations& comps,
+commontypes::Color scene::World::ShadeHit(const geometry::Computations& comps,
                                           const uint8_t remaining_invocations) const {
     const bool shadowed = this->IsShadowed(comps.over_point_);
 
@@ -118,7 +121,7 @@ bool scene::World::IsShadowed(const commontypes::Point& point) const {
     return false;
 }
 
-commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
+commontypes::Color scene::World::ReflectedColor(const geometry::Computations& comps,
                                                 const uint8_t remaining_invocations) const {
     // recursion limit hit
     if (remaining_invocations <= 0)
@@ -131,13 +134,14 @@ commontypes::Color scene::World::ReflectedColor(geometry::Computations& comps,
 
     commontypes::Ray reflect_ray{comps.over_point_, comps.reflect_vector_};
 
-    // decrement the remaining invocations before invocation to eliminate infinite recursion
+    // decrement the remaining invocations before invocation to eliminate infinite
+    // recursion
     const auto color = ColorAt(reflect_ray, remaining_invocations - 1);
 
     return commontypes::Color{color * material_reflective};
 }
 
-commontypes::Color scene::World::RefractedColor(geometry::Computations& comps,
+commontypes::Color scene::World::RefractedColor(const geometry::Computations& comps,
                                                 u_int8_t remaining_invocations) const {
     if (remaining_invocations <= 0) {
         return commontypes::Color::MakeBlack();

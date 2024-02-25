@@ -3,20 +3,10 @@
 #include "pattern.h"
 #include "plane.h"
 #include "scalingmatrix.h"
+#include "test_classes.h"
 #include "translationmatrix.h"
 
 static const double SQRT2OVER2 = sqrt(2) / 2;
-
-namespace {
-class TestPattern : public pattern::Pattern {
-   public:
-    TestPattern() : pattern::Pattern() {}
-
-    commontypes::Color PatternAt(const commontypes::Point& point) const override {
-        return commontypes::Color{point.x(), point.y(), point.z()};
-    }
-};
-}  // namespace
 
 // workaround for testing for the presence of the expected Spheres for the default world
 static bool DefaultWorldContains(const scene::World& default_world,
@@ -38,13 +28,9 @@ TEST(WorldTest, TestCreatingWorld) {
 
 TEST(WorldTest, TestAddObjectsToWorld) {
     scene::World world{};
-    geometry::Sphere s1{};
-    geometry::Sphere s2{};
-    geometry::Sphere s3{};
-    geometry::Sphere s4{};
 
-    const auto s1_ptr = std::make_shared<geometry::Sphere>(s1);
-    const auto s2_ptr = std::make_shared<geometry::Sphere>(s2);
+    const auto s1_ptr = std::make_shared<geometry::Sphere>();
+    const auto s2_ptr = std::make_shared<geometry::Sphere>();
     std::vector<std::shared_ptr<geometry::Shape>> v1{s1_ptr, s2_ptr};
 
     world.AddObjects(std::move(v1));
@@ -52,8 +38,8 @@ TEST(WorldTest, TestAddObjectsToWorld) {
     ASSERT_TRUE(world.WorldContains(s1_ptr));
     ASSERT_TRUE(world.WorldContains(s2_ptr));
 
-    const auto s3_ptr = std::make_shared<geometry::Sphere>(s3);
-    const auto s4_ptr = std::make_shared<geometry::Sphere>(s4);
+    const auto s3_ptr = std::make_shared<geometry::Sphere>();
+    const auto s4_ptr = std::make_shared<geometry::Sphere>();
     std::vector<std::shared_ptr<geometry::Shape>> v2{s3_ptr, s4_ptr};
 
     world.AddObjects(std::move(v2));
@@ -68,17 +54,16 @@ TEST(WorldTest, TestDefaultWorld) {
     const lighting::PointLight light{commontypes::Point{-10, 10, -10},
                                      commontypes::Color{1, 1, 1}};
 
-    geometry::Sphere s1;
+    auto material = std::make_shared<lighting::Material>();
+    material->SetColor(commontypes::Color{0.8, 1.0, 0.6});
+    material->SetDiffuse(0.7);
+    material->SetSpecular(0.2);
 
-    lighting::Material material;
-    material.SetColor(commontypes::Color{0.8, 1.0, 0.6});
-    material.SetDiffuse(0.7);
-    material.SetSpecular(0.2);
+    auto s1 = std::make_shared<geometry::Sphere>();
+    s1->SetMaterial(material);
 
-    s1.SetMaterial(std::make_shared<lighting::Material>(material));
-
-    geometry::Sphere s2;
-    s2.SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
+    auto s2 = std::make_shared<geometry::Sphere>();
+    s2->SetTransform(commontypes::ScalingMatrix{0.5, 0.5, 0.5});
 
     const auto world_light = *default_world.light();
     ASSERT_TRUE(world_light == light);
@@ -86,8 +71,8 @@ TEST(WorldTest, TestDefaultWorld) {
     // the default operator for the Shape base class compares by the object's id
     // we cannot have the same id here considering we aren't instantiating the default_world's
     // Shapes, so we'll fall back to this approach that uses the derived Sphere class' == operator
-    ASSERT_TRUE(DefaultWorldContains(default_world, std::make_shared<geometry::Sphere>(s1)));
-    ASSERT_TRUE(DefaultWorldContains(default_world, std::make_shared<geometry::Sphere>(s2)));
+    ASSERT_TRUE(DefaultWorldContains(default_world, s1));
+    ASSERT_TRUE(DefaultWorldContains(default_world, s2));
 }
 
 TEST(WorldTest, TestIntersectWorldWithRay) {
@@ -182,10 +167,11 @@ TEST(WorldTest, TestThereIsNoShadowWhenObjectIsBehindThePoint) {
 
 TEST(WorldTest, TestShadeHitIsGivenAnIntersectionInShadow) {
     scene::World w{};
-    lighting::PointLight point_light{commontypes::Point{0, 0, -10}, commontypes::Color{1, 1, 1}};
-    w.SetLight(std::make_shared<lighting::PointLight>(point_light));
+    const auto point_light = std::make_shared<lighting::PointLight>(commontypes::Point{0, 0, -10},
+                                                                    commontypes::Color{1, 1, 1});
+    w.SetLight(point_light);
 
-    auto s1 = std::make_shared<geometry::Sphere>(geometry::Sphere{});
+    const auto s1 = std::make_shared<geometry::Sphere>(geometry::Sphere{});
     auto s2 = std::make_shared<geometry::Sphere>(geometry::Sphere{});
     s2->SetTransform(commontypes::TranslationMatrix{0, 0, 10});
 
@@ -373,13 +359,11 @@ TEST(WorldTest, TestRefractedColorWithRefractedRay) {
     auto w = scene::World::DefaultWorld();
     auto A = w.objects().front();
 
-    auto pattern_ptr = std::make_shared<TestPattern>(TestPattern{});
+    auto pattern_ptr = std::make_shared<pattern::TestPattern>(pattern::TestPattern{});
     const lighting::Material material_a =
         lighting::MaterialBuilder()
             .WithAmbient(1.0)  // fully ambient, so shows regardless of lighting
-            .WithPatternPtr(std::move(pattern_ptr))
-            .Build();  // WARNING: attempting to build using the call op results in the pattern_ptr
-                       // being NULL
+            .WithPatternPtr(std::move(pattern_ptr));
 
     A->SetMaterial(std::make_shared<lighting::Material>(material_a));
 
@@ -395,7 +379,7 @@ TEST(WorldTest, TestRefractedColorWithRefractedRay) {
         geometry::Intersection{-0.9899, A}, geometry::Intersection{-0.4899, B},
         geometry::Intersection{0.4899, B}, geometry::Intersection{0.9899, A}};
 
-    auto comps = xs.at(2).PrepareComputations(r, xs);
+    const auto comps = xs.at(2).PrepareComputations(r, xs);
     const auto c = w.RefractedColor(comps, 5);
 
     const auto expected = commontypes::Color(0, 0.99888, 0.04725);

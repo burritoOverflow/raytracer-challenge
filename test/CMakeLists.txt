@@ -33,6 +33,8 @@ add_subdirectory(lighting_test)
 add_subdirectory(scene_test)
 add_subdirectory(pattern_test)
 
+target_include_directories(${This} PRIVATE include)
+
 target_link_libraries(${This} PUBLIC gtest_main Common Canvas Geometry Lighting Scene Pattern)
 
 gtest_discover_tests(${This})

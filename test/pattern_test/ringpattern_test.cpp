@@ -5,7 +5,8 @@
 #include "point.h"
 
 TEST(RingPatternTest, TestRingShouldExtendInBothXandY) {
-    pattern::RingPattern pattern{commontypes::Color::MakeWhite(), commontypes::Color::MakeBlack()};
+    const pattern::RingPattern pattern{commontypes::Color::MakeWhite(),
+                                       commontypes::Color::MakeBlack()};
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 0)) == commontypes::Color::MakeWhite());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(1, 0, 0)) == commontypes::Color::MakeBlack());
     ASSERT_TRUE(pattern.PatternAt(commontypes::Point(0, 0, 1)) == commontypes::Color::MakeBlack());
