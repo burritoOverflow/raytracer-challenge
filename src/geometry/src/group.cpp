@@ -7,10 +7,7 @@ static bool AscendingGeometryIntersectionComparator(const geometry::Intersection
 }
 
 void geometry::Group::AddChildToGroup(std::shared_ptr<geometry::Shape>& shape_ptr) {
-    // TODO: not sure about the approach used -- bidirectional shared_ptr between parent <-> child
-    // here; this should be carefully considered
-    std::shared_ptr<geometry::Shape> this_ptr = std::make_shared<geometry::Group>(*this);
-    shape_ptr->SetParent(this_ptr);
+    shape_ptr->SetParent(this);
     this->children_.emplace_back(shape_ptr);
 }
 
