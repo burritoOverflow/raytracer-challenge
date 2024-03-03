@@ -37,10 +37,10 @@ class Shape {
 
     inline const bool HasParent() const { return parent_ != nullptr; }
 
-    inline const std::shared_ptr<Shape>& GetParent() const { return parent_; }
+    inline const Shape* GetParent() const { return parent_; }
 
     // should NOT be invoked directly, as this depends on the Group adding this Shape as a child
-    inline void SetParent(std::shared_ptr<Shape>& parent) { parent_ = parent; }
+    inline void SetParent(Shape* parent) { parent_ = parent; }
 
     // when intersecting the shape with a Ray, all shapes need to first convert the Ray into
     // object space, transforming it by the inverse of the shape's transformation Matrix
@@ -69,9 +69,9 @@ class Shape {
     virtual commontypes::Vector LocalNormalAt(const commontypes::Point& local_point) const = 0;
 
    private:
-    static uint64_t SHAPE_ID;        // each shape must have a unique identifier
-    uint64_t id_;                    // this shape's identifier
-    std::shared_ptr<Shape> parent_;  // refers to the Group that contains this Shape (optional)
+    static uint64_t SHAPE_ID;  // each shape must have a unique identifier
+    uint64_t id_;              // this shape's identifier
+    Shape* parent_;            // refers to the Group that contains this Shape (optional)
 };
 }  // namespace geometry
 
