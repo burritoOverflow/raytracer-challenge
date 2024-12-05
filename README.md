@@ -23,7 +23,7 @@ Flags used:
 bash
 
 ```
+-width (Camera Width for the render) type: int32 default: 750
 -height (Camera Height for the render) type: int32 default: 900
 -renderTarget (Name of the render example (chapter10, chapter6, chapter7, patternroomcylinder, patternroomsphere)) type: string default: ""
--width (Camera Width for the render) type: int32 default: 750
 ```

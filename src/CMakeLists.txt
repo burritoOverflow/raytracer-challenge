@@ -13,6 +13,9 @@ FetchContent_Declare(
     GIT_TAG v2.2.2
 )
 
+# avoid building the tests for GFlags used by CTest
+set(BUILD_TESTING OFF)
+
 FetchContent_MakeAvailable(gflags)
 
 add_executable(${PROJECT_NAME} "")

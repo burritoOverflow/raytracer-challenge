@@ -8,6 +8,7 @@
 #include <memory>
 #include <numeric>
 #include <set>
+#include <string>
 #include "camera.h"
 #include "canvas.h"
 #include "checkerpattern.h"
@@ -38,6 +39,12 @@ size_t camera_width = DEFAULT_CAMERA_WIDTH;
 
 const std::set<std::string> VALID_TARGETS = {"chapter7", "chapter6", "chapter10",
                                              "patternroomsphere", "patternroomcylinder"};
+
+const std::string USAGE_MESSAGE = R"(
+-width (Camera Width for the render)
+-height (Camera Height fmr the render)
+-renderTarget (Target scene to render. One of: (chapter10, chapter6, chapter7, patternroomcylinder, patternroomsphere))
+)";
 
 const std::string RENDER_HELP_STR =
     "Name of the render example (" +
@@ -360,25 +367,29 @@ void PatternRoomRefractiveCylinder() {
     WriteCanvasToPPM(camera, world);
 }
 
-void ValidateFlags() {
+bool AreFlagValuesValid() {
+    bool flags_valid{true};
+
     if (FLAGS_width <= 0) {
         std::cerr << "Error: 'width' must be a positive integer.\n";
-        exit(EXIT_FAILURE);
+        flags_valid = false;
     }
     if (FLAGS_height <= 0) {
         std::cerr << "Error: 'height' must be a positive integer.\n";
-        exit(EXIT_FAILURE);
+        flags_valid = false;
     }
     if (FLAGS_renderTarget.empty()) {
-        std::cerr << "Error: 'targetname' must not be empty.\n";
-        exit(EXIT_FAILURE);
+        std::cerr << "Error: 'renderTarget' must not be empty.\n";
+        // we dont need the error message that follows this one shown as well, if this is the case
+        return false;
     }
     if (VALID_TARGETS.find(FLAGS_renderTarget) == VALID_TARGETS.end()) {
         std::cerr << "Error: "
                   << "'" << FLAGS_renderTarget << "' is not a valid target: " << RENDER_HELP_STR
                   << "\n";
-        exit(EXIT_FAILURE);
+        flags_valid = false;
     }
+    return flags_valid;
 }
 
 std::function<void()> GetRenderFunction(const std::string& render_target) {
@@ -394,8 +405,13 @@ std::function<void()> GetRenderFunction(const std::string& render_target) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
+    gflags::SetUsageMessage(USAGE_MESSAGE);
     gflags::ParseCommandLineFlags(&argc, &argv, true);
-    ValidateFlags();
+    const bool flags_valid = AreFlagValuesValid();
+    if (!flags_valid) {
+        std::cerr << gflags::ProgramUsage() << std::endl;
+        exit(EXIT_FAILURE);
+    };
 
     camera_height = FLAGS_height;
     camera_width = FLAGS_width;
