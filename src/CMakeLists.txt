@@ -16,6 +16,13 @@ FetchContent_Declare(
 # avoid building the tests for GFlags used by CTest
 set(BUILD_TESTING OFF)
 
+# if not explicitly disabled, the static library will be built alongside the shared library
+# and the executable will be linked with the static lib, despite the presence of the static library
+# and the intent to use the shared library
+if(DEFINED BUILD_SHARED_LIBS)
+    set(BUILD_STATIC_LIBS OFF)
+endif()
+
 FetchContent_MakeAvailable(gflags)
 
 add_executable(${PROJECT_NAME} "")

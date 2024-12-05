@@ -1,6 +1,6 @@
 #include "world.h"
 #include <gtest/gtest.h>
-#include "pattern.h"
+#include <algorithm>
 #include "plane.h"
 #include "scalingmatrix.h"
 #include "test_classes.h"

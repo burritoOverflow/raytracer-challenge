@@ -1,4 +1,5 @@
 #include "group.h"
+#include <algorithm>
 
 // we want all Intersections ordered by ascending t values
 static bool AscendingGeometryIntersectionComparator(const geometry::Intersection& intersection1,

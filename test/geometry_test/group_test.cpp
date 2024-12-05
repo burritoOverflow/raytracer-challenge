@@ -1,5 +1,6 @@
 #include "group.h"
 #include <gtest/gtest.h>
+#include <algorithm>
 #include "scalingmatrix.h"
 #include "sphere.h"
 #include "test_classes.h"
