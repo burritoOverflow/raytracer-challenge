@@ -62,3 +62,5 @@ pi_images/
 cmake-build-relwithdebinfo/
 
 prof.data
+
+callgrind.out.*
