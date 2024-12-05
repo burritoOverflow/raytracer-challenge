@@ -1,8 +1,13 @@
+#include <cstddef>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <memory>
+#include <numeric>
+#include <set>
 #include "camera.h"
 #include "canvas.h"
 #include "checkerpattern.h"
@@ -21,12 +26,32 @@
 #include "viewtransform.h"
 #include "world.h"
 
-// TODO individual renders should be moved to (ideally) separate executables
+#include <gflags/gflags.h>
+
+// TODO: ensure aspect ratio is preserved-(ish), and values are otherwise valid (i.e width >
+// height)
+static constexpr int DEFAULT_CAMERA_HEIGHT = 900;
+static constexpr int DEFAULT_CAMERA_WIDTH = 750;
+
+size_t camera_height = DEFAULT_CAMERA_HEIGHT;
+size_t camera_width = DEFAULT_CAMERA_WIDTH;
+
+const std::set<std::string> VALID_TARGETS = {"chapter7", "chapter6", "chapter10",
+                                             "patternroomsphere", "patternroomcylinder"};
+
+const std::string RENDER_HELP_STR =
+    "Name of the render example (" +
+    std::accumulate(std::next(VALID_TARGETS.begin()),
+                    VALID_TARGETS.end(),
+                    *VALID_TARGETS.begin(),
+                    [](const std::string& acc, const std::string& s) { return acc + ", " + s; }) +
+    ")";
+
+DEFINE_string(renderTarget, "", RENDER_HELP_STR.c_str());
+DEFINE_int32(width, DEFAULT_CAMERA_WIDTH, "Camera Width for the render");
+DEFINE_int32(height, DEFAULT_CAMERA_HEIGHT, "Camera Height for the render");
 
 namespace {
-const int CAMERA_HEIGHT = 900;
-const int CAMERA_WIDTH = 750;
-
 void WriteCanvasToPPM(const scene::Camera& camera, scene::World& world) {
     const auto canvas = camera.Render(world);
     std::string image_outdir_name = "images";
@@ -85,7 +110,7 @@ std::vector<std::shared_ptr<geometry::Shape>> GetSpheresForCh7Render() {
 
 void RenderChapter7Scene() {
     scene::World world{};
-    scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 3};
+    scene::Camera camera{camera_height, camera_width, M_PI / 3};
     camera.SetTransform(commontypes::ViewTransform{commontypes::Point{0, 1.5, -5},
                                                    commontypes::Point{0, 1, 0},
                                                    commontypes::Vector{0, 1, 0}});
@@ -190,7 +215,7 @@ void Chapter6RenderRenderExample(
 // Plane for the "floor" in the image
 void Chapter10PatternPlaneRender() {
     scene::World world{};
-    scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 3};
+    scene::Camera camera{camera_height, camera_width, M_PI / 3};
 
     const commontypes::Point from{0, 1.5, -5};
     const commontypes::Point to{0, 1, 0};
@@ -268,7 +293,7 @@ void PatternRoomRefractiveSphere() {
 
     world.AddObject(std::make_shared<geometry::Sphere>(std::move(red_sphere)));
 
-    scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 4.0};
+    scene::Camera camera{camera_height, camera_width, M_PI / 4.0};
 
     commontypes::Point from = commontypes::Point(10, 1, 0);
     commontypes::Point to = commontypes::Point(0.0, 0.0, 0.0);
@@ -324,7 +349,7 @@ void PatternRoomRefractiveCylinder() {
 
     world.AddObject(std::make_shared<geometry::Sphere>(std::move(red_sphere)));
 
-    scene::Camera camera{CAMERA_HEIGHT, CAMERA_WIDTH, M_PI / 4.0};
+    scene::Camera camera{camera_height, camera_width, M_PI / 4.0};
 
     const commontypes::Point from = commontypes::Point(10, 1, 0);
     const commontypes::Point to = commontypes::Point(0.0, 0.0, 0.0);
@@ -334,9 +359,47 @@ void PatternRoomRefractiveCylinder() {
 
     WriteCanvasToPPM(camera, world);
 }
+
+void ValidateFlags() {
+    if (FLAGS_width <= 0) {
+        std::cerr << "Error: 'width' must be a positive integer.\n";
+        exit(EXIT_FAILURE);
+    }
+    if (FLAGS_height <= 0) {
+        std::cerr << "Error: 'height' must be a positive integer.\n";
+        exit(EXIT_FAILURE);
+    }
+    if (FLAGS_renderTarget.empty()) {
+        std::cerr << "Error: 'targetname' must not be empty.\n";
+        exit(EXIT_FAILURE);
+    }
+    if (VALID_TARGETS.find(FLAGS_renderTarget) == VALID_TARGETS.end()) {
+        std::cerr << "Error: "
+                  << "'" << FLAGS_renderTarget << "' is not a valid target: " << RENDER_HELP_STR
+                  << "\n";
+        exit(EXIT_FAILURE);
+    }
+}
+
+std::function<void()> GetRenderFunction(const std::string& render_target) {
+    std::map<std::string, std::function<void()>> RENDER_TARGETS = {
+        {"chapter7", RenderChapter7Scene},
+        {"chapter6", []() { Chapter6RenderRenderExample(); }},
+        {"chapter10", Chapter10PatternPlaneRender},
+        {"patternroomsphere", PatternRoomRefractiveSphere},
+        {"patternroomcylinder", PatternRoomRefractiveCylinder}};
+
+    return RENDER_TARGETS[render_target];
+}
 }  // namespace
 
-int main() {
-    std::function<void()> render_fn = &PatternRoomRefractiveCylinder;
+int main(int argc, char* argv[]) {
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
+    ValidateFlags();
+
+    camera_height = FLAGS_height;
+    camera_width = FLAGS_width;
+
+    std::function<void()> render_fn = GetRenderFunction(FLAGS_renderTarget);
     utility::OutputMeasuredDuration(render_fn);
 }
